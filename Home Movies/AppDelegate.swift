@@ -26,14 +26,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //BITHockeyManager.sharedHockeyManager().disableCrashManager = true
         BITHockeyManager.sharedHockeyManager().startManager()
         BITHockeyManager.sharedHockeyManager().authenticator.authenticateInstallation()
-       BITHockeyManager.sharedHockeyManager().testIdentifier()
+        BITHockeyManager.sharedHockeyManager().testIdentifier()
         //
         if let bytes = deviceRemainingFreeSpaceInBytes() {
             freeSpaceMb = Int32(bytes/(1024*1024))
             print("free space: \(freeSpaceMb) Mb")
-        } else {
-            print("failed")
-            freeSpaceMb = 0
         }
         return true
     }

@@ -19,7 +19,7 @@ enum AwfulError: ErrorType {
 @objc
 class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
     
-    var parentVC: ViewController?
+    var parentVC: RecordViewController?
     
     var captureSession: AVCaptureSession?
     var videoDataOutput: AVCaptureMovieFileOutput?
@@ -42,7 +42,7 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
     var titleGenerated:Bool?
     var titleFilePath:NSURL?
     
-    init(viewController : ViewController)
+    init(viewController : RecordViewController)
     {
         super.init();
         parentVC = viewController

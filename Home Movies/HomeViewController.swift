@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 
-class LaunchViewController: UIViewController {
+class HomeViewController: UIViewController {
 
     @IBOutlet weak var launchButton: UIButton!
     @IBOutlet weak var videoButton: UIButton!
@@ -20,7 +20,7 @@ class LaunchViewController: UIViewController {
     
     @IBAction func onLaunchButtonClick(sender: AnyObject) {
         
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let mainStoryboard = UIStoryboard(name: "Record", bundle: NSBundle.mainBundle())
         
         let camCtrllr:UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("MainViewController") as UIViewController
         
@@ -39,8 +39,6 @@ class LaunchViewController: UIViewController {
         launchButton.layer.borderWidth = 1
         videoButton.layer.borderWidth = 1
         videoButton.layer.cornerRadius=5
-        launchImage.contentMode = UIViewContentMode.ScaleAspectFit;
-        launchImage.clipsToBounds = true
         self.view.layer.backgroundColor=UIColor.whiteColor().CGColor
     }
 }

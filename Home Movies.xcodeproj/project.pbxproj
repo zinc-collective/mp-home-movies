@@ -11,23 +11,23 @@
 		BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AC1C5E994B007F4A06 /* iphone6.mov */; };
 		BD1B09AF1C5E9977007F4A06 /* iphone5.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AE1C5E9977007F4A06 /* iphone5.mov */; };
 		BD1B09B11C5E99A7007F4A06 /* iphone4sbelow.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09B01C5E99A7007F4A06 /* iphone4sbelow.mov */; };
+		78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D7629E1C85E00500797980 /* AVFoundation.framework */; };
 		BD762F721BD17BDD003AEA6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD762F711BD17BDD003AEA6E /* Assets.xcassets */; };
 		BD762F751BD17BDD003AEA6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD762F731BD17BDD003AEA6E /* LaunchScreen.storyboard */; };
 		BD762F801BD17BDD003AEA6E /* Home_MoviesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD762F7F1BD17BDD003AEA6E /* Home_MoviesTests.swift */; };
 		BD762F8B1BD17BDD003AEA6E /* Home_MoviesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD762F8A1BD17BDD003AEA6E /* Home_MoviesUITests.swift */; };
 		BD762FB61BD18188003AEA6E /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD762FB21BD18188003AEA6E /* HockeySDK.framework */; };
 		BD762FB81BD18188003AEA6E /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BD762FB51BD18188003AEA6E /* HockeySDKResources.bundle */; };
-		BD92A0591C44061B008ABFC5 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92A0581C44061B008ABFC5 /* LaunchViewController.swift */; };
-		BD92A05D1C440755008ABFC5 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD92A05C1C440755008ABFC5 /* Launch.storyboard */; };
-		BDA30A711BE8030900735D64 /* splash-screen-center.png in Resources */ = {isa = PBXBuildFile; fileRef = BDA30A701BE8030900735D64 /* splash-screen-center.png */; };
+		BD92A0591C44061B008ABFC5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92A0581C44061B008ABFC5 /* HomeViewController.swift */; };
+		BD92A05D1C440755008ABFC5 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD92A05C1C440755008ABFC5 /* Home.storyboard */; };
 		BDE762331BD18362008B74F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE762281BD18362008B74F7 /* AppDelegate.swift */; };
 		BDE762381BD18362008B74F7 /* RecordButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */; };
 		BDE762391BD18362008B74F7 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE7622E1BD18362008B74F7 /* UIDeviceExtension.swift */; };
 		BDE7623A1BD18362008B74F7 /* Upload-50.png in Resources */ = {isa = PBXBuildFile; fileRef = BDE7622F1BD18362008B74F7 /* Upload-50.png */; };
 		BDE7623B1BD18362008B74F7 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE762301BD18362008B74F7 /* Utils.swift */; };
 		BDE7623C1BD18362008B74F7 /* VideoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE762311BD18362008B74F7 /* VideoManager.swift */; };
-		BDE7623D1BD18362008B74F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE762321BD18362008B74F7 /* ViewController.swift */; };
-		BDE7623F1BD1839D008B74F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDE7623E1BD1839D008B74F7 /* Main.storyboard */; };
+		BDE7623D1BD18362008B74F7 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE762321BD18362008B74F7 /* RecordViewController.swift */; };
+		BDE7623F1BD1839D008B74F7 /* Record.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDE7623E1BD1839D008B74F7 /* Record.storyboard */; };
 		BDE762411BD1840A008B74F7 /* Upload-50r.png in Resources */ = {isa = PBXBuildFile; fileRef = BDE762401BD1840A008B74F7 /* Upload-50r.png */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +53,7 @@
 		BD1B09AC1C5E994B007F4A06 /* iphone6.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6.mov; sourceTree = "<group>"; };
 		BD1B09AE1C5E9977007F4A06 /* iphone5.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone5.mov; sourceTree = "<group>"; };
 		BD1B09B01C5E99A7007F4A06 /* iphone4sbelow.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone4sbelow.mov; sourceTree = "<group>"; };
+		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		BD762F671BD17BDD003AEA6E /* Home Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Home Movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD762F711BD17BDD003AEA6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BD762F741BD17BDD003AEA6E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -66,17 +67,16 @@
 		BD762FB21BD18188003AEA6E /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		BD762FB41BD18188003AEA6E /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
 		BD762FB51BD18188003AEA6E /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
-		BD92A0581C44061B008ABFC5 /* LaunchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
-		BD92A05C1C440755008ABFC5 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
-		BDA30A701BE8030900735D64 /* splash-screen-center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splash-screen-center.png"; sourceTree = "<group>"; };
+		BD92A0581C44061B008ABFC5 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		BD92A05C1C440755008ABFC5 /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		BDE762281BD18362008B74F7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButtonView.swift; sourceTree = "<group>"; };
 		BDE7622E1BD18362008B74F7 /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		BDE7622F1BD18362008B74F7 /* Upload-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Upload-50.png"; sourceTree = "<group>"; };
 		BDE762301BD18362008B74F7 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		BDE762311BD18362008B74F7 /* VideoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoManager.swift; sourceTree = "<group>"; };
-		BDE762321BD18362008B74F7 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		BDE7623E1BD1839D008B74F7 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		BDE762321BD18362008B74F7 /* RecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
+		BDE7623E1BD1839D008B74F7 /* Record.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Record.storyboard; sourceTree = "<group>"; };
 		BDE762401BD1840A008B74F7 /* Upload-50r.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Upload-50r.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */,
 				BD762FB61BD18188003AEA6E /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,9 +107,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		78D7629A1C85DBFB00797980 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				BDE7622F1BD18362008B74F7 /* Upload-50.png */,
+				BDE762291BD18362008B74F7 /* iphone4sbelow.mp4 */,
+				BDE7622A1BD18362008B74F7 /* iphone5.mp4 */,
+				BDE7622B1BD18362008B74F7 /* iphone6.mp4 */,
+				BDE7622C1BD18362008B74F7 /* iphone6p.mp4 */,
+				BDE762401BD1840A008B74F7 /* Upload-50r.png */,
+			);
+			name = assets;
+			sourceTree = "<group>";
+		};
+		78D7629B1C85DC6E00797980 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				BD92A05C1C440755008ABFC5 /* Home.storyboard */,
+				BD92A0581C44061B008ABFC5 /* HomeViewController.swift */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		78D7629C1C85DC7400797980 /* Record */ = {
+			isa = PBXGroup;
+			children = (
+				BDE7623E1BD1839D008B74F7 /* Record.storyboard */,
+				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
+				BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */,
+			);
+			name = Record;
+			sourceTree = "<group>";
+		};
+		78D7629D1C85DC8300797980 /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				BDE7622E1BD18362008B74F7 /* UIDeviceExtension.swift */,
+				BDE762301BD18362008B74F7 /* Utils.swift */,
+				BDE762311BD18362008B74F7 /* VideoManager.swift */,
+			);
+			name = Lib;
+			sourceTree = "<group>";
+		};
 		BD762F5E1BD17BDD003AEA6E = {
 			isa = PBXGroup;
 			children = (
+				78D7629E1C85E00500797980 /* AVFoundation.framework */,
 				BD762FB11BD18188003AEA6E /* HockeySDK.embeddedframework */,
 				BD762F691BD17BDD003AEA6E /* Home Movies */,
 				BD762F7E1BD17BDD003AEA6E /* Home MoviesTests */,
@@ -130,25 +174,21 @@
 		BD762F691BD17BDD003AEA6E /* Home Movies */ = {
 			isa = PBXGroup;
 			children = (
-				BDA30A701BE8030900735D64 /* splash-screen-center.png */,
-				BDE762401BD1840A008B74F7 /* Upload-50r.png */,
-				BDE7623E1BD1839D008B74F7 /* Main.storyboard */,
-				BDE762281BD18362008B74F7 /* AppDelegate.swift */,
 				BD1B09AE1C5E9977007F4A06 /* iphone5.mov */,
 				BD1B09B01C5E99A7007F4A06 /* iphone4sbelow.mov */,
 				BD1B09AC1C5E994B007F4A06 /* iphone6.mov */,
 				BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */,
-				BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */,
-				BDE7622E1BD18362008B74F7 /* UIDeviceExtension.swift */,
-				BDE7622F1BD18362008B74F7 /* Upload-50.png */,
-				BDE762301BD18362008B74F7 /* Utils.swift */,
 				BDE762311BD18362008B74F7 /* VideoManager.swift */,
 				BDE762321BD18362008B74F7 /* ViewController.swift */,
+
+				78D7629B1C85DC6E00797980 /* Home */,
+				78D7629C1C85DC7400797980 /* Record */,
+				78D7629D1C85DC8300797980 /* Lib */,
 				BD762F711BD17BDD003AEA6E /* Assets.xcassets */,
+				78D7629A1C85DBFB00797980 /* assets */,
+				BDE762281BD18362008B74F7 /* AppDelegate.swift */,
 				BD762F731BD17BDD003AEA6E /* LaunchScreen.storyboard */,
 				BD762F761BD17BDD003AEA6E /* Info.plist */,
-				BD92A0581C44061B008ABFC5 /* LaunchViewController.swift */,
-				BD92A05C1C440755008ABFC5 /* Launch.storyboard */,
 			);
 			path = "Home Movies";
 			sourceTree = "<group>";
@@ -299,15 +339,17 @@
 				BDE7623A1BD18362008B74F7 /* Upload-50.png in Resources */,
 				BD1B09B11C5E99A7007F4A06 /* iphone4sbelow.mov in Resources */,
 				BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */,
-				BDA30A711BE8030900735D64 /* splash-screen-center.png in Resources */,
 				BD1B09AF1C5E9977007F4A06 /* iphone5.mov in Resources */,
 				BDE7623F1BD1839D008B74F7 /* Main.storyboard in Resources */,
+				BDE7623F1BD1839D008B74F7 /* Record.storyboard in Resources */,
 				BD762F751BD17BDD003AEA6E /* LaunchScreen.storyboard in Resources */,
 				BD762F721BD17BDD003AEA6E /* Assets.xcassets in Resources */,
 				BD762FB81BD18188003AEA6E /* HockeySDKResources.bundle in Resources */,
 				BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */,
 				BDE762411BD1840A008B74F7 /* Upload-50r.png in Resources */,
 				BD92A05D1C440755008ABFC5 /* Launch.storyboard in Resources */,
+				BD762FB71BD18188003AEA6E /* HockeySDK.xcconfig in Resources */,
+				BD92A05D1C440755008ABFC5 /* Home.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,12 +391,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDE7623D1BD18362008B74F7 /* ViewController.swift in Sources */,
+				BDE7623D1BD18362008B74F7 /* RecordViewController.swift in Sources */,
 				BDE762391BD18362008B74F7 /* UIDeviceExtension.swift in Sources */,
 				BDE762331BD18362008B74F7 /* AppDelegate.swift in Sources */,
 				BDE7623C1BD18362008B74F7 /* VideoManager.swift in Sources */,
 				BDE762381BD18362008B74F7 /* RecordButtonView.swift in Sources */,
-				BD92A0591C44061B008ABFC5 /* LaunchViewController.swift in Sources */,
+				BD92A0591C44061B008ABFC5 /* HomeViewController.swift in Sources */,
 				BDE7623B1BD18362008B74F7 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

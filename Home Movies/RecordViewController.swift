@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 
-class ViewController: UIViewController {
+class RecordViewController: UIViewController {
 
     var videoMgr: VideoManager?
     var loadingFromBg: Bool = false

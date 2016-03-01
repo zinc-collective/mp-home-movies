@@ -18,25 +18,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash-screen-center.png" translatesAutoresizingMaskIntoConstraints="NO" id="Loj-RG-IDS">
-                                <rect key="frame" x="164" y="96" width="240" height="128"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="Loj-RG-IDS">
+                                <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Loj-RG-IDS" secondAttribute="height" multiplier="15:8" id="u9A-vc-bha"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="u9A-vc-bha"/>
+                                    </mask>
+                                </variation>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Loj-RG-IDS" secondAttribute="bottom" id="6c9-Ev-TK2"/>
                             <constraint firstItem="Loj-RG-IDS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="77D-Dg-Fvl"/>
+                            <constraint firstItem="Loj-RG-IDS" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="A5b-Zo-U4u"/>
                             <constraint firstItem="Loj-RG-IDS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="23" id="BMx-yP-ODJ"/>
                             <constraint firstItem="Loj-RG-IDS" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-80" id="OZ0-L9-Zgb"/>
+                            <constraint firstAttribute="trailing" secondItem="Loj-RG-IDS" secondAttribute="trailing" id="bKu-PU-1fK"/>
                             <constraint firstItem="Loj-RG-IDS" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="height" multiplier="3:4" id="deY-SE-il1"/>
                             <constraint firstItem="Loj-RG-IDS" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="gq8-e4-H2P"/>
+                            <constraint firstItem="Loj-RG-IDS" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="sdj-1f-gBm"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Loj-RG-IDS" secondAttribute="bottom" id="sha-Iy-l5Q"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="77D-Dg-Fvl"/>
                                 <exclude reference="BMx-yP-ODJ"/>
                                 <exclude reference="OZ0-L9-Zgb"/>
+                                <exclude reference="deY-SE-il1"/>
+                                <exclude reference="gq8-e4-H2P"/>
+                                <exclude reference="sha-Iy-l5Q"/>
                             </mask>
                         </variation>
                     </view>
@@ -49,6 +63,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="splash-screen-center.png" width="961" height="799"/>
+        <image name="LaunchImage" width="736" height="414"/>
     </resources>
 </document>
