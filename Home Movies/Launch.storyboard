@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="jUb-1W-Pak">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Launch View Controller-->
+        <scene sceneID="IQ2-86-RXe">
+            <objects>
+                <viewController storyboardIdentifier="LaunchViewController" id="jUb-1W-Pak" customClass="LaunchViewController" customModule="Home_Movies" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ty7-1w-98P"/>
+                        <viewControllerLayoutGuide type="bottom" id="Cg1-il-TXg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleAspectFill" id="HW4-KO-qow" customClass="La">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7nB-Hj-afa">
+                                <rect key="frame" x="412" y="298" width="175" height="42"/>
+                                <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="0.81571365248226946" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="175" id="BXq-rL-rOb"/>
+                                    <constraint firstAttribute="height" constant="42" id="ble-xe-RjD"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                <color key="tintColor" red="1" green="1" blue="0.0" alpha="0.80399490250000005" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="RECORD A MOVIE">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onLaunchButtonClick:" destination="jUb-1W-Pak" eventType="touchUpInside" id="lhS-CE-zpi"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="USm-Dm-JGo">
+                                <rect key="frame" x="80" y="298" width="175" height="42"/>
+                                <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="175" id="Yb5-9t-n6L"/>
+                                    <constraint firstAttribute="height" constant="42" id="vF3-sV-BdD"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                <state key="normal" title="WATCH THE TUTORIAL">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onVideoButton:" destination="jUb-1W-Pak" eventType="touchUpInside" id="adK-Hy-w0v"/>
+                                </connections>
+                            </button>
+                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash-screen-center.png" translatesAutoresizingMaskIntoConstraints="NO" id="knl-oc-C8B">
+                                <rect key="frame" x="138" y="30" width="390" height="226"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="390" id="sPX-1o-DSY"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="knl-oc-C8B" firstAttribute="centerY" secondItem="HW4-KO-qow" secondAttribute="centerY" constant="-44.5" id="Fjo-jO-n8B"/>
+                            <constraint firstItem="knl-oc-C8B" firstAttribute="centerX" secondItem="HW4-KO-qow" secondAttribute="centerX" id="HUZ-3w-vrM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="7nB-Hj-afa" secondAttribute="trailing" constant="60" id="MX6-kb-nuj"/>
+                            <constraint firstItem="USm-Dm-JGo" firstAttribute="top" secondItem="knl-oc-C8B" secondAttribute="bottom" constant="42" id="NKV-rx-A3T"/>
+                            <constraint firstItem="Cg1-il-TXg" firstAttribute="top" secondItem="7nB-Hj-afa" secondAttribute="bottom" constant="35" id="ZcT-Jb-1dA"/>
+                            <constraint firstItem="USm-Dm-JGo" firstAttribute="centerY" secondItem="7nB-Hj-afa" secondAttribute="centerY" id="eC0-Ka-4rY"/>
+                            <constraint firstItem="Cg1-il-TXg" firstAttribute="top" secondItem="USm-Dm-JGo" secondAttribute="bottom" constant="35" id="kFn-fy-DGC"/>
+                            <constraint firstItem="7nB-Hj-afa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="USm-Dm-JGo" secondAttribute="trailing" constant="20" id="n6W-1H-Jtk"/>
+                            <constraint firstItem="USm-Dm-JGo" firstAttribute="top" secondItem="7nB-Hj-afa" secondAttribute="bottom" constant="-42" id="vCD-Ve-XQv"/>
+                            <constraint firstItem="USm-Dm-JGo" firstAttribute="leading" secondItem="HW4-KO-qow" secondAttribute="leadingMargin" constant="60" id="vYz-at-GXj"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="launchButton" destination="7nB-Hj-afa" id="xTi-kC-xZG"/>
+                        <outlet property="launchImage" destination="knl-oc-C8B" id="JNw-Eq-awR"/>
+                        <outlet property="videoButton" destination="USm-Dm-JGo" id="9FO-xC-SHU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bE9-ir-MCu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="592.5" y="215.5"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="splash-screen-center.png" width="961" height="799"/>
+    </resources>
+</document>
