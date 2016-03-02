@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D7629E1C85E00500797980 /* AVFoundation.framework */; };
 		BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */; };
 		BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AC1C5E994B007F4A06 /* iphone6.mov */; };
 		BD1B09AF1C5E9977007F4A06 /* iphone5.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AE1C5E9977007F4A06 /* iphone5.mov */; };
 		BD1B09B11C5E99A7007F4A06 /* iphone4sbelow.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09B01C5E99A7007F4A06 /* iphone4sbelow.mov */; };
-		78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D7629E1C85E00500797980 /* AVFoundation.framework */; };
 		BD762F721BD17BDD003AEA6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD762F711BD17BDD003AEA6E /* Assets.xcassets */; };
 		BD762F751BD17BDD003AEA6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD762F731BD17BDD003AEA6E /* LaunchScreen.storyboard */; };
 		BD762F801BD17BDD003AEA6E /* Home_MoviesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD762F7F1BD17BDD003AEA6E /* Home_MoviesTests.swift */; };
@@ -49,11 +49,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6p.mov; sourceTree = "<group>"; };
 		BD1B09AC1C5E994B007F4A06 /* iphone6.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6.mov; sourceTree = "<group>"; };
 		BD1B09AE1C5E9977007F4A06 /* iphone5.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone5.mov; sourceTree = "<group>"; };
 		BD1B09B01C5E99A7007F4A06 /* iphone4sbelow.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone4sbelow.mov; sourceTree = "<group>"; };
-		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		BD762F671BD17BDD003AEA6E /* Home Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Home Movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD762F711BD17BDD003AEA6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BD762F741BD17BDD003AEA6E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -110,11 +110,11 @@
 		78D7629A1C85DBFB00797980 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				BD1B09AE1C5E9977007F4A06 /* iphone5.mov */,
+				BD1B09B01C5E99A7007F4A06 /* iphone4sbelow.mov */,
+				BD1B09AC1C5E994B007F4A06 /* iphone6.mov */,
+				BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */,
 				BDE7622F1BD18362008B74F7 /* Upload-50.png */,
-				BDE762291BD18362008B74F7 /* iphone4sbelow.mp4 */,
-				BDE7622A1BD18362008B74F7 /* iphone5.mp4 */,
-				BDE7622B1BD18362008B74F7 /* iphone6.mp4 */,
-				BDE7622C1BD18362008B74F7 /* iphone6p.mp4 */,
 				BDE762401BD1840A008B74F7 /* Upload-50r.png */,
 			);
 			name = assets;
@@ -133,8 +133,9 @@
 			isa = PBXGroup;
 			children = (
 				BDE7623E1BD1839D008B74F7 /* Record.storyboard */,
-				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
 				BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */,
+				BDE762311BD18362008B74F7 /* VideoManager.swift */,
+				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
 			);
 			name = Record;
 			sourceTree = "<group>";
@@ -144,7 +145,6 @@
 			children = (
 				BDE7622E1BD18362008B74F7 /* UIDeviceExtension.swift */,
 				BDE762301BD18362008B74F7 /* Utils.swift */,
-				BDE762311BD18362008B74F7 /* VideoManager.swift */,
 			);
 			name = Lib;
 			sourceTree = "<group>";
@@ -174,13 +174,6 @@
 		BD762F691BD17BDD003AEA6E /* Home Movies */ = {
 			isa = PBXGroup;
 			children = (
-				BD1B09AE1C5E9977007F4A06 /* iphone5.mov */,
-				BD1B09B01C5E99A7007F4A06 /* iphone4sbelow.mov */,
-				BD1B09AC1C5E994B007F4A06 /* iphone6.mov */,
-				BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */,
-				BDE762311BD18362008B74F7 /* VideoManager.swift */,
-				BDE762321BD18362008B74F7 /* ViewController.swift */,
-
 				78D7629B1C85DC6E00797980 /* Home */,
 				78D7629C1C85DC7400797980 /* Record */,
 				78D7629D1C85DC8300797980 /* Lib */,
@@ -340,15 +333,14 @@
 				BD1B09B11C5E99A7007F4A06 /* iphone4sbelow.mov in Resources */,
 				BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */,
 				BD1B09AF1C5E9977007F4A06 /* iphone5.mov in Resources */,
-				BDE7623F1BD1839D008B74F7 /* Main.storyboard in Resources */,
+				BDE7623F1BD1839D008B74F7 /* Record.storyboard in Resources */,
 				BDE7623F1BD1839D008B74F7 /* Record.storyboard in Resources */,
 				BD762F751BD17BDD003AEA6E /* LaunchScreen.storyboard in Resources */,
 				BD762F721BD17BDD003AEA6E /* Assets.xcassets in Resources */,
 				BD762FB81BD18188003AEA6E /* HockeySDKResources.bundle in Resources */,
 				BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */,
 				BDE762411BD1840A008B74F7 /* Upload-50r.png in Resources */,
-				BD92A05D1C440755008ABFC5 /* Launch.storyboard in Resources */,
-				BD762FB71BD18188003AEA6E /* HockeySDK.xcconfig in Resources */,
+				BD92A05D1C440755008ABFC5 /* Home.storyboard in Resources */,
 				BD92A05D1C440755008ABFC5 /* Home.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -529,7 +521,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -550,7 +541,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
