@@ -653,40 +653,28 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
     
     
     func getFadeTransformAnimGrp() -> CAAnimationGroup {
-        //animations
-        /*let fadeAnimation = CABasicAnimation(keyPath: "opacity")
-        fadeAnimation.toValue = 1.0
-        fadeAnimation.fillMode = kCAFillModeBoth
-        fadeAnimation.removedOnCompletion=false
-        fadeAnimation.duration = 1.5
-        fadeAnimation.beginTime=AVCoreAnimationBeginTimeAtZero */
-        //change the scal...
-        let scaleAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
-        scaleAnimation.values = [NSValue(CATransform3D: CATransform3DMakeScale(0.9, 1, 1)), NSValue(CATransform3D: CATransform3DMakeScale(1, 1, 1))]
-        //time function and duration of the animation
-        scaleAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        scaleAnimation.duration = 2
-        scaleAnimation.rotationMode="auto"
-        scaleAnimation.removedOnCompletion=false
-        scaleAnimation.beginTime=AVCoreAnimationBeginTimeAtZero
+        
         //
-        let animation : CABasicAnimation = CABasicAnimation(keyPath: "transform");
-        //let transform : CATransform3D = CATransform3DMakeScale(2, 2, 1);
-        //animation.setValue(NSValue(CATransform3D: transform), forKey: "scaleText");
-        
-        animation.fromValue = NSValue(CATransform3D: CATransform3DMakeScale(0.8, 1,0.8))
-        animation.toValue = NSValue(CATransform3D: CATransform3DMakeScale(1, 1, 1))
-        animation.duration = 2.0;
+        let animation : CABasicAnimation = CABasicAnimation(keyPath: "transform.scale");
+        animation.fromValue = NSValue(CATransform3D: CATransform3DMakeScale(1, 1,1))
+        animation.toValue = NSValue(CATransform3D: CATransform3DMakeScale(1.5, 1, 1))
+        animation.duration = 4
+        animation.fillMode=kCAFillModeBoth
         animation.beginTime=AVCoreAnimationBeginTimeAtZero
-        
+        //
+       
         //grouping above animations before initiating
         let animGrp = CAAnimationGroup()
         animGrp.beginTime=AVCoreAnimationBeginTimeAtZero
         animGrp.animations=[animation]
         animGrp.removedOnCompletion=false
         animGrp.fillMode=kCAFillModeBoth
-        animGrp.duration = 2.0
+        animGrp.duration = 4
         //
+        
+     
+       
+        
         return animGrp
     }
     
@@ -704,12 +692,12 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
         default: assetName = "iphone4sbelow"
         }
         
-        let asset = AVURLAsset(URL:NSBundle.mainBundle().URLForResource(assetName, withExtension:"mp4")!)
+        let asset = AVURLAsset(URL:NSBundle.mainBundle().URLForResource(assetName, withExtension:"mov")!)
         return asset
         
     }
     
-    /*
+    
     
     func createAnimatedTitleVideo(label: String, animGrp: ()-> CAAnimationGroup)  {
         
@@ -746,149 +734,32 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
             //asset layer
             let al = CALayer()
             al.opacity=1.0
-            al.position=CGPointMake(animComp.renderSize.width/2, animComp.renderSize.height/2)
+            //al.position=CGPointMake(animComp.renderSize.width/2, animComp.renderSize.height/2)
             al.frame=CGRectMake(0, 0, animComp.renderSize.width,animComp.renderSize.height)
-            //al.backgroundColor=UIColor.whiteColor().CGColor
-            //let imageURL = NSBundle.mainBundle().pathForResource("test1", ofType:"png")
-            //let img = UIImage(contentsOfFile: imageURL!)
-            //al.contents=img?.CGImage
             al.geometryFlipped=false
+            al.contentsGravity = "center"
+            al.anchorPoint=CGPointMake(0.5, 0.5)
             //animation
             let textLayer = CATextLayer()
             textLayer.frame = CGRectMake(0, 0, animComp.renderSize.width,animComp.renderSize.height/2)
+            //textLayer.position=CGPointMake(animComp.renderSize.width/2, animComp.renderSize.height/2)
             textLayer.string = label
-            let fontName: CFStringRef = "Noteworthy-Light"
+            let fontName: CFStringRef = "HelveticaNeue-Bold"
             textLayer.font = CTFontCreateWithName(fontName, 10.0, nil)
             textLayer.foregroundColor = UIColor.whiteColor().CGColor
-            textLayer.fontSize = 48.0;
+            textLayer.fontSize = 55.0;
             textLayer.contentsScale=UIScreen.mainScreen().scale*2
             textLayer.wrapped = true
             textLayer.alignmentMode = kCAAlignmentCenter
-            textLayer.opacity=0.0
-            textLayer.display()
-            textLayer.anchorPoint = CGPointMake(0.5, 0.2)
+            textLayer.opacity=1
+            textLayer.anchorPoint = CGPointMake(0.5, 0.5)//
+            
+            
+            
             textLayer.addAnimation(animGrp(), forKey: "chosenAnimation")
-            //
-            //textLayer.addAnimation(fadeAnimation, forKey: "animateOpacity")
-            //textLayer.addAnimation(scaleAnimation, forKey: "transform")
-            //
             al.addSublayer(textLayer)
             parentLayer.addSublayer(al)
-            //parentLayer.addSublayer(textLayer)
             
-            let animTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videoLayer, inLayer: parentLayer)
-            animComp.animationTool=animTool
-            
-            let compInstr = AVMutableVideoCompositionInstruction()
-            compInstr.timeRange=CMTimeRangeMake(kCMTimeZero, asset.duration)
-            let layerInstr = AVMutableVideoCompositionLayerInstruction(assetTrack: asset_track)
-            layerInstr.setOpacity(1, atTime: kCMTimeZero)
-            
-            
-            compInstr.layerInstructions=[layerInstr]
-            animComp.instructions=[compInstr]
-            
-            //
-            let fileURL = self.titleFilePath!
-            let filePath = self.titleFilePath!.path!
-            if NSFileManager.defaultManager().fileExistsAtPath(filePath) {
-                do {
-                    try NSFileManager.defaultManager().removeItemAtPath(filePath)
-                }
-                catch let err as NSError {
-                    print(err)
-                }
-                
-            }
-            print(self.titleFilePath!)
-            
-            let exportSession = AVAssetExportSession(asset: comp, presetName: AVAssetExportPresetHighestQuality)
-            print(comp)
-            exportSession?.outputURL=fileURL
-            exportSession?.videoComposition=animComp
-            exportSession?.outputFileType=AVFileTypeMPEG4
-            print(exportSession?.estimatedOutputFileLength)
-            exportSession?.exportAsynchronouslyWithCompletionHandler(){
-                switch exportSession!.status{
-                case  AVAssetExportSessionStatus.Completed:
-                    self.titleGenerated = true
-                default:
-                    print("cancelled \(exportSession!.error)")
-                    
-                }
-                dispatch_group_leave(self.titDispGrp!)
-                
-            }
-            
-        }
-        
-    } */
-    
-    func createAnimatedTitleVideo(label: String, animGrp: ()-> CAAnimationGroup)  {
-        
-        
-        //let dispGrp = dispatch_group_create()
-        dispatch_async(GlobalUserInteractiveQueue) {
-            
-            
-            //dispatch_group_enter(self.dispGrp)
-            //mutable composition
-            let comp = AVMutableComposition()
-            //video asset
-            let asset = self.getAssetForDevice()
-            let track = comp.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
-            let asset_track = asset.tracksWithMediaType(AVMediaTypeVideo)[0]
-            print(asset.tracksWithMediaType(AVMediaTypeVideo)[0])
-            do {
-                try track.insertTimeRange(CMTimeRangeMake(kCMTimeZero, asset.duration), ofTrack: asset_track, atTime: kCMTimeZero)
-            }
-            catch let err as NSError {
-                print(err)
-            }
-            print(asset.duration)
-            //
-            let animComp = AVMutableVideoComposition(propertiesOfAsset: asset)
-            //
-            let parentLayer = CALayer()
-            let videoLayer = CALayer()
-            print(animComp.frameDuration)
-            parentLayer.frame=CGRectMake(0, 0, animComp.renderSize.width,animComp.renderSize.height)
-            videoLayer.frame=CGRectMake(0,0,animComp.renderSize.width,animComp.renderSize.height)
-            parentLayer.addSublayer(videoLayer)
-            //
-            //asset layer
-            let al = CALayer()
-            al.opacity=1.0
-            al.position=CGPointMake(animComp.renderSize.width/2, animComp.renderSize.height/2)
-            al.frame=CGRectMake(0, 0, animComp.renderSize.width,animComp.renderSize.height)
-            //al.backgroundColor=UIColor.whiteColor().CGColor
-            //let imageURL = NSBundle.mainBundle().pathForResource("test1", ofType:"png")
-            //let img = UIImage(contentsOfFile: imageURL!)
-            //al.contents=img?.CGImage
-            al.geometryFlipped=false
-            //animation
-            let textLayer = CATextLayer()
-            textLayer.frame = CGRectMake(0, 0, animComp.renderSize.width,animComp.renderSize.height/2)
-            textLayer.string = label
-            //let fontName: CFStringRef = "Noteworthy-Light"
-            //textLayer.font = CTFontCreateWithName(fontName, 10.0, nil)
-            textLayer.foregroundColor = UIColor.whiteColor().CGColor
-            textLayer.fontSize = 75.0;
-            textLayer.contentsScale=UIScreen.mainScreen().scale*2
-            textLayer.wrapped = true
-            textLayer.alignmentMode = kCAAlignmentCenter
-            textLayer.opacity=0.5
-            textLayer.display()
-            //textLayer.anchorPoint = CGPointMake(0.5, 0.2)
-            textLayer.anchorPoint = CGPointMake(0.5, 0.1)
-            textLayer.addAnimation(animGrp(), forKey: "chosenAnimation")
-            //
-            //textLayer.addAnimation(fadeAnimation, forKey: "animateOpacity")
-            //textLayer.addAnimation(scaleAnimation, forKey: "transform")
-            //
-            al.addSublayer(textLayer)
-            parentLayer.addSublayer(al)
-            //parentLayer.addSublayer(textLayer)
             
             let animTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videoLayer, inLayer: parentLayer)
             animComp.animationTool=animTool
