@@ -16,15 +16,20 @@ enum AwfulError: ErrorType {
     case SessionError
 }
 
+protocol VideoViewDelegate : class {
+    func videoError(error: NSError);
+}
+
 @objc
-class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
+class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
     
-    var parentVC: RecordViewController?
+//    var parentVC: RecordViewController?
+    
+    weak var delegate: VideoViewDelegate?
     
     var captureSession: AVCaptureSession?
     var videoDataOutput: AVCaptureMovieFileOutput?
     var previewLayer : AVCaptureVideoPreviewLayer?
-    var delegate : AVCaptureFileOutputRecordingDelegate?
     // If we find a device we'll store it here for later use
     var captureDevice : AVCaptureDevice?
     var audCaptureDevice : AVCaptureDevice?
@@ -42,13 +47,16 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
     var titleGenerated:Bool?
     var titleFilePath:NSURL?
     
-    init(viewController : RecordViewController)
-    {
-        super.init();
-        parentVC = viewController
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
         devicesPresent = areDevicesPresent()
-        
     }
+    
+//    init()
+//    {
+//
+//    }
     
     func startRecording()
     {
@@ -66,8 +74,6 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
             videoDataOutput?.startRecordingToOutputFileURL(fileURL, recordingDelegate: self)
             print("Started recording")
         }
-        
-        //
     }
     
     func canFinalize() -> Bool {
@@ -164,7 +170,6 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
     
     func startSession(preview: Bool) throws
     {
-        
         do {
             
             try configureDevice()
@@ -181,8 +186,8 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
             
             if preview {
                 previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                parentVC!.view.layer.addSublayer(previewLayer!)
-                previewLayer?.frame = parentVC!.view.layer.frame
+                self.layer.addSublayer(previewLayer!)
+                previewLayer?.frame = self.layer.frame
                 captureSession?.startRunning()
                 let previewConn = self.previewLayer!.connection
                 let orientation = UIInterfaceOrientation.LandscapeRight
@@ -195,9 +200,6 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
                     captureSession!.addOutput(videoDataOutput)
 
                 }
-                
-                //show controls
-                bringControlsToForeground()
             }
         }
         catch let error as NSError{
@@ -209,23 +211,13 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
     func stopSession()
     {
         stopRecording()
-        captureSession!.stopRunning()
-        previewLayer!.removeFromSuperlayer()
+        captureSession?.stopRunning()
+        previewLayer?.removeFromSuperlayer()
         previewLayer = nil
         captureSession = nil
         
         print("stopped session, cleanup done!")
     }
-    
-    func bringControlsToForeground()
-    {
-        parentVC?.view.bringSubviewToFront(parentVC!.recordButton)
-        parentVC?.view.bringSubviewToFront(parentVC!.timerLabel)
-        parentVC?.view.bringSubviewToFront(parentVC!.doneButton)
-        parentVC?.view.bringSubviewToFront(parentVC!.clipsLabel)
-    }
-    
-    
     
     func configureDevice() throws {
         if let device = captureDevice {
@@ -509,65 +501,7 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
         return retVal
     }
     
-    class CustomPlayerController : AVPlayerViewController {
-        
-        var videoMgr: VideoManager?
-        var button: UIButton?
-        
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            button   = UIButton(type:UIButtonType.Custom)
-            let img = UIImage(named: "Upload-50r")
-            button!.setImage(img, forState: UIControlState.Normal)
-            
-            button!.frame = CGRectMake(100, 100, 100, 50)
-            
-            // button.frame = CGRectMake(self.view.frame.size.width/2 - button.frame.size.width/2, self.view.frame.size.height/2 - button.frame.size.height/2, button.frame.size.width, button.frame.size.height)
-            
-            //button.backgroundColor = UIColor.greenColor()
-            //button.setTitle("Button", forState: UIControlState.Normal)
-            button!.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
-            self.view.addSubview(button!)
-            
-            
-        }
-        
-        override func viewDidLayoutSubviews() {
-            let bounds = button!.superview!.bounds
-            button!.center = CGPointMake(CGRectGetMaxX(bounds)-50, CGRectGetMidY(bounds))
-        }
-        
-        func buttonPressed(sender: UIButton!){
-            print("share pressed \(self.parentViewController)")
-            displayShareSheet()
-            //self.dismissViewControllerAnimated(true, completion: nil)
-            
-        }
-        
-        func displayShareSheet(){
-            let sessDir = self.videoMgr!.getSessionFileDir()
-            if  sessDir.exists{
-                let url = NSURL(fileURLWithPath: sessDir.path)
-                let shareContent = url.URLByAppendingPathComponent("full.mp4")
-                let activityViewController = UIActivityViewController(activityItems: [shareContent as NSURL], applicationActivities: nil)
-                presentViewController(activityViewController, animated: true, completion: {})
-            }
-        }
-        
-        
-    }
 
-    
-    func playVideo(videoURL : NSURL) {
-        let player = AVPlayer(URL: videoURL)
-        let playerController = CustomPlayerController()//AVPlayerViewController()
-        playerController.videoMgr = self
-        playerController.player = player
-        //player.play()
-        parentVC!.presentViewController(playerController, animated: true, completion:{})
-        
-    }
-    
     
     func getSessionFileDir() -> (path: String, exists: Bool){
         
@@ -626,10 +560,7 @@ class VideoManager : NSObject, AVCaptureFileOutputRecordingDelegate{
         self.recording=false
         if(error != nil)
         {
-            if error.localizedRecoverySuggestion != nil
-            {
-                parentVC!.showAlert("Error!", msg: error.localizedRecoverySuggestion!, comp: {(alert: UIAlertAction!) in exit(0)})
-            }
+            delegate?.videoError(error)
             
         }
         else {

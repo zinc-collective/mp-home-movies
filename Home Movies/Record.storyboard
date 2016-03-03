@@ -18,6 +18,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aEd-w3-b5H" customClass="VideoView" customModule="Home_Movies" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="168" id="Um5-ON-fSC"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Um5-ON-fSC"/>
+                                    </mask>
+                                </variation>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pFe-A2-koH" customClass="RecordButtonView" customModule="Home_Movies">
                                 <rect key="frame" x="625" y="177" width="60" height="60"/>
                                 <constraints>
@@ -82,26 +94,48 @@
                                     </mask>
                                 </variation>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Orientation" translatesAutoresizingMaskIntoConstraints="NO" id="1Xg-oh-PSe">
+                                <rect key="frame" x="283" y="126" width="170" height="162"/>
+                                <color key="backgroundColor" red="1" green="0.055976856370000001" blue="0.180435348" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="170" id="Cx0-E2-8IE"/>
+                                    <constraint firstAttribute="height" constant="162" id="QMW-19-DZU"/>
+                                    <constraint firstAttribute="width" constant="170" id="dzk-G8-qKP"/>
+                                    <constraint firstAttribute="height" constant="162" id="eRf-UV-uBf"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Cx0-E2-8IE"/>
+                                        <exclude reference="QMW-19-DZU"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="tRP-7e-QWA" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" constant="11" id="0FG-jH-n0R"/>
                             <constraint firstAttribute="trailing" secondItem="GAU-qf-7Xk" secondAttribute="trailing" constant="188" id="2qR-J4-P6d"/>
+                            <constraint firstItem="1Xg-oh-PSe" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="4lc-9G-Ssg"/>
                             <constraint firstItem="L6d-rA-aW5" firstAttribute="centerX" secondItem="ZVa-1E-A6d" secondAttribute="centerX" id="5By-9Y-hxk"/>
                             <constraint firstAttribute="centerY" secondItem="GAU-qf-7Xk" secondAttribute="centerY" constant="-119.5" id="6SV-oa-yp4"/>
                             <constraint firstAttribute="trailingMargin" secondItem="GAU-qf-7Xk" secondAttribute="trailing" constant="15" id="GjQ-ln-VHm"/>
+                            <constraint firstItem="aEd-w3-b5H" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="Hq5-0S-9tF"/>
                             <constraint firstItem="pFe-A2-koH" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="Jxg-Tb-Rp8"/>
                             <constraint firstItem="GAU-qf-7Xk" firstAttribute="leading" secondItem="pFe-A2-koH" secondAttribute="trailing" constant="85" id="KVc-W0-GW4"/>
                             <constraint firstItem="L6d-rA-aW5" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="L4Z-m9-Dul"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="GAU-qf-7Xk" secondAttribute="bottom" constant="35" id="Mcc-sY-I5G"/>
                             <constraint firstAttribute="centerX" secondItem="GAU-qf-7Xk" secondAttribute="centerX" constant="-142.5" id="TDr-f8-dcb"/>
+                            <constraint firstItem="1Xg-oh-PSe" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="VtH-Bo-AdC"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="pFe-A2-koH" secondAttribute="bottom" constant="20" id="Wfb-cu-W8k"/>
                             <constraint firstItem="ZVa-1E-A6d" firstAttribute="bottom" secondItem="L6d-rA-aW5" secondAttribute="bottom" constant="5" id="XhQ-Gi-IKy"/>
+                            <constraint firstAttribute="trailing" secondItem="aEd-w3-b5H" secondAttribute="trailing" id="eF9-Fv-kIA"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="aEd-w3-b5H" secondAttribute="bottom" id="ezr-fF-aeE"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="L6d-rA-aW5" secondAttribute="bottom" constant="41" id="fZk-aE-zDC"/>
                             <constraint firstItem="ZVa-1E-A6d" firstAttribute="centerX" secondItem="tRP-7e-QWA" secondAttribute="centerX" constant="1" id="h5i-IG-CdH"/>
                             <constraint firstItem="GAU-qf-7Xk" firstAttribute="leading" secondItem="pFe-A2-koH" secondAttribute="trailing" constant="-224" id="jhP-fU-Al3"/>
                             <constraint firstItem="tRP-7e-QWA" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="qYw-NS-R2h"/>
                             <constraint firstAttribute="trailingMargin" secondItem="pFe-A2-koH" secondAttribute="trailing" constant="31" id="sWd-fV-4aI"/>
+                            <constraint firstItem="aEd-w3-b5H" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="w8l-SP-lvq"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -123,6 +157,7 @@
                         <outlet property="doneButton" destination="ZVa-1E-A6d" id="tev-IF-EYa"/>
                         <outlet property="recordButton" destination="pFe-A2-koH" id="zOc-vH-kHx"/>
                         <outlet property="timerLabel" destination="GAU-qf-7Xk" id="NKc-Jg-kVl"/>
+                        <outlet property="videoView" destination="aEd-w3-b5H" id="A8M-3S-c9Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -130,5 +165,8 @@
             <point key="canvasLocation" x="212" y="339"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Orientation" width="170" height="162"/>
+    </resources>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

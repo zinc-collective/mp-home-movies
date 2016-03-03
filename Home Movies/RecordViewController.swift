@@ -10,9 +10,8 @@ import UIKit
 import AVFoundation
 
 
-class RecordViewController: UIViewController {
+class RecordViewController: UIViewController, VideoViewDelegate {
 
-    var videoMgr: VideoManager?
     var loadingFromBg: Bool = false
     
     @IBOutlet weak var clipsLabel: UILabel!
@@ -20,20 +19,22 @@ class RecordViewController: UIViewController {
     
     @IBOutlet weak var timerLabel: UILabel!
     
+    @IBOutlet weak var videoView: VideoView!
     
     var startTime : NSTimeInterval?
     var timer: NSTimer?
     @IBOutlet weak var doneButton: UIButton!
     
     
-    
-   
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
     
     
     @IBAction func recordPressed(sender: AnyObject) {
         print("record pressed")
-        if videoMgr!.isDoneFinalizingOutput() {
-            self.videoMgr!.cleanupSessionDir()
+        if videoView.isDoneFinalizingOutput() {
+            videoView.cleanupSessionDir()
         }
         updateRecordButtonState()
     }
@@ -50,21 +51,11 @@ class RecordViewController: UIViewController {
         //{
         
         showAlertWithCancel("Are You Sure You Want To Make Your Movie?", msg: "", comp: {
-            (alert: UIAlertAction!) in self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: {(alert: UIAlertAction!) in self.generateTitleAndMakeMovie(self.videoMgr!.movieTitle!)})
+            (alert: UIAlertAction!) in self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: {(alert: UIAlertAction!) in self.generateTitleAndMakeMovie(self.videoView.movieTitle!)})
         })
         
             
        // }
-    }
-    
-    func displayShareSheet(){
-        let sessDir = self.videoMgr!.getSessionFileDir()
-        if  sessDir.exists{
-            let url = NSURL(fileURLWithPath: sessDir.path)
-            let shareContent = url.URLByAppendingPathComponent("full.mp4")
-            let activityViewController = UIActivityViewController(activityItems: [shareContent as NSURL], applicationActivities: nil)
-            presentViewController(activityViewController, animated: true, completion: {})
-        }
     }
     
     func generateTitleAndMakeMovie(title: String)
@@ -73,37 +64,49 @@ class RecordViewController: UIViewController {
         showHideActivityIndicator(true)
         if title != "" {
             
-            videoMgr!.titleGenerated=false
-            let dp = videoMgr!.getSessionFileDir()
+            videoView.titleGenerated=false
+            let dp = videoView.getSessionFileDir()
             if !dp.exists {
                 return //defensive
             }
-            videoMgr!.titleFilePath = NSURL(fileURLWithPath: dp.path).URLByAppendingPathComponent("1title.mp4")
-            self.videoMgr!.titDispGrp = dispatch_group_create()
-            dispatch_group_enter(videoMgr!.titDispGrp!)
+            videoView.titleFilePath = NSURL(fileURLWithPath: dp.path).URLByAppendingPathComponent("1title.mp4")
+            self.videoView.titDispGrp = dispatch_group_create()
+            dispatch_group_enter(videoView.titDispGrp!)
             print(title.endIndex)
-            self.videoMgr!.createAnimatedTitleVideo(title, animGrp: videoMgr!.getFadeTransformAnimGrp)
-            dispatch_group_wait(videoMgr!.titDispGrp!, DISPATCH_TIME_FOREVER)
+            self.videoView.createAnimatedTitleVideo(title, animGrp: videoView.getFadeTransformAnimGrp)
+            dispatch_group_wait(videoView.titDispGrp!, DISPATCH_TIME_FOREVER)
             //
         }
         //concatenate video.
         dispatch_async(GlobalUserInitiatedQueue){
-            self.videoMgr!.doneDispGroup = dispatch_group_create()
-            dispatch_group_enter(self.videoMgr!.doneDispGroup!)
-            self.videoMgr!.finalizeOutput()
-            dispatch_group_wait(self.videoMgr!.doneDispGroup!, DISPATCH_TIME_FOREVER)
+            self.videoView.doneDispGroup = dispatch_group_create()
+            dispatch_group_enter(self.videoView.doneDispGroup!)
+            self.videoView.finalizeOutput()
+            dispatch_group_wait(self.videoView.doneDispGroup!, DISPATCH_TIME_FOREVER)
             dispatch_async(GlobalMainQueue){
                 self.showHideActivityIndicator(false)
                 self.updateDoneButton()
-                let sessDir = self.videoMgr!.getSessionFileDir()
+                let sessDir = self.videoView.getSessionFileDir()
                 if  sessDir.exists{
                     let url = NSURL(fileURLWithPath: sessDir.path)
-                    self.videoMgr!.playVideo(url.URLByAppendingPathComponent("full.mp4"))
+                    self.playVideo(url.URLByAppendingPathComponent("full.mp4"))
                 }
                 
             }
         }
     }
+    
+    func playVideo(videoURL : NSURL) {
+        let player = AVPlayer(URL: videoURL)
+        let playerController = VideoPlayerController()
+        playerController.fullVideoURL = videoURL
+        playerController.player = player
+        self.presentViewController(playerController, animated: true, completion:{})
+        
+    }
+    
+    // no this needs to be on the other one. can't present here.
+    
     
     //used by video mgr
     func isSharing() -> Bool
@@ -116,24 +119,24 @@ class RecordViewController: UIViewController {
         
         if recordButton.record
         {
-            //videoMgr!.cleanupSessionDir()
+            //videoView.cleanupSessionDir()
             recordButton.record = false
             timerLabel.hidden=false
             doneButton.hidden = true
             hideClipsLabel()
             recordButton.setNeedsDisplay()
-            videoMgr?.startRecording()
+            videoView.startRecording()
             startTimer()
         }
         else
         {
             recordButton.record = true
             timerLabel.hidden=true
-            doneButton.hidden = videoMgr!.canFinalize()
+            doneButton.hidden = videoView.canFinalize()
             showClipsLabel()
             recordButton.setNeedsDisplay()
             stopTimer()
-            videoMgr?.stopRecording()
+            videoView.stopRecording()
         }
         
     }
@@ -147,7 +150,7 @@ class RecordViewController: UIViewController {
             doneButton.hidden = true
             activityIndicator.hidden=false
             activityIndicator.center=self.view.center
-            self.view.bringSubviewToFront(activityIndicator)
+//            self.view.bringSubviewToFront(activityIndicator)
             activityIndicator.startAnimating()
         }
         else{
@@ -191,23 +194,17 @@ class RecordViewController: UIViewController {
     
     func updateDoneButton()
     {
-        if videoMgr!.isDoneFinalizingOutput() {
+        if videoView.isDoneFinalizingOutput() {
             //doneButton.setTitle("Make Movie", forState: .Normal)
             doneButton.hidden=true
-            self.view.sendSubviewToBack(doneButton)
+//            self.view.sendSubviewToBack(doneButton)
         }
         else
         {
             //doneButton.setTitle("Make Movie", forState: .Normal)
             showClipsLabel()
-            if videoMgr!.getClipsCount() > 0 {
-                doneButton.hidden=false
-                self.view.bringSubviewToFront(doneButton)
-            }
-            else{
-                doneButton.hidden=true
-                self.view.sendSubviewToBack(doneButton)
-            }
+            let hasClips = (videoView.getClipsCount() > 0)
+            doneButton.hidden = !hasClips
             
         }
         doneButton.setNeedsDisplay()
@@ -215,7 +212,7 @@ class RecordViewController: UIViewController {
     }
     
     func showClipsLabel(){
-        let count = videoMgr!.getClipsCount()
+        let count = videoView.getClipsCount()
         var txt: String?
         
         if count > 0 {
@@ -246,8 +243,6 @@ class RecordViewController: UIViewController {
         doneButton.layer.borderColor = UIColor.whiteColor().CGColor
         doneButton.layer.cornerRadius = CGFloat(5.0)
         //doneButton.setNeedsDisplay()
-        //
-       
 
         print("view will appear")
         
@@ -256,17 +251,16 @@ class RecordViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        videoView.delegate = self
+        
         //
-        videoMgr = VideoManager(viewController: self)
         //
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: nil)
          NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillEnterBackground", name: UIApplicationWillResignActiveNotification, object: nil)
         
-        //doneButton.hidden = videoMgr!.canFinalize()
+        //doneButton.hidden = videoView.canFinalize()
         print("view did load")
-        
-        
     }
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -283,7 +277,7 @@ class RecordViewController: UIViewController {
             
             do
             {
-                try self.videoMgr?.startSession(true)
+                try self.videoView.startSession(true)
             }
             catch let error as NSError {
                 print(error.description)
@@ -297,8 +291,8 @@ class RecordViewController: UIViewController {
         stopTimer()
         timerLabel.hidden=true
         dispatch_async(GlobalUtilityQueue){
-            self.videoMgr?.stopRecording()
-            self.videoMgr?.stopSession()
+            self.videoView.stopRecording()
+            self.videoView.stopSession()
         }
     }
     
@@ -337,8 +331,6 @@ class RecordViewController: UIViewController {
     
         
     override func viewDidAppear(animated: Bool) {
-        //
-        
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         if(appDelegate.freeSpaceMb <= 50)
         {
@@ -346,16 +338,16 @@ class RecordViewController: UIViewController {
             })
         }
         //check for devices TODO negate check below
-        if !videoMgr!.devicesPresent {
+        if !videoView.devicesPresent {
             showAlert("Error", msg: "Camera/Microphone not found!", comp: {(alert: UIAlertAction!) in exit(0)})
         }
             
-        if !videoMgr!.checkAllAuthorizations() {
+        if !videoView.checkAllAuthorizations() {
             showAlert("Error", msg: "Camera/Microphone/Photos Usage Not Authorized!!! \n\nPlease Update App Settings And Try Again.", comp: {(alert: UIAlertAction!) in exit(0)})
         }
         else {
             do {
-                try videoMgr!.startSession(true)
+                try videoView.startSession(true)
             }
             catch let error as NSError {
                 print(error.description)
@@ -380,7 +372,7 @@ class RecordViewController: UIViewController {
     
     
     /*func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!){
-        videoMgr!.recording=false
+        videoView.recording=false
         if(error != nil)
         {
             let alert=UIAlertView()
@@ -392,13 +384,13 @@ class RecordViewController: UIViewController {
             print("done recording -> \(outputFileURL)")
         }
         
-        dispatch_group_leave(videoMgr!.recDispGrp!)
+        dispatch_group_leave(videoView.recDispGrp!)
         
     }
     
     
     func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
-        videoMgr!.recording=true
+        videoView.recording=true
         print("started recording to -> \(fileURL)" )
     }*/
     
@@ -408,13 +400,13 @@ class RecordViewController: UIViewController {
     
     func showAlertForTitle(tit: String, msg: String, comp: ((UIAlertAction!) -> Void)){
         
-        self.videoMgr!.movieTitle=""
+        self.videoView.movieTitle=""
         let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.Alert)
         let okButton = UIAlertAction(title: "Add Title", style: UIAlertActionStyle.Default, handler: comp )
         alertCtrller.addAction(okButton)
         alertCtrller.addAction( UIAlertAction(title: "No Title", style: UIAlertActionStyle.Default, handler: {
             (alert: UIAlertAction!) in
-            self.videoMgr!.movieTitle=""
+            self.videoView.movieTitle=""
             comp(okButton)
         } ))
         alertCtrller.addTextFieldWithConfigurationHandler { (textField) in
@@ -427,13 +419,20 @@ class RecordViewController: UIViewController {
                 }
                 else{
                     alertCtrller.message = ""
-                    self.videoMgr!.movieTitle = textField.text?.uppercaseString
+                    self.videoView.movieTitle = textField.text?.uppercaseString
                 }
             }
         }
         self.presentViewController(alertCtrller, animated: true, completion: nil)
         
         
+    }
+    
+    
+    func videoError(error: NSError) {
+        if let msg = error.localizedRecoverySuggestion {
+            self.showAlert("Error!", msg: msg, comp: {(alert: UIAlertAction!) in exit(0)})
+        }
     }
  
 
