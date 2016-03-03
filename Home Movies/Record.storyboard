@@ -94,9 +94,8 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Orientation" translatesAutoresizingMaskIntoConstraints="NO" id="1Xg-oh-PSe">
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Orientation" translatesAutoresizingMaskIntoConstraints="NO" id="1Xg-oh-PSe">
                                 <rect key="frame" x="283" y="126" width="170" height="162"/>
-                                <color key="backgroundColor" red="1" green="0.055976856370000001" blue="0.180435348" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="170" id="Cx0-E2-8IE"/>
                                     <constraint firstAttribute="height" constant="162" id="QMW-19-DZU"/>
@@ -155,6 +154,7 @@
                         <outlet property="activityIndicator" destination="tRP-7e-QWA" id="y4X-Fd-3zm"/>
                         <outlet property="clipsLabel" destination="L6d-rA-aW5" id="3fE-bF-Qow"/>
                         <outlet property="doneButton" destination="ZVa-1E-A6d" id="tev-IF-EYa"/>
+                        <outlet property="orientationIcon" destination="1Xg-oh-PSe" id="zk2-PO-zTp"/>
                         <outlet property="recordButton" destination="pFe-A2-koH" id="zOc-vH-kHx"/>
                         <outlet property="timerLabel" destination="GAU-qf-7Xk" id="NKc-Jg-kVl"/>
                         <outlet property="videoView" destination="aEd-w3-b5H" id="A8M-3S-c9Z"/>

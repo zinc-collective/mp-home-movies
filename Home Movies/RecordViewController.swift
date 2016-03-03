@@ -20,13 +20,16 @@ class RecordViewController: UIViewController, VideoViewDelegate {
     @IBOutlet weak var timerLabel: UILabel!
     
     @IBOutlet weak var videoView: VideoView!
+    @IBOutlet weak var orientationIcon: UIImageView!
     
     var startTime : NSTimeInterval?
     var timer: NSTimer?
+    var orientation : UIDeviceOrientation
     @IBOutlet weak var doneButton: UIButton!
     
     
     required init?(coder aDecoder: NSCoder) {
+        orientation = UIDeviceOrientation.LandscapeRight
         super.init(coder: aDecoder)
     }
     
@@ -141,25 +144,31 @@ class RecordViewController: UIViewController, VideoViewDelegate {
         
     }
     
+    func updateRecordButtonShown() {
+        if (activityIndicator.hidden == false || isDevicePortrait()) {
+            recordButton.hidden = true
+        }
+        else {
+            recordButton.hidden = false
+        }
+    }
     
     
     func showHideActivityIndicator(show: Bool){
         if show {
-            recordButton.hidden = true
             timerLabel.hidden=true
             doneButton.hidden = true
             activityIndicator.hidden=false
             activityIndicator.center=self.view.center
-//            self.view.bringSubviewToFront(activityIndicator)
             activityIndicator.startAnimating()
         }
         else{
             self.activityIndicator.stopAnimating()
             activityIndicator.hidden=true
-            recordButton.hidden = false
             timerLabel.hidden=true
             doneButton.hidden = false
         }
+        self.updateRecordButtonShown()
     }
     
     func startTimer()
@@ -195,13 +204,10 @@ class RecordViewController: UIViewController, VideoViewDelegate {
     func updateDoneButton()
     {
         if videoView.isDoneFinalizingOutput() {
-            //doneButton.setTitle("Make Movie", forState: .Normal)
             doneButton.hidden=true
-//            self.view.sendSubviewToBack(doneButton)
         }
         else
         {
-            //doneButton.setTitle("Make Movie", forState: .Normal)
             showClipsLabel()
             let hasClips = (videoView.getClipsCount() > 0)
             doneButton.hidden = !hasClips
@@ -225,7 +231,6 @@ class RecordViewController: UIViewController, VideoViewDelegate {
         
         clipsLabel.text = txt
         clipsLabel.hidden=false
-        self.view.bringSubviewToFront(clipsLabel)
     }
     
     func hideClipsLabel(){
@@ -246,6 +251,13 @@ class RecordViewController: UIViewController, VideoViewDelegate {
 
         print("view will appear")
         
+        UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "orientationDidChange", name:UIDeviceOrientationDidChangeNotification, object: nil)
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        print("view disappear")
+        UIDevice.currentDevice().endGeneratingDeviceOrientationNotifications()
     }
     
     
@@ -366,10 +378,6 @@ class RecordViewController: UIViewController, VideoViewDelegate {
     }
     
     
-    override func viewDidDisappear(animated: Bool) {
-        print("view disappear")
-    }
-    
     
     /*func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!){
         videoView.recording=false
@@ -433,6 +441,16 @@ class RecordViewController: UIViewController, VideoViewDelegate {
         if let msg = error.localizedRecoverySuggestion {
             self.showAlert("Error!", msg: msg, comp: {(alert: UIAlertAction!) in exit(0)})
         }
+    }
+    
+    func orientationDidChange() {
+        updateRecordButtonShown()
+        orientationIcon.hidden = !isDevicePortrait()
+    }
+    
+    func isDevicePortrait() -> Bool {
+        let orientation = UIDevice.currentDevice().orientation
+        return ((orientation == UIDeviceOrientation.Portrait) || (orientation == UIDeviceOrientation.PortraitUpsideDown))
     }
  
 
