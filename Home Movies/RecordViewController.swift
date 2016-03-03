@@ -445,7 +445,15 @@ class RecordViewController: UIViewController, VideoViewDelegate {
     
     func orientationDidChange() {
         updateRecordButtonShown()
+        
+        
         orientationIcon.hidden = !isDevicePortrait()
+        var a = M_PI / 2.0
+        if (UIDevice.currentDevice().orientation == .Portrait) {
+            a = -(M_PI / 2.0)
+        }
+        let m = CGAffineTransformMakeRotation(CGFloat(a))
+        orientationIcon.transform = m
     }
     
     func isDevicePortrait() -> Bool {
