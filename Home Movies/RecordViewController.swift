@@ -84,7 +84,11 @@ class RecordViewController: UIViewController, VideoViewDelegate {
         dispatch_async(GlobalUserInitiatedQueue){
             self.videoView.doneDispGroup = dispatch_group_create()
             dispatch_group_enter(self.videoView.doneDispGroup!)
-            self.videoView.finalizeOutput()
+            if !self.videoView.finalizeOutput() {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.showAlert("Error",msg: "Could not create video. Please contact support.", comp: {_ in })
+                }
+            }
             dispatch_group_wait(self.videoView.doneDispGroup!, DISPATCH_TIME_FOREVER)
             dispatch_async(GlobalMainQueue){
                 self.showHideActivityIndicator(false)

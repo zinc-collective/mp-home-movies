@@ -177,6 +177,11 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
             captureSession = AVCaptureSession()
             videoDataOutput = AVCaptureMovieFileOutput()
             
+            // disable fragment writing to fix loss of audio
+            // http://stackoverflow.com/questions/26768987/avcapturesession-audio-doesnt-work-for-long-videos
+            // https://developer.apple.com/library/prerelease/ios/documentation/AVFoundation/Reference/AVCaptureMovieFileOutput_Class/index.html#//apple_ref/occ/instp/AVCaptureMovieFileOutput/movieFragmentInterval
+            videoDataOutput?.movieFragmentInterval = kCMTimeInvalid;
+            
             try captureSession!.addInput(AVCaptureDeviceInput(device: captureDevice))
             try captureSession!.addInput(AVCaptureDeviceInput(device: audCaptureDevice))
             //
@@ -298,10 +303,12 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
         if dp.exists
         {
             //parentVC!.showHideActivityIndicator(true)
-            processDirContents(dp.path);
+            let result = processDirContents(dp.path);
             //parentVC!.showHideActivityIndicator(false)
-            print("done concatenating files")
-            return true
+            if (result) {
+                print("done concatenating files")
+            }
+            return result
         }
         else
         {
@@ -351,16 +358,21 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
                 let moviePathUrl =  pathURL.URLByAppendingPathComponent(assetFile)
                 let sourceAsset = AVURLAsset(URL: moviePathUrl, options: [AVURLAssetPreferPreciseDurationAndTimingKey:true,AVURLAssetReferenceRestrictionsKey:0])
                 let tracks = sourceAsset.tracksWithMediaType(AVMediaTypeVideo)
-                var audios: [AVAssetTrack]? = sourceAsset.tracksWithMediaType(AVMediaTypeAudio)
+                var audios: [AVAssetTrack] = sourceAsset.tracksWithMediaType(AVMediaTypeAudio)
                 if tracks.count > 0{
                     
                     let assetTrack:AVAssetTrack = tracks[0]
                     try trackVideo.insertTimeRange(CMTimeRangeMake(kCMTimeZero,sourceAsset.duration), ofTrack: assetTrack, atTime: insertTime)
                     
-                     if audios != nil && audios?.count > 0 {
-                        let assetTrackAudio:AVAssetTrack = audios![0]
+                     if audios.count > 0 {
+                        let assetTrackAudio:AVAssetTrack = audios[0]
                    
                         try trackAudio.insertTimeRange(CMTimeRangeMake(kCMTimeZero,sourceAsset.duration), ofTrack: assetTrackAudio, atTime: insertTime)
+                    }
+                        
+                    else {
+                        print("Track", assetFile, "at time", insertTime.value, "has no audio")
+                        return false
                     }
                     
                     insertTime = CMTimeAdd(insertTime, sourceAsset.duration)
