@@ -1,0 +1,2 @@
+- [x] Fix audio bug
+- [ ] close keyboard before generating video. Naw, not worth it.

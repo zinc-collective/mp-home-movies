@@ -50,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		782D632B1C8F375F00A5CD44 /* todo.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = todo.md; sourceTree = "<group>"; };
 		7855FC201C87AFC800704231 /* VideoPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerController.swift; sourceTree = "<group>"; };
 		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6p.mov; sourceTree = "<group>"; };
@@ -155,6 +156,7 @@
 		BD762F5E1BD17BDD003AEA6E = {
 			isa = PBXGroup;
 			children = (
+				782D632B1C8F375F00A5CD44 /* todo.md */,
 				78D7629E1C85E00500797980 /* AVFoundation.framework */,
 				BD762FB11BD18188003AEA6E /* HockeySDK.embeddedframework */,
 				BD762F691BD17BDD003AEA6E /* Home Movies */,

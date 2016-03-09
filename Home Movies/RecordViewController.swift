@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 
-class RecordViewController: UIViewController, VideoViewDelegate {
+class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDelegate {
 
     var loadingFromBg: Bool = false
     
@@ -54,7 +54,9 @@ class RecordViewController: UIViewController, VideoViewDelegate {
         //{
         
         showAlertWithCancel("Are You Sure You Want To Make Your Movie?", msg: "", comp: {
-            (alert: UIAlertAction!) in self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: {(alert: UIAlertAction!) in self.generateTitleAndMakeMovie(self.videoView.movieTitle!)})
+            (alert: UIAlertAction!) in self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: { (alert: UIAlertAction!) in
+                self.generateTitleAndMakeMovie(self.videoView.movieTitle!)
+            })
         })
         
             
@@ -421,7 +423,8 @@ class RecordViewController: UIViewController, VideoViewDelegate {
             self.videoView.movieTitle=""
             comp(okButton)
         } ))
-        alertCtrller.addTextFieldWithConfigurationHandler { (textField) in
+        alertCtrller.addTextFieldWithConfigurationHandler {(textField) in
+            textField.delegate = self
             textField.placeholder = "Title"
             NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
                 okButton.enabled = textField.text != ""
@@ -463,6 +466,11 @@ class RecordViewController: UIViewController, VideoViewDelegate {
     func isDevicePortrait() -> Bool {
         let orientation = UIDevice.currentDevice().orientation
         return ((orientation == UIDeviceOrientation.Portrait) || (orientation == UIDeviceOrientation.PortraitUpsideDown))
+    }
+    
+    func textFieldShouldReturn(field: UITextField) -> Bool {
+        field.resignFirstResponder()
+        return true
     }
  
 
