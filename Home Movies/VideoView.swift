@@ -11,6 +11,8 @@ import AVFoundation
 import Photos
 import AVKit
 
+let TitleTrackName = "1title"
+
 enum AwfulError: ErrorType {
     case NoDevice
     case SessionError
@@ -106,7 +108,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
                 let contents = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(dp.path)
                 for file in contents {
                     count = count + 1
-                    if file.containsString("1title")
+                    if file.containsString(TitleTrackName)
                     {
                         count = count - 1
                     }
@@ -370,7 +372,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
                         try trackAudio.insertTimeRange(CMTimeRangeMake(kCMTimeZero,sourceAsset.duration), ofTrack: assetTrackAudio, atTime: insertTime)
                     }
                         
-                    else {
+                    else if !assetFile.containsString(TitleTrackName) {
                         print("Track", assetFile, "at time", insertTime.value, "has no audio")
                         return false
                     }

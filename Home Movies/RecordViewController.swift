@@ -74,7 +74,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             if !dp.exists {
                 return //defensive
             }
-            videoView.titleFilePath = NSURL(fileURLWithPath: dp.path).URLByAppendingPathComponent("1title.mp4")
+            videoView.titleFilePath = NSURL(fileURLWithPath: dp.path).URLByAppendingPathComponent(TitleTrackName + ".mp4")
             self.videoView.titDispGrp = dispatch_group_create()
             dispatch_group_enter(videoView.titDispGrp!)
             print(title.endIndex)
