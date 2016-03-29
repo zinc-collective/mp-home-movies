@@ -686,12 +686,16 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
             al.anchorPoint=CGPointMake(0.5, 0.5)
             //animation
             let textLayer = CATextLayer()
-            textLayer.frame = CGRectMake(0, 0, animComp.renderSize.width,animComp.renderSize.height/2)
-            //textLayer.position=CGPointMake(animComp.renderSize.width/2, animComp.renderSize.height/2)
+            let pw = animComp.renderSize.width
+            let ph = animComp.renderSize.height
+            let w = pw * 0.66
+            let lineHeight : CGFloat = 50.0
+            textLayer.frame = CGRectMake(((pw - w)/2), 0, w, ph/2 + lineHeight)
             textLayer.string = label
             let fontName: CFStringRef = "HelveticaNeue-Bold"
             textLayer.font = CTFontCreateWithName(fontName, 10.0, nil)
             textLayer.foregroundColor = UIColor.whiteColor().CGColor
+//            textLayer.backgroundColor = UIColor.redColor().CGColor
             textLayer.fontSize = 55.0;
             textLayer.contentsScale=UIScreen.mainScreen().scale*2
             textLayer.wrapped = true
