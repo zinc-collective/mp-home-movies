@@ -5,7 +5,6 @@
 //  Created by sudhir on 9/2/15.
 //  Copyright (c) 2015 HomeMoviesDev. All rights reserved.
 //
-import HockeySDK
 import UIKit
 
 
@@ -19,15 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var fromBg = false
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        //
-        //Override point for customization after application launch.
-        BITHockeyManager.sharedHockeyManager().configureWithIdentifier("aeedf4d16dafdc8a2d7acf84c561df79")
-        // Do some additional configuration if needed here
-        //BITHockeyManager.sharedHockeyManager().disableCrashManager = true
-        BITHockeyManager.sharedHockeyManager().startManager()
-        BITHockeyManager.sharedHockeyManager().authenticator.authenticateInstallation()
-        BITHockeyManager.sharedHockeyManager().testIdentifier()
-        //
         if let bytes = deviceRemainingFreeSpaceInBytes() {
             freeSpaceMb = Int32(bytes/(1024*1024))
             print("free space: \(freeSpaceMb) Mb")

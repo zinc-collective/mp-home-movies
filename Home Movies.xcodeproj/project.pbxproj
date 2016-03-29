@@ -19,8 +19,6 @@
 		BD762F751BD17BDD003AEA6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD762F731BD17BDD003AEA6E /* LaunchScreen.storyboard */; };
 		BD762F801BD17BDD003AEA6E /* Home_MoviesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD762F7F1BD17BDD003AEA6E /* Home_MoviesTests.swift */; };
 		BD762F8B1BD17BDD003AEA6E /* Home_MoviesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD762F8A1BD17BDD003AEA6E /* Home_MoviesUITests.swift */; };
-		BD762FB61BD18188003AEA6E /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD762FB21BD18188003AEA6E /* HockeySDK.framework */; };
-		BD762FB81BD18188003AEA6E /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BD762FB51BD18188003AEA6E /* HockeySDKResources.bundle */; };
 		BD92A0591C44061B008ABFC5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92A0581C44061B008ABFC5 /* HomeViewController.swift */; };
 		BDE762331BD18362008B74F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE762281BD18362008B74F7 /* AppDelegate.swift */; };
 		BDE762381BD18362008B74F7 /* RecordButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */; };
@@ -67,9 +65,6 @@
 		BD762F861BD17BDD003AEA6E /* Home MoviesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Home MoviesUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD762F8A1BD17BDD003AEA6E /* Home_MoviesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home_MoviesUITests.swift; sourceTree = "<group>"; };
 		BD762F8C1BD17BDD003AEA6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BD762FB21BD18188003AEA6E /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
-		BD762FB41BD18188003AEA6E /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
-		BD762FB51BD18188003AEA6E /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		BD92A0581C44061B008ABFC5 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		BD92A05C1C440755008ABFC5 /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		BDE762281BD18362008B74F7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,7 +84,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */,
-				BD762FB61BD18188003AEA6E /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +152,6 @@
 			children = (
 				782D632B1C8F375F00A5CD44 /* todo.md */,
 				78D7629E1C85E00500797980 /* AVFoundation.framework */,
-				BD762FB11BD18188003AEA6E /* HockeySDK.embeddedframework */,
 				BD762F691BD17BDD003AEA6E /* Home Movies */,
 				BD762F7E1BD17BDD003AEA6E /* Home MoviesTests */,
 				BD762F891BD17BDD003AEA6E /* Home MoviesUITests */,
@@ -207,25 +200,6 @@
 				BD762F8C1BD17BDD003AEA6E /* Info.plist */,
 			);
 			path = "Home MoviesUITests";
-			sourceTree = "<group>";
-		};
-		BD762FB11BD18188003AEA6E /* HockeySDK.embeddedframework */ = {
-			isa = PBXGroup;
-			children = (
-				BD762FB21BD18188003AEA6E /* HockeySDK.framework */,
-				BD762FB31BD18188003AEA6E /* Resources */,
-			);
-			name = HockeySDK.embeddedframework;
-			path = "HockeySDK-iOS/HockeySDK.embeddedframework";
-			sourceTree = "<group>";
-		};
-		BD762FB31BD18188003AEA6E /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				BD762FB41BD18188003AEA6E /* HockeySDK.xcconfig */,
-				BD762FB51BD18188003AEA6E /* HockeySDKResources.bundle */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -342,7 +316,6 @@
 				BD1B09AF1C5E9977007F4A06 /* iphone5.mov in Resources */,
 				BD762F751BD17BDD003AEA6E /* LaunchScreen.storyboard in Resources */,
 				BD762F721BD17BDD003AEA6E /* Assets.xcassets in Resources */,
-				BD762FB81BD18188003AEA6E /* HockeySDKResources.bundle in Resources */,
 				BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */,
 				BDE762411BD1840A008B74F7 /* Upload-50r.png in Resources */,
 			);
@@ -527,10 +500,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
-				);
 				INFOPLIST_FILE = "Home Movies/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -547,10 +516,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
-				);
 				INFOPLIST_FILE = "Home Movies/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
