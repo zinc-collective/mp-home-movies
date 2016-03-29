@@ -6,7 +6,8 @@
 //  Copyright (c) 2015 HomeMoviesDev. All rights reserved.
 //
 import UIKit
-
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             freeSpaceMb = Int32(bytes/(1024*1024))
             print("free space: \(freeSpaceMb) Mb")
         }
+        
+        Fabric.with([Crashlytics.self])
         return true
     }
 

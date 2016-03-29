@@ -30,7 +30,10 @@ class HomeViewController: UIViewController {
 
     @IBAction func onVideoButton(sender: AnyObject) {
         //bNSWorkspace.sharedWorkspace().openURL(NSURL(string: "http://www.google.com")!)
-        UIApplication.sharedApplication().openURL(NSURL( string: "http://www.homemoviesapp.com/tour")!)
+//        UIApplication.sharedApplication().openURL(NSURL( string: "http://www.homemoviesapp.com/tour")!)
+        print("TESTING CRASH")
+        let arr = ["one", "two", "three"]
+        print(arr[4])
     }
     
     override func viewWillAppear(animated: Bool) {

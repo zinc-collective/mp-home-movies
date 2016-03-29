@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6BE4CB150363EE805A66A7C1 /* Pods_Home_Movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9247002F4AE63EFAD8A5645 /* Pods_Home_Movies.framework */; };
 		7855FC211C87AFC800704231 /* VideoPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855FC201C87AFC800704231 /* VideoPlayerController.swift */; };
 		7855FC221C87B6AA00704231 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD92A05C1C440755008ABFC5 /* Home.storyboard */; };
 		7855FC231C87B6AF00704231 /* Record.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDE7623E1BD1839D008B74F7 /* Record.storyboard */; };
@@ -48,9 +49,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		782D632B1C8F375F00A5CD44 /* todo.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = todo.md; sourceTree = "<group>"; };
+		0C4A5C47FBCB561A64495A14 /* Pods-Home Movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Home Movies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies.debug.xcconfig"; sourceTree = "<group>"; };
 		7855FC201C87AFC800704231 /* VideoPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerController.swift; sourceTree = "<group>"; };
 		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		BBD7CB34B83BADD8DC5210A0 /* Pods-Home Movies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Home Movies.release.xcconfig"; path = "Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies.release.xcconfig"; sourceTree = "<group>"; };
 		BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6p.mov; sourceTree = "<group>"; };
 		BD1B09AC1C5E994B007F4A06 /* iphone6.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6.mov; sourceTree = "<group>"; };
 		BD1B09AE1C5E9977007F4A06 /* iphone5.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone5.mov; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 		BDE762321BD18362008B74F7 /* RecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		BDE7623E1BD1839D008B74F7 /* Record.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Record.storyboard; sourceTree = "<group>"; };
 		BDE762401BD1840A008B74F7 /* Upload-50r.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Upload-50r.png"; sourceTree = "<group>"; };
+		D9247002F4AE63EFAD8A5645 /* Pods_Home_Movies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Home_Movies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +87,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */,
+				6BE4CB150363EE805A66A7C1 /* Pods_Home_Movies.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +108,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		215CED9FC200B072B63DFB3E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0C4A5C47FBCB561A64495A14 /* Pods-Home Movies.debug.xcconfig */,
+				BBD7CB34B83BADD8DC5210A0 /* Pods-Home Movies.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		741C9CB4E62DA9AB27402F86 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D9247002F4AE63EFAD8A5645 /* Pods_Home_Movies.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		78D7629A1C85DBFB00797980 /* assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,12 +171,13 @@
 		BD762F5E1BD17BDD003AEA6E = {
 			isa = PBXGroup;
 			children = (
-				782D632B1C8F375F00A5CD44 /* todo.md */,
 				78D7629E1C85E00500797980 /* AVFoundation.framework */,
 				BD762F691BD17BDD003AEA6E /* Home Movies */,
 				BD762F7E1BD17BDD003AEA6E /* Home MoviesTests */,
 				BD762F891BD17BDD003AEA6E /* Home MoviesUITests */,
 				BD762F681BD17BDD003AEA6E /* Products */,
+				215CED9FC200B072B63DFB3E /* Pods */,
+				741C9CB4E62DA9AB27402F86 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -209,10 +231,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BD762F8F1BD17BDD003AEA6E /* Build configuration list for PBXNativeTarget "Home Movies" */;
 			buildPhases = (
+				94C62AFB90DF71B21E798841 /* Check Pods Manifest.lock */,
 				BD762F631BD17BDD003AEA6E /* Sources */,
 				BD762F641BD17BDD003AEA6E /* Frameworks */,
 				BD762F651BD17BDD003AEA6E /* Resources */,
-				BD762F981BD17FE4003AEA6E /* ShellScript */,
+				4A4EA5606CC3A84F83D171FE /* Embed Pods Frameworks */,
+				86E9FE2C485C51755640CEAA /* Copy Pods Resources */,
+				782A06691CAAE83C004AFE92 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -338,7 +363,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		BD762F981BD17FE4003AEA6E /* ShellScript */ = {
+		4A4EA5606CC3A84F83D171FE /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		782A06691CAAE83C004AFE92 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -349,7 +389,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "FILE=\"${SRCROOT}/HockeySDK-iOS/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 6a09c19815c2f7f42d12f74f97f8f87c0f139e62 d29b37ba3305e7a136158c7684175a69995c401705890454f260b5b758d91816";
+		};
+		86E9FE2C485C51755640CEAA /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		94C62AFB90DF71B21E798841 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -496,10 +565,12 @@
 		};
 		BD762F901BD17BDD003AEA6E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C4A5C47FBCB561A64495A14 /* Pods-Home Movies.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = "Home Movies/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -512,10 +583,12 @@
 		};
 		BD762F911BD17BDD003AEA6E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BBD7CB34B83BADD8DC5210A0 /* Pods-Home Movies.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = "Home Movies/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
