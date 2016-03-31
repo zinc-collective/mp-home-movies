@@ -127,7 +127,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         {
             //videoView.cleanupSessionDir()
             recordButton.recording = true
-            timerLabel.hidden=false
             doneButton.hidden = true
             hideClipsLabel()
             videoView.startRecording()
@@ -136,7 +135,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         else
         {
             recordButton.recording = false
-            timerLabel.hidden=true
             doneButton.hidden = videoView.canFinalize()
             showClipsLabel()
             timerLabel.stopTimer()
@@ -157,7 +155,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     func showHideActivityIndicator(show: Bool){
         if show {
-            timerLabel.hidden=true
             doneButton.hidden = true
             activityIndicator.hidden=false
             activityIndicator.center=self.view.center
@@ -166,7 +163,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         else{
             self.activityIndicator.stopAnimating()
             activityIndicator.hidden=true
-            timerLabel.hidden=true
             doneButton.hidden = false
         }
         self.updateRecordButtonShown()
@@ -211,7 +207,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     override func viewWillAppear(animated: Bool) {
         recordButton.recording=false
-        timerLabel.hidden=true
         
         updateDoneButton()
         activityIndicator.hidden=true
@@ -271,7 +266,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     {
         print("view - app will enter background")
         timerLabel.stopTimer()
-        timerLabel.hidden=true
         dispatch_async(GlobalUtilityQueue){
             self.videoView.stopRecording()
             self.videoView.stopSession()
@@ -435,6 +429,11 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     func textFieldShouldReturn(field: UITextField) -> Bool {
         field.resignFirstResponder()
         return true
+    }
+    
+    @IBAction func didTapCameraSwitch() {
+        print("CAMERA SWITCH")
+        videoView.switchCamera()
     }
  
 

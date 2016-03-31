@@ -22,8 +22,10 @@ protocol VideoViewDelegate : class {
     func videoError(error: NSError);
 }
 
+typealias Devices = (front: AVCaptureDevice?, back: AVCaptureDevice?, audio: AVCaptureDevice?)
+
 @objc
-class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
+class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     
 //    var parentVC: RecordViewController?
     
@@ -33,11 +35,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
     var videoDataOutput: AVCaptureMovieFileOutput?
     var previewLayer : AVCaptureVideoPreviewLayer?
     // If we find a device we'll store it here for later use
-    var captureDevice : AVCaptureDevice?
-    var audCaptureDevice : AVCaptureDevice?
-    //
+    
     var recording: Bool = false
-    var devicesPresent : Bool = false
     var recDispGrp : dispatch_group_t?
     var titDispGrp: dispatch_group_t?
     var semp : dispatch_semaphore_t? = nil
@@ -49,16 +48,20 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
     var titleGenerated:Bool?
     var titleFilePath:NSURL?
     
+    var devices : Devices
+    var currentVideoDevice : AVCaptureDevice?
+    
+    var devicesPresent : Bool {
+        get {
+            return (devices.front != nil || devices.back != nil) && devices.audio != nil
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        devicesPresent = areDevicesPresent()
+        devices = availableDevices()
+        currentVideoDevice = devices.back
     }
-    
-//    init()
-//    {
-//
-//    }
     
     func startRecording()
     {
@@ -172,46 +175,50 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
     
     func startSession(preview: Bool) throws
     {
-        do {
+        if let videoDevice = currentVideoDevice {
             
-            try configureDevice()
-            let err : NSError? = nil
-            captureSession = AVCaptureSession()
-            videoDataOutput = AVCaptureMovieFileOutput()
-            
-            // disable fragment writing to fix loss of audio
-            // http://stackoverflow.com/questions/26768987/avcapturesession-audio-doesnt-work-for-long-videos
-            // https://developer.apple.com/library/prerelease/ios/documentation/AVFoundation/Reference/AVCaptureMovieFileOutput_Class/index.html#//apple_ref/occ/instp/AVCaptureMovieFileOutput/movieFragmentInterval
-            videoDataOutput?.movieFragmentInterval = kCMTimeInvalid;
-            
-            try captureSession!.addInput(AVCaptureDeviceInput(device: captureDevice))
-            try captureSession!.addInput(AVCaptureDeviceInput(device: audCaptureDevice))
-            //
-            if err != nil {
-                print("error: \(err?.localizedDescription)")
-            }
-            
-            if preview {
-                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                self.layer.addSublayer(previewLayer!)
-                previewLayer?.frame = self.layer.frame
-                captureSession?.startRunning()
-                let previewConn = self.previewLayer!.connection
-                let orientation = UIInterfaceOrientation.LandscapeRight
-                //let orientation = UIDevice.currentDevice().orientation//parentVC!.interfaceOrientation.rawValue
-                let avorientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue)
-                previewConn.videoOrientation = avorientation!
+            do {
+                
+                try configureDevice(videoDevice)
+                let err : NSError? = nil
+                captureSession = AVCaptureSession()
+                videoDataOutput = AVCaptureMovieFileOutput()
+                
+                // disable fragment writing to fix loss of audio
+                // http://stackoverflow.com/questions/26768987/avcapturesession-audio-doesnt-work-for-long-videos
+                // https://developer.apple.com/library/prerelease/ios/documentation/AVFoundation/Reference/AVCaptureMovieFileOutput_Class/index.html#//apple_ref/occ/instp/AVCaptureMovieFileOutput/movieFragmentInterval
+                videoDataOutput?.movieFragmentInterval = kCMTimeInvalid;
+                
+                try captureSession!.addInput(AVCaptureDeviceInput(device: videoDevice))
+                try captureSession!.addInput(AVCaptureDeviceInput(device: devices.audio))
                 //
-                if captureSession!.canAddOutput(videoDataOutput)
-                {
-                    captureSession!.addOutput(videoDataOutput)
+                if err != nil {
+                    print("error: \(err?.localizedDescription)")
+                }
+                
+                if preview {
+                    previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+                    self.layer.addSublayer(previewLayer!)
+                    previewLayer?.frame = self.layer.frame
+                    captureSession?.startRunning()
+                    let previewConn = self.previewLayer!.connection
+                    let orientation = UIInterfaceOrientation.LandscapeRight
+                    //let orientation = UIDevice.currentDevice().orientation//parentVC!.interfaceOrientation.rawValue
+                    let avorientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue)
+                    previewConn.videoOrientation = avorientation!
+                    //
+                    if captureSession!.canAddOutput(videoDataOutput)
+                    {
+                        captureSession!.addOutput(videoDataOutput)
 
+                    }
                 }
             }
-        }
-        catch let error as NSError{
-            print(error.description)
-            throw error
+            catch let error as NSError{
+                print(error.description)
+                throw error
+            }
+            
         }
     }
     
@@ -226,52 +233,50 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
         print("stopped session, cleanup done!")
     }
     
-    func configureDevice() throws {
-        if let device = captureDevice {
-            do {
-                try device.lockForConfiguration()
-            } catch let err as NSError{
-                throw err
-            }
-            device.focusMode = .ContinuousAutoFocus
-            device.unlockForConfiguration()
+    func configureDevice(device:AVCaptureDevice) throws {
+        do {
+            try device.lockForConfiguration()
+        } catch let err as NSError{
+            throw err
         }
         
+        if (device.isFocusModeSupported(.ContinuousAutoFocus)) {
+            device.focusMode = .ContinuousAutoFocus
+        }
+        
+        if (device.smoothAutoFocusSupported) {
+            device.smoothAutoFocusEnabled = true
+        }
+        
+        device.unlockForConfiguration()
     }
     
-    func areDevicesPresent() -> Bool {
-        //check for devices
-        let devices = AVCaptureDevice.devices()
+    func availableDevices() -> Devices {
+        
+        let devices = AVCaptureDevice.devices() as! [AVCaptureDevice]
+        var front : AVCaptureDevice?
+        var back : AVCaptureDevice?
+        var audio : AVCaptureDevice?
         
         // Loop through all the capture devices on this phone
         for device in devices {
             // Make sure this particular device supports video
             if device.hasMediaType(AVMediaTypeVideo) {
                 // Finally check the position and confirm we've got the back camera
-                if(device.position == AVCaptureDevicePosition.Back) {
-                    captureDevice = device as? AVCaptureDevice
-                    if captureDevice != nil {
-                        print("Video Capture device found")
-                        
-                    }
+                if(device.position == .Back) {
+                    back = device
+                }
+                else if (device.position == .Front) {
+                    front = device
                 }
             }
+            
             if device.hasMediaType(AVMediaTypeAudio) {
-                audCaptureDevice = device as? AVCaptureDevice
-                if audCaptureDevice != nil {
-                    print("Audio Capture device found")
-                }
-                
+                audio = device
             }
         }
-        //
-        if captureDevice == nil || audCaptureDevice == nil {
-            return false
-        }
         
-        //checkAllAuthorizations()
-        
-        return true
+        return (front, back, audio)
     }
     
     func isDoneFinalizingOutput() -> Bool {
@@ -553,20 +558,20 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
         return filePath!;
     }
     
-    func focusTo(value : Float) {
-        if let device = captureDevice {
-            do{
-                try device.lockForConfiguration()
-                device.setFocusModeLockedWithLensPosition(value, completionHandler: { (time) -> Void in})
-                device.unlockForConfiguration()
-                
-            }
-            catch let err as NSError {
-                print(err.description)
-            }
-            
-        }
-    }
+//    func focusTo(value : Float) {
+//        if let device = currentVideoDevice {
+//            do{
+//                try device.lockForConfiguration()
+//                device.setFocusModeLockedWithLensPosition(value, completionHandler: { (time) -> Void in})
+//                device.unlockForConfiguration()
+//                
+//            }
+//            catch let err as NSError {
+//                print(err.description)
+//            }
+//            
+//        }
+//    }
     
     
     
@@ -770,6 +775,27 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate{
         catch let err as NSError {
             print(err)
             throw err
+        }
+    }
+    
+    // hmm... I think, I should flip it around...
+    // http://stackoverflow.com/questions/9524048/how-to-flip-an-individual-uiview-without-flipping-the-parent-view
+    func switchCamera() {
+        if (currentVideoDevice == devices.front) {
+            currentVideoDevice = devices.back
+        }
+        else {
+            currentVideoDevice = devices.front
+        }
+        
+        stopSession()
+        
+        do {
+            try startSession(true)
+        }
+        
+        catch let error as NSError {
+            print(error.description)
         }
     }
     
