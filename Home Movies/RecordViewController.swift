@@ -17,13 +17,11 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var clipsLabel: UILabel!
     @IBOutlet weak var recordButton: RecordButtonView!
     
-    @IBOutlet weak var timerLabel: UILabel!
+    @IBOutlet weak var timerLabel: RecordTimer!
     
     @IBOutlet weak var videoView: VideoView!
     @IBOutlet weak var orientationIcon: UIImageView!
     
-    var startTime : NSTimeInterval?
-    var timer: NSTimer?
     var orientation : UIDeviceOrientation
     @IBOutlet weak var doneButton: UIButton!
     
@@ -39,7 +37,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         if videoView.isDoneFinalizingOutput() {
             videoView.cleanupSessionDir()
         }
-        updateRecordButtonState()
+        toggleRecord()
     }
     
     @IBAction func donePressed(sender: AnyObject) {
@@ -123,28 +121,25 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         return doneButton.titleLabel!.text == "Share"
     }
     
-    func updateRecordButtonState()
+    func toggleRecord()
     {
-        
-        if recordButton.record
+        if recordButton.recording == false
         {
             //videoView.cleanupSessionDir()
-            recordButton.record = false
+            recordButton.recording = true
             timerLabel.hidden=false
             doneButton.hidden = true
             hideClipsLabel()
-            recordButton.setNeedsDisplay()
             videoView.startRecording()
-            startTimer()
+            timerLabel.startTimer()
         }
         else
         {
-            recordButton.record = true
+            recordButton.recording = false
             timerLabel.hidden=true
             doneButton.hidden = videoView.canFinalize()
             showClipsLabel()
-            recordButton.setNeedsDisplay()
-            stopTimer()
+            timerLabel.stopTimer()
             videoView.stopRecording()
         }
         
@@ -177,35 +172,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         self.updateRecordButtonShown()
     }
     
-    func startTimer()
-    {
-        let sel : Selector = "updateTime"
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.01, target:self,selector: sel, userInfo: nil, repeats:true)
-        startTime=NSDate.timeIntervalSinceReferenceDate()
-    }
-    
-    func stopTimer()
-    {
-        if timer != nil {
-            timer?.invalidate()
-            timer = nil
-        }
-    }
-    
-    func updateTime()
-    {
-        let currentTime = NSDate.timeIntervalSinceReferenceDate()
-        var elapsedTime: NSTimeInterval = currentTime - startTime!
-        let minutes = UInt8(elapsedTime / 60.0)
-        elapsedTime -= (NSTimeInterval(minutes) * 60)
-        let seconds = UInt8(elapsedTime)
-        elapsedTime -= NSTimeInterval(seconds)
-        let fraction = UInt8(elapsedTime * 100)
-        let strMinutes = String(format: "%02d", minutes)
-        let strSeconds = String(format: "%02d", seconds)
-        let strFraction = String(format: "%02d", fraction)
-        timerLabel.text = "\(strMinutes):\(strSeconds):\(strFraction)"
-    }
     
     func updateDoneButton()
     {
@@ -244,8 +210,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     override func viewWillAppear(animated: Bool) {
-        recordButton.record=true
-        recordButton.setNeedsDisplay()
+        recordButton.recording=false
         timerLabel.hidden=true
         
         updateDoneButton()
@@ -253,7 +218,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         doneButton.layer.borderWidth=CGFloat(1.0)
         doneButton.layer.borderColor = UIColor.whiteColor().CGColor
         doneButton.layer.cornerRadius = CGFloat(5.0)
-        //doneButton.setNeedsDisplay()
 
         print("view will appear")
         
@@ -306,7 +270,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     func applicationWillEnterBackground()
     {
         print("view - app will enter background")
-        stopTimer()
+        timerLabel.stopTimer()
         timerLabel.hidden=true
         dispatch_async(GlobalUtilityQueue){
             self.videoView.stopRecording()

@@ -13,11 +13,21 @@ import UIKit
 
 class RecordButtonView : UIButton {
     
-    var record:Bool = false
+    private var _recording:Bool = false
+    
+    var recording: Bool {
+        get {
+            return _recording
+        }
+        set(newValue) {
+            _recording = newValue
+            self.setNeedsDisplay()
+        }
+    }
     
     override func drawRect(rect: CGRect)
     {
-        if record {
+        if !_recording {
             
             //let inner = CGRectMake(rect.minX-10, rect.minY-10, rect.width-10,rect.height-10)
             
