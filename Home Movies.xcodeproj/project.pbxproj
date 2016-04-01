@@ -13,6 +13,7 @@
 		7855FC231C87B6AF00704231 /* Record.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDE7623E1BD1839D008B74F7 /* Record.storyboard */; };
 		787DD0441CADB1750031B10F /* RecordTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787DD0431CADB1750031B10F /* RecordTimer.swift */; };
 		78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D7629E1C85E00500797980 /* AVFoundation.framework */; };
+		78F8BF961CAEC9D20016AE8A /* CameraFocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */; };
 		BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */; };
 		BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AC1C5E994B007F4A06 /* iphone6.mov */; };
 		BD1B09AF1C5E9977007F4A06 /* iphone5.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AE1C5E9977007F4A06 /* iphone5.mov */; };
@@ -35,6 +36,7 @@
 		7855FC201C87AFC800704231 /* VideoPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerController.swift; sourceTree = "<group>"; };
 		787DD0431CADB1750031B10F /* RecordTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTimer.swift; sourceTree = "<group>"; };
 		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFocusSquare.swift; sourceTree = "<group>"; };
 		BBD7CB34B83BADD8DC5210A0 /* Pods-Home Movies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Home Movies.release.xcconfig"; path = "Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies.release.xcconfig"; sourceTree = "<group>"; };
 		BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6p.mov; sourceTree = "<group>"; };
 		BD1B09AC1C5E994B007F4A06 /* iphone6.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6.mov; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				7855FC201C87AFC800704231 /* VideoPlayerController.swift */,
 				BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */,
 				787DD0431CADB1750031B10F /* RecordTimer.swift */,
+				78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */,
 			);
 			name = Record;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				BDE7623C1BD18362008B74F7 /* VideoView.swift in Sources */,
 				BDE762381BD18362008B74F7 /* RecordButtonView.swift in Sources */,
 				BD92A0591C44061B008ABFC5 /* HomeViewController.swift in Sources */,
+				78F8BF961CAEC9D20016AE8A /* CameraFocusSquare.swift in Sources */,
 				7855FC211C87AFC800704231 /* VideoPlayerController.swift in Sources */,
 				BDE7623B1BD18362008B74F7 /* Utils.swift in Sources */,
 				787DD0441CADB1750031B10F /* RecordTimer.swift in Sources */,

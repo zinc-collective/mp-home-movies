@@ -34,6 +34,9 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     var captureSession: AVCaptureSession?
     var videoDataOutput: AVCaptureMovieFileOutput?
     var previewLayer : AVCaptureVideoPreviewLayer?
+    
+    var focusSquare : CameraFocusSquare?
+    
     // If we find a device we'll store it here for later use
     
     var recording: Bool = false
@@ -831,7 +834,21 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 device.exposureMode = AVCaptureExposureMode.AutoExpose
             }
             
+            
             device.unlockForConfiguration()
+            
+            if let oldSquare = focusSquare {
+                oldSquare.removeFromSuperview()
+            }
+            
+            let square = CameraFocusSquare(frame: CameraFocusSquare.centerFrame(size: 80, center: touchPoint))
+            addSubview(square)
+            
+            square.animate {
+                square.removeFromSuperview()
+            }
+            
+            self.focusSquare = square
         }
     }
  
