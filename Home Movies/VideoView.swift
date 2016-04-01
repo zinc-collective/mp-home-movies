@@ -808,4 +808,32 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         }
         
     }
+    
+    // Tap to focus and exposure
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if let touchPoint = touches.first?.locationInView(self), device = currentVideoDevice, preview = previewLayer {
+            
+            let focusPoint = preview.captureDevicePointOfInterestForPoint(touchPoint)
+            
+            do {
+                try device.lockForConfiguration()
+            } catch let err as NSError {
+                print("Device Lock Error:", err.description)
+            }
+            
+            if device.focusPointOfInterestSupported {
+                device.focusPointOfInterest = focusPoint
+                device.focusMode = .ContinuousAutoFocus
+            }
+            
+            if device.exposurePointOfInterestSupported {
+                device.exposurePointOfInterest = focusPoint
+                device.exposureMode = AVCaptureExposureMode.AutoExpose
+            }
+            
+            device.unlockForConfiguration()
+        }
+    }
+ 
+
 }
