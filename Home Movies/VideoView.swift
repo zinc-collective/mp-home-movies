@@ -221,9 +221,9 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 
                 if preview {
                     previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                    self.layer.addSublayer(previewLayer!)
-                    previewLayer?.frame = self.layer.frame
-                    captureSession?.startRunning()
+                    self.layer.addSublayer(self.previewLayer!)
+                    self.previewLayer?.frame = self.layer.frame
+                    self.captureSession?.startRunning()
                     let previewConn = self.previewLayer!.connection
                     let orientation = UIInterfaceOrientation.LandscapeRight
                     //let orientation = UIDevice.currentDevice().orientation//parentVC!.interfaceOrientation.rawValue
@@ -779,11 +779,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     
                 }
                 dispatch_group_leave(self.titDispGrp!)
-                
             }
-            
         }
-        
     }
 
     func getImageFromVideo(url: NSURL) throws -> UIImage{

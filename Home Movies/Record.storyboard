@@ -64,6 +64,11 @@
                                     <constraint firstItem="tLf-LC-WYS" firstAttribute="centerY" secondItem="XS0-rF-Ur9" secondAttribute="centerY" id="kgR-1Q-3Ed"/>
                                     <constraint firstItem="GAU-qf-7Xk" firstAttribute="centerY" secondItem="XS0-rF-Ur9" secondAttribute="centerY" id="wUq-xM-xwn"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVa-1E-A6d">
                                 <rect key="frame" x="324" y="338" width="112" height="40"/>

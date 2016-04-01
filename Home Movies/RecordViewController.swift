@@ -450,6 +450,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 self.videoView.removeFromSuperview()
                 self.addVideoView(device)
                 
+                // TODO: do this after you switch, have something nice to look at while it's animating
                 do {
                     try self.videoView.startSession(true)
                 }

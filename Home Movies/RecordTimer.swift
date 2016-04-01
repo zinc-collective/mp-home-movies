@@ -26,6 +26,7 @@ class RecordTimer: UILabel {
     func stopTimer() {
         timer?.invalidate()
         timer = nil
+        self.text = stringFromTimeInterval(0.0)
     }
     
     func updateTime(timer:NSTimer)
