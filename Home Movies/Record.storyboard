@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aEd-w3-b5H" customClass="VideoView" customModule="Home_Movies" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aEd-w3-b5H" userLabel="Video Container">
                                 <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -182,7 +182,7 @@
                         <outlet property="orientationIcon" destination="1Xg-oh-PSe" id="zk2-PO-zTp"/>
                         <outlet property="recordButton" destination="pFe-A2-koH" id="zOc-vH-kHx"/>
                         <outlet property="timerLabel" destination="GAU-qf-7Xk" id="NKc-Jg-kVl"/>
-                        <outlet property="videoView" destination="aEd-w3-b5H" id="A8M-3S-c9Z"/>
+                        <outlet property="videoContainer" destination="aEd-w3-b5H" id="EwS-N9-EWg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

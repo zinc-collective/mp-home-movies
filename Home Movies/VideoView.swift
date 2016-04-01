@@ -59,8 +59,28 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        initialize(nil)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initialize(nil)
+    }
+    
+    init(frame: CGRect, device: AVCaptureDevice?) {
+        super.init(frame: frame)
+        initialize(device)
+    }
+    
+    func initialize(device:AVCaptureDevice?) {
         devices = availableDevices()
-        currentVideoDevice = devices.back
+        
+        if let d = device {
+            currentVideoDevice = d
+        }
+        else {
+            currentVideoDevice = devices.back
+        }
     }
     
     func startRecording()
@@ -778,27 +798,14 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    // hmm... I think, I should flip it around...
-    // http://stackoverflow.com/questions/9524048/how-to-flip-an-individual-uiview-without-flipping-the-parent-view
-    func switchCamera() {
+    func switchedCameraDevice() -> AVCaptureDevice? {
+        
         if (currentVideoDevice == devices.front) {
-            currentVideoDevice = devices.back
+            return devices.back
         }
         else {
-            currentVideoDevice = devices.front
+            return devices.front
         }
         
-        stopSession()
-        
-        do {
-            try startSession(true)
-        }
-        
-        catch let error as NSError {
-            print(error.description)
-        }
     }
-    
-
-    
 }

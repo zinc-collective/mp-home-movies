@@ -19,7 +19,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     @IBOutlet weak var timerLabel: RecordTimer!
     
-    @IBOutlet weak var videoView: VideoView!
+    var videoView: VideoView!
+    @IBOutlet weak var videoContainer: UIView!
     @IBOutlet weak var orientationIcon: UIImageView!
     
     var orientation : UIDeviceOrientation
@@ -228,9 +229,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        videoView.delegate = self
+        addVideoView()
         
-        //
         //
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: nil)
@@ -238,6 +238,16 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
         //doneButton.hidden = videoView.canFinalize()
         print("view did load")
+    }
+    
+    func addVideoView(device:AVCaptureDevice?) {
+        videoView = VideoView(frame: videoContainer.bounds, device: device)
+        videoContainer.addSubview(videoView)
+        videoView.delegate = self
+    }
+    
+    func addVideoView() {
+        addVideoView(nil)
     }
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -432,8 +442,23 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     @IBAction func didTapCameraSwitch() {
-        print("CAMERA SWITCH")
-        videoView.switchCamera()
+        let oldVideoView = videoView
+        if let device = videoView.switchedCameraDevice() {
+            UIView.transitionWithView(videoContainer, duration: 0.250, options: .TransitionFlipFromTop, animations: {
+                self.videoView.removeFromSuperview()
+                self.addVideoView(device)
+                
+                do {
+                    try self.videoView.startSession(true)
+                }
+                catch let error as NSError {
+                    print(error.description)
+                }
+                
+            }, completion: { (_) in
+                oldVideoView.stopSession()
+            })
+        }
     }
  
 
