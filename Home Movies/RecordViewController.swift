@@ -25,7 +25,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     var orientation : UIDeviceOrientation
     @IBOutlet weak var doneButton: UIButton!
-    
+    @IBOutlet weak var cameraSwitchButton: UIButton!
     
     required init?(coder aDecoder: NSCoder) {
         orientation = UIDeviceOrientation.LandscapeRight
@@ -129,6 +129,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             //videoView.cleanupSessionDir()
             recordButton.recording = true
             doneButton.hidden = true
+            cameraSwitchButton.hidden = true
             hideClipsLabel()
             videoView.startRecording()
             timerLabel.startTimer()
@@ -137,6 +138,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         {
             recordButton.recording = false
             doneButton.hidden = videoView.canFinalize()
+            cameraSwitchButton.hidden = false
             showClipsLabel()
             timerLabel.stopTimer()
             videoView.stopRecording()
