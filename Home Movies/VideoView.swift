@@ -377,24 +377,40 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
         let composition = AVMutableComposition()
         let trackVideo:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: CMPersistentTrackID())
-        
         let trackAudio:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: CMPersistentTrackID())
+        
+        // Stuff
+        let videoComposition = AVMutableVideoComposition()
+        videoComposition.frameDuration = CMTimeMake(1,30)
+        videoComposition.renderScale = 1.0
+        
+        let instruction = AVMutableVideoCompositionInstruction()
+        let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: trackVideo)
+        
+        // Stuff
+        
+        let videoLayerInstruction = AVMutableVideoCompositionInstruction()
+        videoLayerInstruction.layerInstructions = []
+        
         
         var insertTime = kCMTimeZero
         
-        
-        do{
+        do {
             for assetFile in files {
                 let moviePathUrl =  pathURL.URLByAppendingPathComponent(assetFile)
                 let sourceAsset = AVURLAsset(URL: moviePathUrl, options: [AVURLAssetPreferPreciseDurationAndTimingKey:true,AVURLAssetReferenceRestrictionsKey:0])
                 let tracks = sourceAsset.tracksWithMediaType(AVMediaTypeVideo)
                 var audios: [AVAssetTrack] = sourceAsset.tracksWithMediaType(AVMediaTypeAudio)
-                if tracks.count > 0{
+                if tracks.count > 0 {
                     
                     let assetTrack:AVAssetTrack = tracks[0]
-                    try trackVideo.insertTimeRange(CMTimeRangeMake(kCMTimeZero,sourceAsset.duration), ofTrack: assetTrack, atTime: insertTime)
                     
-                     if audios.count > 0 {
+                    videoComposition.renderSize = assetTrack.naturalSize
+                    layerInstruction.setTransform(assetTrack.preferredTransform, atTime: insertTime)
+                    
+                    try trackVideo.insertTimeRange(assetTrack.timeRange, ofTrack: assetTrack, atTime: insertTime)
+                    
+                    if audios.count > 0 {
                         let assetTrackAudio:AVAssetTrack = audios[0]
                    
                         try trackAudio.insertTimeRange(CMTimeRangeMake(kCMTimeZero,sourceAsset.duration), ofTrack: assetTrackAudio, atTime: insertTime)
@@ -405,41 +421,63 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                         return false
                     }
                     
+                    // set the transform / orientation from the original
+                    // for transforms, etc
+                    let instruction = AVMutableVideoCompositionLayerInstruction(assetTrack: trackVideo)
+                    instruction.setTransform(assetTrack.preferredTransform, atTime: insertTime)
+                    
+                    videoLayerInstruction.layerInstructions.append(instruction)
+                    
                     insertTime = CMTimeAdd(insertTime, sourceAsset.duration)
                     
                 }
             }
         }
+            
         catch let err as NSError {
-            print(err.description)
+            print("COMPOSITION ERROR: ", err.localizedDescription)
             return false
         }
         
+        instruction.layerInstructions = [layerInstruction]
+        instruction.timeRange = trackVideo.timeRange
         
+        videoComposition.instructions = [instruction]
         
-        let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality)
-        
-        exporter!.outputURL = completeMovieUrl
-        
-        exporter!.outputFileType = AVFileTypeMPEG4 //AVFileTypeQuickTimeMovie
-        
-        exporter!.exportAsynchronouslyWithCompletionHandler({
+        if let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
             
-            switch exporter!.status{
+            exporter.videoComposition = videoComposition
+            
+            exporter.outputURL = completeMovieUrl
+            
+            exporter.outputFileType = AVFileTypeMPEG4 //AVFileTypeQuickTimeMovie
+            
+            exporter.exportAsynchronouslyWithCompletionHandler({
                 
-            case  AVAssetExportSessionStatus.Failed:
-                print("failed \(exporter!.error)")
-            case AVAssetExportSessionStatus.Cancelled:
-                print("cancelled \(exporter!.error)")
-            default:
-                print(exporter!.outputURL)
-                self.authorizeAndCopyFile(completeMovieUrl, path:pathURL)
-                print("complete")
-                
-            }
-        })
+                switch exporter.status{
+                    
+                case  AVAssetExportSessionStatus.Failed:
+                    print("failed \(exporter.error)")
+                    print(exporter.error?.localizedDescription)
+                case AVAssetExportSessionStatus.Cancelled:
+                    print("cancelled \(exporter.error)")
+                default:
+                    print(exporter.outputURL)
+                    self.authorizeAndCopyFile(completeMovieUrl, path:pathURL)
+                    print("complete")
+                    
+                }
+            })
+        }
+        else {
+            // crash, can't create the exporter
+            assert(false, "Could not create exporter")
+        }
+        
         return true
     }
+    
+    // if this returns an error, I'd like to notify the user and send to us
     
     
     
