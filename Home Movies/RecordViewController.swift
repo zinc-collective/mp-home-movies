@@ -27,6 +27,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var cameraSwitchButton: UIButton!
     
+    var alertController : UIAlertController?
+    
     required init?(coder aDecoder: NSCoder) {
         orientation = UIDeviceOrientation.LandscapeRight
         super.init(coder: aDecoder)
@@ -420,21 +422,32 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         alertCtrller.addTextFieldWithConfigurationHandler {(textField) in
             textField.delegate = self
             textField.placeholder = "Title"
-            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
-                okButton.enabled = textField.text != ""
-                if textField.text?.characters.count > 40 {
-                    alertCtrller.message = "Title too long! Maximum 40 characters allowed."
-                    okButton.enabled=false
-                }
-                else{
-                    alertCtrller.message = ""
-                    self.videoView.movieTitle = textField.text?.uppercaseString
-                }
-            }
         }
+        
+        // save for later
+        self.alertController = alertCtrller
         self.presentViewController(alertCtrller, animated: true, completion: nil)
         
         
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        var str : NSString = ""
+        if let old = textField.text {
+            str = old as NSString
+        }
+        
+        let newString = str.stringByReplacingCharactersInRange(range, withString: string)
+        
+        if (newString.characters.count > 40) {
+            self.alertController?.message = "Title too long. Maximum 40 characters."
+            return false
+        }
+        else {
+            self.alertController?.message = ""
+        }
+        
+        return true
     }
     
     
