@@ -317,28 +317,17 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
     }
     
-    func finalizeOutput() -> Bool
+    func finalizeOutput() throws -> Bool
     {
         let dp = getSessionFileDir()
         if !dp.exists{
-            do {
-                try NSFileManager.defaultManager().createDirectoryAtPath(dp.path, withIntermediateDirectories: false, attributes: nil)
-                
-            }
-            catch let err as NSError {
-                print(err.description)
-            }
+            try NSFileManager.defaultManager().createDirectoryAtPath(dp.path, withIntermediateDirectories: false, attributes: nil)
         }
         
         if dp.exists
         {
-            //parentVC!.showHideActivityIndicator(true)
-            let result = processDirContents(dp.path);
-            //parentVC!.showHideActivityIndicator(false)
-            if (result) {
-                print("done concatenating files")
-            }
-            return result
+            try processDirContents(dp.path);
+            return true
         }
         else
         {
@@ -346,7 +335,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    func processDirContents(path: String) -> Bool {
+    func processDirContents(path: String) throws -> Bool {
         
         let fileMgr = NSFileManager.defaultManager()
         var files = [String]()
@@ -356,16 +345,10 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         let completeMovieUrl = pathURL.URLByAppendingPathComponent("full.mp4")
         
         if fileMgr.fileExistsAtPath(completeMovieUrl.path!){
-            try! fileMgr.removeItemAtURL(completeMovieUrl)
+            try fileMgr.removeItemAtURL(completeMovieUrl)
         }
         
-        do {
-            try  files = fileMgr.contentsOfDirectoryAtPath(path)
-        }
-        catch let err as NSError {
-            print(err.description)
-            return false
-        }
+        try files = fileMgr.contentsOfDirectoryAtPath(path)
         
         if files.count <= 0 {
             return false
@@ -373,106 +356,13 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
         print(files)
         
-        
-        
-        let composition = AVMutableComposition()
-        let trackVideo:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: CMPersistentTrackID())
-        let trackAudio:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: CMPersistentTrackID())
-        
-        // Stuff
-        let videoComposition = AVMutableVideoComposition()
-        videoComposition.frameDuration = CMTimeMake(1,30)
-        videoComposition.renderScale = 1.0
-        
-        let instruction = AVMutableVideoCompositionInstruction()
-        let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: trackVideo)
-        
-        // Stuff
-        
-        let videoLayerInstruction = AVMutableVideoCompositionInstruction()
-        videoLayerInstruction.layerInstructions = []
-        
-        
-        var insertTime = kCMTimeZero
-        
-        do {
-            for assetFile in files {
-                let moviePathUrl =  pathURL.URLByAppendingPathComponent(assetFile)
-                let sourceAsset = AVURLAsset(URL: moviePathUrl, options: [AVURLAssetPreferPreciseDurationAndTimingKey:true,AVURLAssetReferenceRestrictionsKey:0])
-                let tracks = sourceAsset.tracksWithMediaType(AVMediaTypeVideo)
-                var audios: [AVAssetTrack] = sourceAsset.tracksWithMediaType(AVMediaTypeAudio)
-                if tracks.count > 0 {
-                    
-                    let assetTrack:AVAssetTrack = tracks[0]
-                    
-                    videoComposition.renderSize = assetTrack.naturalSize
-                    layerInstruction.setTransform(assetTrack.preferredTransform, atTime: insertTime)
-                    
-                    try trackVideo.insertTimeRange(assetTrack.timeRange, ofTrack: assetTrack, atTime: insertTime)
-                    
-                    if audios.count > 0 {
-                        let assetTrackAudio:AVAssetTrack = audios[0]
-                   
-                        try trackAudio.insertTimeRange(CMTimeRangeMake(kCMTimeZero,sourceAsset.duration), ofTrack: assetTrackAudio, atTime: insertTime)
-                    }
-                        
-                    else if !assetFile.containsString(TitleTrackName) {
-                        print("Track", assetFile, "at time", insertTime.value, "has no audio")
-                        return false
-                    }
-                    
-                    // set the transform / orientation from the original
-                    // for transforms, etc
-                    let instruction = AVMutableVideoCompositionLayerInstruction(assetTrack: trackVideo)
-                    instruction.setTransform(assetTrack.preferredTransform, atTime: insertTime)
-                    
-                    videoLayerInstruction.layerInstructions.append(instruction)
-                    
-                    insertTime = CMTimeAdd(insertTime, sourceAsset.duration)
-                    
-                }
-            }
-        }
-            
-        catch let err as NSError {
-            print("COMPOSITION ERROR: ", err.localizedDescription)
-            return false
+        let fileUrls = files.map { (filePath) in
+            return pathURL.URLByAppendingPathComponent(filePath)
         }
         
-        instruction.layerInstructions = [layerInstruction]
-        instruction.timeRange = trackVideo.timeRange
+        try VideoProcess.exportVideo(fileUrls, toURL: completeMovieUrl)
         
-        videoComposition.instructions = [instruction]
-        
-        if let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
-            
-            exporter.videoComposition = videoComposition
-            
-            exporter.outputURL = completeMovieUrl
-            
-            exporter.outputFileType = AVFileTypeMPEG4 //AVFileTypeQuickTimeMovie
-            
-            exporter.exportAsynchronouslyWithCompletionHandler({
-                
-                switch exporter.status{
-                    
-                case  AVAssetExportSessionStatus.Failed:
-                    print("failed \(exporter.error)")
-                    print(exporter.error?.localizedDescription)
-                case AVAssetExportSessionStatus.Cancelled:
-                    print("cancelled \(exporter.error)")
-                default:
-                    print(exporter.outputURL)
-                    self.authorizeAndCopyFile(completeMovieUrl, path:pathURL)
-                    print("complete")
-                    
-                }
-            })
-        }
-        else {
-            // crash, can't create the exporter
-            assert(false, "Could not create exporter")
-        }
+        self.authorizeAndCopyFile(completeMovieUrl, path:pathURL)
         
         return true
     }

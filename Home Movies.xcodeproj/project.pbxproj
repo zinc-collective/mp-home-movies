@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6BE4CB150363EE805A66A7C1 /* Pods_Home_Movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9247002F4AE63EFAD8A5645 /* Pods_Home_Movies.framework */; };
+		784043C21CB2E20E008324FB /* VideoProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784043C11CB2E20E008324FB /* VideoProcess.swift */; };
 		7855FC211C87AFC800704231 /* VideoPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855FC201C87AFC800704231 /* VideoPlayerController.swift */; };
 		7855FC221C87B6AA00704231 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD92A05C1C440755008ABFC5 /* Home.storyboard */; };
 		7855FC231C87B6AF00704231 /* Record.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDE7623E1BD1839D008B74F7 /* Record.storyboard */; };
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		0C4A5C47FBCB561A64495A14 /* Pods-Home Movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Home Movies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies.debug.xcconfig"; sourceTree = "<group>"; };
+		784043C11CB2E20E008324FB /* VideoProcess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoProcess.swift; sourceTree = "<group>"; };
 		7855FC201C87AFC800704231 /* VideoPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerController.swift; sourceTree = "<group>"; };
 		787DD0431CADB1750031B10F /* RecordTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTimer.swift; sourceTree = "<group>"; };
 		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -118,6 +120,7 @@
 				BDE7623E1BD1839D008B74F7 /* Record.storyboard */,
 				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
 				BDE762311BD18362008B74F7 /* VideoView.swift */,
+				784043C11CB2E20E008324FB /* VideoProcess.swift */,
 				7855FC201C87AFC800704231 /* VideoPlayerController.swift */,
 				BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */,
 				787DD0431CADB1750031B10F /* RecordTimer.swift */,
@@ -314,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDE7623D1BD18362008B74F7 /* RecordViewController.swift in Sources */,
+				784043C21CB2E20E008324FB /* VideoProcess.swift in Sources */,
 				BDE762391BD18362008B74F7 /* UIDeviceExtension.swift in Sources */,
 				BDE762331BD18362008B74F7 /* AppDelegate.swift in Sources */,
 				BDE7623C1BD18362008B74F7 /* VideoView.swift in Sources */,

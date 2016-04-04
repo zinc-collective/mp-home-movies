@@ -85,21 +85,45 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         dispatch_async(GlobalUserInitiatedQueue){
             self.videoView.doneDispGroup = dispatch_group_create()
             dispatch_group_enter(self.videoView.doneDispGroup!)
-            if !self.videoView.finalizeOutput() {
+            var exported = false
+            var exportMessage: String?
+            do {
+                exported = try self.videoView.finalizeOutput()
+            }
+                
+            catch VideoExportError.CompositionFailed(let error) {
+                exportMessage = error.localizedDescription
+            }
+                
+            catch VideoExportError.CouldNotCreateExporter() {
+                exportMessage = "Could not create exporter"
+            }
+                
+            catch VideoExportError.MissingAudio(let url, let time) {
+                exportMessage = "Track missing audio: \(url.absoluteString) \(time)"
+            }
+                
+            catch let err as NSError {
+                exportMessage = err.localizedDescription
+            }
+            
+            if let msg = exportMessage {
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.showAlert("Error",msg: "Could not create video. Please contact support.", comp: {_ in })
+                    self.showAlert("Video Error", msg: "Please contact support\n\n \(msg)", comp: {_ in })
                 }
             }
+            
             dispatch_group_wait(self.videoView.doneDispGroup!, DISPATCH_TIME_FOREVER)
             dispatch_async(GlobalMainQueue){
                 self.showHideActivityIndicator(false)
                 self.updateDoneButton()
-                let sessDir = self.videoView.getSessionFileDir()
-                if  sessDir.exists{
-                    let url = NSURL(fileURLWithPath: sessDir.path)
-                    self.playVideo(url.URLByAppendingPathComponent("full.mp4"))
+                if (exported) {
+                    let sessDir = self.videoView.getSessionFileDir()
+                    if  sessDir.exists{
+                        let url = NSURL(fileURLWithPath: sessDir.path)
+                        self.playVideo(url.URLByAppendingPathComponent("full.mp4"))
+                    }
                 }
-                
             }
         }
     }
