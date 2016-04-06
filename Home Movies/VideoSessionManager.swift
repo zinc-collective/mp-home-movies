@@ -15,9 +15,18 @@ enum VideoExportError: ErrorType {
     case CouldNotCreateExporter()
 }
 
-class VideoProcess: NSObject {
+let TitleTrackName = "1title"
+
+class VideoSessionManager: NSObject {
     
-    class func exportVideo(sources: [NSURL], toURL: NSURL) throws -> Void {
+    static let defaultManager = VideoSessionManager()
+    
+    override init() {
+        super.init()
+        try! initializeSessionDir()
+    }
+    
+    func exportVideo(sources: [NSURL], toURL: NSURL) throws -> Void {
         
         let composition = AVMutableComposition()
         let trackVideo:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: CMPersistentTrackID())
@@ -112,5 +121,102 @@ class VideoProcess: NSObject {
             throw VideoExportError.CouldNotCreateExporter()
         }
     }
+    
+    func sessionFileDir() -> String {
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let documentsDirectory = paths[0]
+        let filePath:String = "\(documentsDirectory)/HomeMoviesSession"
+        return filePath
+    }
+    
+    func initializeSessionDir() throws {
+        let manager = NSFileManager.defaultManager()
+        let dir = sessionFileDir()
+        if (!manager.fileExistsAtPath(dir)) {
+            try NSFileManager.defaultManager().createDirectoryAtPath(dir, withIntermediateDirectories: false, attributes: nil)
+        }
+    }
+    
+    func cleanupSessionDir() throws {
+        let dir = self.sessionFileDir()
+        try NSFileManager.defaultManager().removeItemAtPath(dir)
+        try self.initializeSessionDir()
+    }
+    
+    
+    func newVideoPath() -> String {
+        let formatter: NSDateFormatter = NSDateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss.SSS"
+        let dateTimePrefix: String = formatter.stringFromDate(NSDate())
+        
+        let path = self.sessionFileDir()
+        
+        let filePath:String = "\(path)/\(dateTimePrefix).mp4"
+        return filePath
+    }
+    
+    
+    func getClipsCount() -> Int {
+        var count: Int = 0
+        do {
+            let path = sessionFileDir()
+            let contents = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(path)
+            for file in contents {
+                count = count + 1
+                if file.containsString(TitleTrackName)
+                {
+                    count = count - 1
+                }
+                if file.containsString("full")
+                {
+                    count = count - 1
+                }
+            }
+        }
+        catch let err as NSError {
+            print(err)
+        }
+        if count >= 0 {
+            return count
+        }
+        else {
+            return 0
+        }
+    }
+    
+    func deleteLastClip () {
+        let urls = sessionFileURLs()
+        
+        if let url = urls.last {
+            do {
+                try NSFileManager.defaultManager().removeItemAtURL(url)
+            }
+            catch _ {
+                print("Could not delete url: ", url)
+            }
+        }
+    }
+    
+    func sessionFileURLs() -> [NSURL] {
+        let dir = sessionFileDir()
+        let fileMgr = NSFileManager.defaultManager()
+        var files = [String]()
+        
+        let pathURL = NSURL(fileURLWithPath: dir)
+        
+        do {
+            try files = fileMgr.contentsOfDirectoryAtPath(dir)
+        }
+        catch _ {
+            return []
+        }
+        
+        let fileUrls = files.map { (filePath) in
+            return pathURL.URLByAppendingPathComponent(filePath)
+        }
+        
+        return fileUrls
+    }
+    
     
 }

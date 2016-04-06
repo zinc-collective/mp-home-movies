@@ -9,12 +9,17 @@
 import UIKit
 import AVFoundation
 
+// what are my unique possible states
+// Ready | Recording | Working
 
 class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDelegate {
 
     var loadingFromBg: Bool = false
     
-    @IBOutlet weak var clipsLabel: UILabel!
+    var videoSession = VideoSessionManager.defaultManager
+    var isRecording = false
+    
+    @IBOutlet weak var clipsButton: UIButton!
     @IBOutlet weak var recordButton: RecordButtonView!
     
     @IBOutlet weak var timerLabel: RecordTimer!
@@ -27,6 +32,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var cameraSwitchButton: UIButton!
     
+    @IBOutlet weak var deleteButton: UIButton!
+    
+    @IBOutlet weak var startOverButton: OutlineButton!
     var alertController : UIAlertController?
     
     required init?(coder aDecoder: NSCoder) {
@@ -35,61 +43,58 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     
     @IBAction func recordPressed(sender: AnyObject) {
-        print("record pressed")
-        if videoView.isDoneFinalizingOutput() {
-            videoView.cleanupSessionDir()
-        }
         toggleRecord()
     }
     
     @IBAction func donePressed(sender: AnyObject) {
         print("done pressed")
-        
-        //if doneButton.titleLabel!.text == "Share"
-        //{
-        
-            //displayShareSheet()
-        //}
-        //else
-        //{
-        
         showAlertWithCancel("Are You Sure You Want To Make Your Movie?", msg: "", comp: {
             (alert: UIAlertAction!) in self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: { (alert: UIAlertAction!) in
                 self.generateTitleAndMakeMovie(self.videoView.movieTitle!)
             })
         })
-        
-            
-       // }
+    }
+    
+    @IBAction func deletePressed() {
+        print("Delete last clip")
+        videoSession.deleteLastClip()
+        renderControls()
+    }
+    
+    @IBAction func startOverPressed() {
+        print("START OVER")
+        do {
+            try videoSession.cleanupSessionDir()
+        }
+        catch let err as NSError {
+            print("Error", err.localizedDescription)
+        }
+        renderControls()
     }
     
     func generateTitleAndMakeMovie(title: String)
     {
-        hideClipsLabel()
         showHideActivityIndicator(true)
+        
         if title != "" {
-            
+            // TODO move this into VideoSessionManager?
             videoView.titleGenerated=false
-            let dp = videoView.getSessionFileDir()
-            if !dp.exists {
-                return //defensive
-            }
-            videoView.titleFilePath = NSURL(fileURLWithPath: dp.path).URLByAppendingPathComponent(TitleTrackName + ".mp4")
+            let dir = videoView.videoSession.sessionFileDir()
+            videoView.titleFilePath = NSURL(fileURLWithPath: dir).URLByAppendingPathComponent(TitleTrackName + ".mp4")
             self.videoView.titDispGrp = dispatch_group_create()
             dispatch_group_enter(videoView.titDispGrp!)
             print(title.endIndex)
             self.videoView.createAnimatedTitleVideo(title, animGrp: videoView.getFadeTransformAnimGrp)
             dispatch_group_wait(videoView.titDispGrp!, DISPATCH_TIME_FOREVER)
-            //
         }
         //concatenate video.
         dispatch_async(GlobalUserInitiatedQueue){
             self.videoView.doneDispGroup = dispatch_group_create()
             dispatch_group_enter(self.videoView.doneDispGroup!)
-            var exported = false
+            var exportedURL : NSURL?
             var exportMessage: String?
             do {
-                exported = try self.videoView.finalizeOutput()
+                exportedURL = try self.videoView.finalizeOutput()
             }
                 
             catch VideoExportError.CompositionFailed(let error) {
@@ -117,13 +122,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             dispatch_group_wait(self.videoView.doneDispGroup!, DISPATCH_TIME_FOREVER)
             dispatch_async(GlobalMainQueue){
                 self.showHideActivityIndicator(false)
-                self.updateDoneButton()
-                if (exported) {
-                    let sessDir = self.videoView.getSessionFileDir()
-                    if  sessDir.exists{
-                        let url = NSURL(fileURLWithPath: sessDir.path)
-                        self.playVideo(url.URLByAppendingPathComponent("full.mp4"))
-                    }
+                if let url = exportedURL {
+                    self.playVideo(url)
                 }
             }
         }
@@ -138,8 +138,38 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
     }
     
-    // no this needs to be on the other one. can't present here.
-    
+    func renderControls() {
+        
+        let isPortrait = isDevicePortrait()
+        let isWorking = activityIndicator.hidden == false
+        let numClips = videoSession.getClipsCount()
+        let hasClips = (numClips > 0)
+        
+        let toAlpha = { (hidden: Bool) -> CGFloat in
+            if hidden {
+                return 0.0
+            }
+            else {
+                return 1.0
+            }
+        }
+        
+        UIView.animateWithDuration(0.200, animations: {
+            
+            self.doneButton.alpha      = toAlpha(isPortrait || self.isRecording || !hasClips)
+            self.startOverButton.alpha = toAlpha(isPortrait || self.isRecording || !hasClips)
+            self.deleteButton.alpha    = toAlpha(isPortrait || self.isRecording || !hasClips)
+            self.clipsButton.alpha     = toAlpha(isPortrait || !hasClips)
+            self.recordButton.alpha    = toAlpha(isWorking || isPortrait)
+        })
+        
+        self.clipsButton.setTitle("\(numClips)", forState: .Normal)
+        
+        recordButton.recording = isRecording
+        
+        recordLight.hidden = !isRecording
+        cameraSwitchButton.hidden = isPortrait || isRecording
+    }
     
     //used by video mgr
     func isSharing() -> Bool
@@ -149,101 +179,38 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     func toggleRecord()
     {
-        if recordButton.recording == false
+        isRecording = !isRecording
+        
+        if isRecording
         {
-            //videoView.cleanupSessionDir()
-            recordButton.recording = true
-            doneButton.hidden = true
-            cameraSwitchButton.hidden = true
-            hideClipsLabel()
             videoView.startRecording()
             timerLabel.startTimer()
-            recordLight.hidden = false
         }
         else
         {
-            recordButton.recording = false
-            doneButton.hidden = videoView.canFinalize()
-            cameraSwitchButton.hidden = false
-            showClipsLabel()
-            timerLabel.stopTimer()
             videoView.stopRecording()
-            recordLight.hidden = true
+            timerLabel.stopTimer()
         }
         
+        renderControls()
     }
-    
-    func updateRecordButtonShown() {
-        if (activityIndicator.hidden == false || isDevicePortrait()) {
-            recordButton.hidden = true
-        }
-        else {
-            recordButton.hidden = false
-        }
-    }
-    
     
     func showHideActivityIndicator(show: Bool){
         if show {
-            doneButton.hidden = true
-            activityIndicator.hidden=false
-            activityIndicator.center=self.view.center
+            activityIndicator.hidden = false
+            activityIndicator.center = self.view.center
             activityIndicator.startAnimating()
         }
         else{
             self.activityIndicator.stopAnimating()
             activityIndicator.hidden=true
-            doneButton.hidden = false
         }
-        self.updateRecordButtonShown()
-    }
-    
-    
-    func updateDoneButton()
-    {
-        if videoView.isDoneFinalizingOutput() {
-            doneButton.hidden=true
-        }
-        else
-        {
-            showClipsLabel()
-            let hasClips = (videoView.getClipsCount() > 0)
-            doneButton.hidden = !hasClips
-            
-        }
-        doneButton.setNeedsDisplay()
-
-    }
-    
-    func showClipsLabel(){
-        let count = videoView.getClipsCount()
-        var txt: String?
-        
-        if count > 0 {
-            txt = "\(count)"
-        }
-        else
-        {
-            txt = ""
-        }
-        
-        clipsLabel.text = txt
-        clipsLabel.hidden=false
-    }
-    
-    func hideClipsLabel(){
-        clipsLabel.hidden=true
+        renderControls()
     }
     
     override func viewWillAppear(animated: Bool) {
-        recordButton.recording=false
-        recordLight.hidden = true
-        
-        updateDoneButton()
         activityIndicator.hidden=true
-        doneButton.layer.borderWidth=CGFloat(1.0)
-        doneButton.layer.borderColor = UIColor.whiteColor().CGColor
-        doneButton.layer.cornerRadius = CGFloat(5.0)
+        renderControls()
 
         print("view will appear")
         
@@ -261,8 +228,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     override func viewDidLoad() {
         super.viewDidLoad()
         addVideoView()
+        clipsButton.contentHorizontalAlignment = .Center
         
-        //
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
          NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
@@ -467,8 +434,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     func orientationDidChange() {
-        updateRecordButtonShown()
-        
         let orientation = UIDevice.currentDevice().orientation
         
         orientationIcon.hidden = !isDevicePortrait()
@@ -478,6 +443,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
         let m = CGAffineTransformMakeRotation(CGFloat(a))
         orientationIcon.transform = m
+        
+        renderControls()
     }
     
     func isDevicePortrait() -> Bool {

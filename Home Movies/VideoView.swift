@@ -11,7 +11,6 @@ import AVFoundation
 import Photos
 import AVKit
 
-let TitleTrackName = "1title"
 
 enum AwfulError: ErrorType {
     case NoDevice
@@ -30,6 +29,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
 //    var parentVC: RecordViewController?
     
     weak var delegate: VideoViewDelegate?
+    
+    var videoSession = VideoSessionManager.defaultManager
     
     var captureSession: AVCaptureSession?
     var videoDataOutput: AVCaptureMovieFileOutput?
@@ -111,7 +112,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     
     func startRecording()
     {
-        let fileURL = NSURL(fileURLWithPath: getFilePath());
+        let fileURL = NSURL(fileURLWithPath: videoSession.newVideoPath());
         //
         if captureSession!.running {
             print("session running")
@@ -123,63 +124,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             print("Started recording")
         }
     }
-    
-    func canFinalize() -> Bool {
-        
-        if !self.recording {
-            let dp = getSessionFileDir()
-            if(dp.exists){
-                return true
-            }
-            
-        }
-        return false
-    }
-    
-    
-    
-    func cleanupSessionDir()
-    {
-        let dp = getSessionFileDir()
-        if dp.exists {
-            try! NSFileManager.defaultManager().removeItemAtPath(dp.path)
-        }
-    }
-    
-    func getClipsCount() -> Int {
-        var count: Int = 0
-        do {
-            let dp = getSessionFileDir()
-            if dp.exists {
-                let contents = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(dp.path)
-                for file in contents {
-                    count = count + 1
-                    if file.containsString(TitleTrackName)
-                    {
-                        count = count - 1
-                    }
-                    if file.containsString("full")
-                    {
-                        count = count - 1
-                    }
-                }
-            }
-            
-        }
-        catch let err as NSError {
-            print(err)
-        }
-        if count >= 0 {
-            return count
-        }
-        else {
-            return 0
-        }
-    }
-    
-    
-    //fix this later
-    
     
     func stopRecording()
     {
@@ -212,8 +156,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         }
         
     }
-    
-
     
     
     func startSession(preview: Bool) throws
@@ -322,36 +264,28 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     }
     
     func isDoneFinalizingOutput() -> Bool {
-         let dp = getSessionFileDir()
-        if dp.exists {
-            let fileMgr = NSFileManager.defaultManager()
-            let pathURL = NSURL(fileURLWithPath: dp.path)
-            let completeMovieUrl = pathURL.URLByAppendingPathComponent("full.mp4")
-            if fileMgr.fileExistsAtPath(completeMovieUrl.path!){
-                return true
-            }
+        let dir = videoSession.sessionFileDir()
+        let fileMgr = NSFileManager.defaultManager()
+        let pathURL = NSURL(fileURLWithPath: dir)
+        let completeMovieUrl = pathURL.URLByAppendingPathComponent("full.mp4")
+        if fileMgr.fileExistsAtPath(completeMovieUrl.path!){
+            return true
         }
         
         return false
-        
     }
     
-    func finalizeOutput() throws -> Bool
+    func finalizeOutput() throws -> NSURL?
     {
-        let dp = getSessionFileDir()
-        if !dp.exists{
-            try NSFileManager.defaultManager().createDirectoryAtPath(dp.path, withIntermediateDirectories: false, attributes: nil)
+        let dir = videoSession.sessionFileDir()
+        let result = try processDirContents(dir)
+        
+        if result {
+            let url = NSURL(fileURLWithPath: dir)
+            return url.URLByAppendingPathComponent("full.mp4")
         }
         
-        if dp.exists
-        {
-            try processDirContents(dp.path);
-            return true
-        }
-        else
-        {
-            return false
-        }
+        return nil
     }
     
     func processDirContents(path: String) throws -> Bool {
@@ -379,7 +313,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             return pathURL.URLByAppendingPathComponent(filePath)
         }
         
-        try VideoProcess.exportVideo(fileUrls, toURL: completeMovieUrl)
+        try videoSession.exportVideo(fileUrls, toURL: completeMovieUrl)
         
         print("Exported: ", completeMovieUrl)
         
@@ -495,43 +429,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     }
     
 
-    
-    func getSessionFileDir() -> (path: String, exists: Bool){
-        
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-        let documentsDirectory = paths[0]
-        var filePath:String? = nil
-        filePath = "\(documentsDirectory)/ezvideoSession"
-        return (filePath!,NSFileManager.defaultManager().fileExistsAtPath(filePath!))
-    }
-    
-    func getFilePath() -> String{
-        
-        let formatter: NSDateFormatter = NSDateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
-        let dateTimePrefix: String = formatter.stringFromDate(NSDate())
-        
-        let dp = getSessionFileDir()
-        
-        if !dp.exists{
-            
-            do {
-                try NSFileManager.defaultManager().createDirectoryAtPath(dp.path, withIntermediateDirectories: false, attributes: nil)
-            } catch let error1 as NSError {
-                print(error1.description)
-            }
-        }
-        
-        var filePath:String? = nil
-        var fileNamePostfix = 0
-        repeat {
-            filePath =
-            "\(dp.path)/\(dateTimePrefix)-\(fileNamePostfix).mp4"
-            fileNamePostfix += 1
-        } while (NSFileManager.defaultManager().fileExistsAtPath(filePath!))
-        
-        return filePath!;
-    }
     
 //    func focusTo(value : Float) {
 //        if let device = currentVideoDevice {

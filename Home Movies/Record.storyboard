@@ -88,8 +88,8 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVa-1E-A6d">
-                                <rect key="frame" x="324" y="338" width="112" height="40"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVa-1E-A6d" customClass="OutlineButton" customModule="Home_Movies" customModuleProvider="target">
+                                <rect key="frame" x="312" y="338" width="112" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="112" id="RTE-LJ-11U"/>
                                     <constraint firstAttribute="height" constant="40" id="mlI-bQ-CTw"/>
@@ -110,25 +110,17 @@
                                     <constraint firstAttribute="height" constant="37" id="Gml-DK-ZVa"/>
                                 </constraints>
                             </activityIndicatorView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L6d-rA-aW5">
-                                <rect key="frame" x="20" y="345" width="57" height="28"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YeP-Yy-BK8" customClass="OutlineButton" customModule="Home_Movies" customModuleProvider="target">
+                                <rect key="frame" x="12" y="8" width="90" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="166" id="nth-br-xce"/>
-                                    <constraint firstAttribute="width" constant="57" id="svn-8C-NBA"/>
-                                    <constraint firstAttribute="height" constant="21" id="t1w-Dv-uWB"/>
-                                    <constraint firstAttribute="height" constant="28" id="x4N-dH-qB6"/>
+                                    <constraint firstAttribute="width" constant="90" id="Hla-sT-hLd"/>
+                                    <constraint firstAttribute="height" constant="30" id="Jpq-PU-Txa"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="nth-br-xce"/>
-                                        <exclude reference="t1w-Dv-uWB"/>
-                                    </mask>
-                                </variation>
-                            </label>
+                                <state key="normal" title="Start Over"/>
+                                <connections>
+                                    <action selector="startOverPressed" destination="vXZ-lx-hvc" eventType="touchUpInside" id="DRD-Gi-gyA"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fF9-KH-1Oj" userLabel="Thumb Controls VIew">
                                 <rect key="frame" x="661" y="0.0" width="75" height="414"/>
                                 <subviews>
@@ -145,13 +137,43 @@
                                             <action selector="recordPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="7JC-m1-X3b"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F6c-tJ-9cd">
+                                        <rect key="frame" x="22" y="364" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="ML9-uk-sAz"/>
+                                            <constraint firstAttribute="width" constant="30" id="fiu-hD-RFf"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <state key="normal" title="1"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wcZ-Wm-oJE">
+                                        <rect key="frame" x="23" y="20" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="VKd-q8-m5n"/>
+                                            <constraint firstAttribute="height" constant="30" id="Y1m-9U-DLw"/>
+                                        </constraints>
+                                        <state key="normal" image="Delete"/>
+                                        <connections>
+                                            <action selector="deletePressed" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ndX-If-DcG"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="F6c-tJ-9cd" firstAttribute="centerX" secondItem="fF9-KH-1Oj" secondAttribute="centerX" id="Ci9-0e-8w0"/>
+                                    <constraint firstItem="wcZ-Wm-oJE" firstAttribute="top" secondItem="fF9-KH-1Oj" secondAttribute="top" constant="20" id="Czp-kr-S6p"/>
+                                    <constraint firstAttribute="bottom" secondItem="F6c-tJ-9cd" secondAttribute="bottom" constant="20" id="N7l-uV-CeK"/>
                                     <constraint firstItem="pFe-A2-koH" firstAttribute="centerX" secondItem="fF9-KH-1Oj" secondAttribute="centerX" id="POh-ju-WDv"/>
                                     <constraint firstAttribute="width" constant="75" id="U7B-KA-hac"/>
                                     <constraint firstItem="pFe-A2-koH" firstAttribute="centerY" secondItem="fF9-KH-1Oj" secondAttribute="centerY" id="ZnH-8B-oGS"/>
+                                    <constraint firstItem="wcZ-Wm-oJE" firstAttribute="leading" secondItem="fF9-KH-1Oj" secondAttribute="leading" constant="23" id="pcw-2A-tmw"/>
+                                    <constraint firstItem="wcZ-Wm-oJE" firstAttribute="centerX" secondItem="fF9-KH-1Oj" secondAttribute="centerX" id="xKH-JS-7sv"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="pcw-2A-tmw"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Orientation" translatesAutoresizingMaskIntoConstraints="NO" id="1Xg-oh-PSe">
                                 <rect key="frame" x="283" y="126" width="170" height="162"/>
@@ -174,38 +196,45 @@
                             <constraint firstItem="tRP-7e-QWA" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" constant="11" id="0FG-jH-n0R"/>
                             <constraint firstItem="XS0-rF-Ur9" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" constant="3" id="4I9-4p-ihc"/>
                             <constraint firstItem="1Xg-oh-PSe" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="4lc-9G-Ssg"/>
-                            <constraint firstItem="L6d-rA-aW5" firstAttribute="centerX" secondItem="ZVa-1E-A6d" secondAttribute="centerX" id="5By-9Y-hxk"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="fF9-KH-1Oj" secondAttribute="bottom" id="62g-zP-oUr"/>
                             <constraint firstAttribute="trailing" secondItem="fF9-KH-1Oj" secondAttribute="trailing" id="8Or-hc-Vof"/>
+                            <constraint firstItem="YeP-Yy-BK8" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="ATa-vo-PI1"/>
                             <constraint firstItem="fF9-KH-1Oj" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="Elj-RP-7la"/>
                             <constraint firstItem="aEd-w3-b5H" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="Hq5-0S-9tF"/>
-                            <constraint firstItem="L6d-rA-aW5" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="L4Z-m9-Dul"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="YeP-Yy-BK8" secondAttribute="leading" constant="8" id="Tj4-xy-Bcp"/>
+                            <constraint firstItem="YeP-Yy-BK8" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="8" id="VUM-UX-vmg"/>
                             <constraint firstItem="1Xg-oh-PSe" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="VtH-Bo-AdC"/>
-                            <constraint firstItem="ZVa-1E-A6d" firstAttribute="bottom" secondItem="L6d-rA-aW5" secondAttribute="bottom" constant="5" id="XhQ-Gi-IKy"/>
+                            <constraint firstItem="ZVa-1E-A6d" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="byG-Wi-vp2"/>
                             <constraint firstAttribute="trailing" secondItem="aEd-w3-b5H" secondAttribute="trailing" id="eF9-Fv-kIA"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="aEd-w3-b5H" secondAttribute="bottom" id="ezr-fF-aeE"/>
-                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="L6d-rA-aW5" secondAttribute="bottom" constant="41" id="fZk-aE-zDC"/>
                             <constraint firstItem="ZVa-1E-A6d" firstAttribute="centerX" secondItem="tRP-7e-QWA" secondAttribute="centerX" constant="1" id="h5i-IG-CdH"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="ZVa-1E-A6d" secondAttribute="bottom" constant="36" id="kbE-QR-4tR"/>
                             <constraint firstItem="XS0-rF-Ur9" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="qMk-jM-boD"/>
                             <constraint firstItem="tRP-7e-QWA" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="qYw-NS-R2h"/>
+                            <constraint firstItem="YeP-Yy-BK8" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="uLM-gD-AXW"/>
                             <constraint firstItem="aEd-w3-b5H" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="w8l-SP-lvq"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="5By-9Y-hxk"/>
+                                <exclude reference="ATa-vo-PI1"/>
+                                <exclude reference="uLM-gD-AXW"/>
+                                <exclude reference="h5i-IG-CdH"/>
                             </mask>
                         </variation>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
                         <outlet property="activityIndicator" destination="tRP-7e-QWA" id="y4X-Fd-3zm"/>
                         <outlet property="cameraSwitchButton" destination="tLf-LC-WYS" id="IIH-S0-6yp"/>
-                        <outlet property="clipsLabel" destination="L6d-rA-aW5" id="3fE-bF-Qow"/>
+                        <outlet property="clipsButton" destination="F6c-tJ-9cd" id="vEA-8F-699"/>
+                        <outlet property="deleteButton" destination="wcZ-Wm-oJE" id="06x-aN-khq"/>
                         <outlet property="doneButton" destination="ZVa-1E-A6d" id="tev-IF-EYa"/>
                         <outlet property="orientationIcon" destination="1Xg-oh-PSe" id="zk2-PO-zTp"/>
                         <outlet property="recordButton" destination="pFe-A2-koH" id="zOc-vH-kHx"/>
                         <outlet property="recordLight" destination="gwQ-aK-BFe" id="bhW-l1-ClU"/>
+                        <outlet property="startOverButton" destination="YeP-Yy-BK8" id="nF3-Mh-qG0"/>
                         <outlet property="timerLabel" destination="GAU-qf-7Xk" id="NKc-Jg-kVl"/>
                         <outlet property="videoContainer" destination="aEd-w3-b5H" id="EwS-N9-EWg"/>
                     </connections>
@@ -217,6 +246,7 @@
     </scenes>
     <resources>
         <image name="CameraSwitch" width="50" height="50"/>
+        <image name="Delete" width="50" height="50"/>
         <image name="Orientation" width="170" height="170"/>
     </resources>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
