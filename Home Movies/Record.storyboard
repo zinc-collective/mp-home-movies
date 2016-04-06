@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1713" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -54,13 +54,25 @@
                                             <action selector="didTapCameraSwitch" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Gqs-Bv-X3V"/>
                                         </connections>
                                     </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gwQ-aK-BFe" customClass="RecordLight" customModule="Home_Movies" customModuleProvider="target">
+                                        <rect key="frame" x="83" y="16" width="8" height="8"/>
+                                        <color key="backgroundColor" red="1" green="0.055976856370000001" blue="0.180435348" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="8" id="K2Y-1J-LK3"/>
+                                            <constraint firstAttribute="width" constant="8" id="r0o-4Q-7eR"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="274" id="00d-Wz-gUE"/>
                                     <constraint firstAttribute="height" constant="40" id="7uL-Gz-auo"/>
                                     <constraint firstItem="GAU-qf-7Xk" firstAttribute="centerX" secondItem="XS0-rF-Ur9" secondAttribute="centerX" id="QRu-G1-dZz"/>
+                                    <constraint firstItem="gwQ-aK-BFe" firstAttribute="centerY" secondItem="XS0-rF-Ur9" secondAttribute="centerY" id="S4r-UG-Nfa"/>
                                     <constraint firstAttribute="trailing" secondItem="tLf-LC-WYS" secondAttribute="trailing" constant="8" id="XaM-lG-75f"/>
+                                    <constraint firstItem="GAU-qf-7Xk" firstAttribute="leading" secondItem="gwQ-aK-BFe" secondAttribute="trailing" id="ZUz-zg-V4Y"/>
+                                    <constraint firstItem="gwQ-aK-BFe" firstAttribute="leading" secondItem="XS0-rF-Ur9" secondAttribute="leading" constant="75" id="ZWU-Tp-NsT"/>
+                                    <constraint firstItem="gwQ-aK-BFe" firstAttribute="top" secondItem="XS0-rF-Ur9" secondAttribute="top" constant="10" id="a6h-CW-4xP"/>
                                     <constraint firstItem="tLf-LC-WYS" firstAttribute="centerY" secondItem="XS0-rF-Ur9" secondAttribute="centerY" id="kgR-1Q-3Ed"/>
                                     <constraint firstItem="GAU-qf-7Xk" firstAttribute="centerY" secondItem="XS0-rF-Ur9" secondAttribute="centerY" id="wUq-xM-xwn"/>
                                 </constraints>
@@ -69,6 +81,12 @@
                                         <integer key="value" value="3"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ZWU-Tp-NsT"/>
+                                        <exclude reference="a6h-CW-4xP"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZVa-1E-A6d">
                                 <rect key="frame" x="324" y="338" width="112" height="40"/>
@@ -187,13 +205,14 @@
                         <outlet property="doneButton" destination="ZVa-1E-A6d" id="tev-IF-EYa"/>
                         <outlet property="orientationIcon" destination="1Xg-oh-PSe" id="zk2-PO-zTp"/>
                         <outlet property="recordButton" destination="pFe-A2-koH" id="zOc-vH-kHx"/>
+                        <outlet property="recordLight" destination="gwQ-aK-BFe" id="bhW-l1-ClU"/>
                         <outlet property="timerLabel" destination="GAU-qf-7Xk" id="NKc-Jg-kVl"/>
                         <outlet property="videoContainer" destination="aEd-w3-b5H" id="EwS-N9-EWg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="212" y="339"/>
+            <point key="canvasLocation" x="181" y="333"/>
         </scene>
     </scenes>
     <resources>

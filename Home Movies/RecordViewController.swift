@@ -18,19 +18,18 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var recordButton: RecordButtonView!
     
     @IBOutlet weak var timerLabel: RecordTimer!
+    @IBOutlet weak var recordLight: RecordLight!
     
     var videoView: VideoView!
     @IBOutlet weak var videoContainer: UIView!
     @IBOutlet weak var orientationIcon: UIImageView!
     
-    var orientation : UIDeviceOrientation
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var cameraSwitchButton: UIButton!
     
     var alertController : UIAlertController?
     
     required init?(coder aDecoder: NSCoder) {
-        orientation = UIDeviceOrientation.LandscapeRight
         super.init(coder: aDecoder)
     }
     
@@ -159,6 +158,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             hideClipsLabel()
             videoView.startRecording()
             timerLabel.startTimer()
+            recordLight.hidden = false
         }
         else
         {
@@ -168,6 +168,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             showClipsLabel()
             timerLabel.stopTimer()
             videoView.stopRecording()
+            recordLight.hidden = true
         }
         
     }
@@ -236,6 +237,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     override func viewWillAppear(animated: Bool) {
         recordButton.recording=false
+        recordLight.hidden = true
         
         updateDoneButton()
         activityIndicator.hidden=true
@@ -457,6 +459,13 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
     }
     
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        
+        let orientation = UIApplication.sharedApplication().statusBarOrientation
+        videoView?.orientation = orientation
+    }
+    
     func orientationDidChange() {
         updateRecordButtonShown()
         
@@ -469,8 +478,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
         let m = CGAffineTransformMakeRotation(CGFloat(a))
         orientationIcon.transform = m
-        
-        videoView?.orientation = UIApplication.sharedApplication().statusBarOrientation
     }
     
     func isDevicePortrait() -> Bool {
@@ -505,7 +512,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     override func shouldAutorotate() -> Bool {
-        return false
+        return !recordButton.recording
     }
     
 }
