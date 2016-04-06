@@ -20,7 +20,7 @@ class RecordTimer: UILabel {
 
     func startTimer() {
         startDate = NSDate()
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.00, target: self, selector: "updateTime:", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1.00, target: self, selector: #selector(RecordTimer.updateTime(_:)), userInfo: nil, repeats: true)
     }
     
     func stopTimer() {

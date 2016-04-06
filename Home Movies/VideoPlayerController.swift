@@ -28,7 +28,7 @@ class VideoPlayerController : AVPlayerViewController {
         
         //button.backgroundColor = UIColor.greenColor()
         //button.setTitle("Button", forState: UIControlState.Normal)
-        button!.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        button!.addTarget(self, action: #selector(VideoPlayerController.buttonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(button!)
         
         

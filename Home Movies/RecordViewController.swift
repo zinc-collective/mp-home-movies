@@ -245,8 +245,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 
         print("view will appear")
         
+        videoView?.orientation = UIApplication.sharedApplication().statusBarOrientation
+        
         UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "orientationDidChange", name:UIDeviceOrientationDidChangeNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:UIDeviceOrientationDidChangeNotification, object: nil)
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -254,15 +256,14 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         UIDevice.currentDevice().endGeneratingDeviceOrientationNotifications()
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         addVideoView()
         
         //
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: nil)
-         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillEnterBackground", name: UIApplicationWillResignActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
+         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
         
         //doneButton.hidden = videoView.canFinalize()
         print("view did load")
@@ -367,7 +368,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 print(error.description)
             }
         }
-  
     }
 
     override func didReceiveMemoryWarning() {
@@ -460,14 +460,17 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     func orientationDidChange() {
         updateRecordButtonShown()
         
+        let orientation = UIDevice.currentDevice().orientation
         
         orientationIcon.hidden = !isDevicePortrait()
         var a = M_PI / 2.0
-        if (UIDevice.currentDevice().orientation == .Portrait) {
+        if (orientation == .Portrait) {
             a = -(M_PI / 2.0)
         }
         let m = CGAffineTransformMakeRotation(CGFloat(a))
         orientationIcon.transform = m
+        
+        videoView?.orientation = UIApplication.sharedApplication().statusBarOrientation
     }
     
     func isDevicePortrait() -> Bool {
@@ -499,6 +502,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 oldVideoView.stopSession()
             })
         }
+    }
+    
+    override func shouldAutorotate() -> Bool {
+        return false
     }
     
 }

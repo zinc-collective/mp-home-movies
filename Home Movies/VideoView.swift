@@ -35,6 +35,29 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     var videoDataOutput: AVCaptureMovieFileOutput?
     var previewLayer : AVCaptureVideoPreviewLayer?
     
+    var orientation : UIInterfaceOrientation {
+        get {
+            if self.videoOrientation == .LandscapeLeft {
+                return .LandscapeLeft
+            }
+            else {
+                return .LandscapeRight
+            }
+        }
+        
+        set(newValue) {
+            if newValue == .LandscapeLeft {
+                self.videoOrientation = .LandscapeLeft
+            }
+            else {
+                self.videoOrientation = .LandscapeRight
+            }
+            
+        }
+    }
+    
+    var videoOrientation = AVCaptureVideoOrientation.LandscapeRight
+    
     var focusSquare : CameraFocusSquare?
     
     // If we find a device we'll store it here for later use
@@ -93,11 +116,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         if captureSession!.running {
             print("session running")
             if(videoDataOutput?.connectionWithMediaType(AVMediaTypeVideo).supportsVideoOrientation == true) {
-            //
                 let vidConn = videoDataOutput?.connectionWithMediaType(AVMediaTypeVideo)
-                print(vidConn?.videoOrientation)
-                vidConn?.videoOrientation = AVCaptureVideoOrientation.LandscapeRight
-                print(vidConn?.videoOrientation)
+                vidConn?.videoOrientation = self.videoOrientation
             }
             videoDataOutput?.startRecordingToOutputFileURL(fileURL, recordingDelegate: self)
             print("Started recording")
@@ -224,12 +244,11 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     self.layer.addSublayer(self.previewLayer!)
                     self.previewLayer?.frame = self.layer.frame
                     self.captureSession?.startRunning()
-                    let previewConn = self.previewLayer!.connection
-                    let orientation = UIInterfaceOrientation.LandscapeRight
-                    //let orientation = UIDevice.currentDevice().orientation//parentVC!.interfaceOrientation.rawValue
-                    let avorientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue)
-                    previewConn.videoOrientation = avorientation!
-                    //
+                    
+                    if let preview = previewLayer {
+                        preview.connection.videoOrientation = self.videoOrientation
+                    }
+                
                     if captureSession!.canAddOutput(videoDataOutput)
                     {
                         captureSession!.addOutput(videoDataOutput)
@@ -362,7 +381,11 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
         try VideoProcess.exportVideo(fileUrls, toURL: completeMovieUrl)
         
+        print("Exported: ", completeMovieUrl)
+        
         self.authorizeAndCopyFile(completeMovieUrl, path:pathURL)
+        
+        print("Copied: ", completeMovieUrl)
         
         return true
     }
@@ -378,7 +401,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
     {
         
-        PHPhotoLibrary.requestAuthorization { (PHAuthorizationStatus status) -> Void in
+        PHPhotoLibrary.requestAuthorization { status in
             switch (status)
             {
                 
@@ -441,7 +464,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         dispatch_group_wait(self.recDispGrp!, DISPATCH_TIME_FOREVER)
         //
         dispatch_group_enter(self.recDispGrp!)
-        PHPhotoLibrary.requestAuthorization { (PHAuthorizationStatus status) -> Void in
+        PHPhotoLibrary.requestAuthorization { (status : PHAuthorizationStatus) -> Void in
             print("perm \(status)")
             dispatch_group_leave(self.recDispGrp!)
         }
@@ -503,7 +526,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         var fileNamePostfix = 0
         repeat {
             filePath =
-            "\(dp.path)/\(dateTimePrefix)-\(fileNamePostfix++).mp4"
+            "\(dp.path)/\(dateTimePrefix)-\(fileNamePostfix).mp4"
+            fileNamePostfix += 1
         } while (NSFileManager.defaultManager().fileExistsAtPath(filePath!))
         
         return filePath!;
