@@ -84,17 +84,13 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     {
         showHideActivityIndicator(true)
         
-        if let title = movieTitle {
-            // TODO move this into VideoSessionManager?
-            videoView.titleGenerated=false
-            let dir = videoView.videoSession.sessionFileDir()
-            videoView.titleFilePath = NSURL(fileURLWithPath: dir).URLByAppendingPathComponent(TitleTrackName + ".mp4")
-            self.videoView.titDispGrp = dispatch_group_create()
-            dispatch_group_enter(videoView.titDispGrp!)
-            print(title.endIndex)
-            self.videoView.createAnimatedTitleVideo(title, animGrp: videoView.getFadeTransformAnimGrp)
-            dispatch_group_wait(videoView.titDispGrp!, DISPATCH_TIME_FOREVER)
+        do {
+            try videoView.prepareTitleTrack(movieTitle)
         }
+        catch let err as NSError {
+            print("Title Error", err.localizedDescription)
+        }
+        
         //concatenate video.
         dispatch_async(GlobalUserInitiatedQueue){
             self.videoView.doneDispGroup = dispatch_group_create()
@@ -494,7 +490,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     override func shouldAutorotate() -> Bool {
-        return !recordButton.recording
+//        return !recordButton.recording
+        return false
     }
     
 }

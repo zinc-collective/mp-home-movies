@@ -160,6 +160,19 @@ class VideoSessionManager: NSObject {
         return base.URLByAppendingPathComponent(CompleteVideoName + ".mp4")
     }
     
+    func titleTrackURL() -> NSURL {
+        let dir = self.sessionFileDir()
+        return NSURL(fileURLWithPath: dir).URLByAppendingPathComponent(TitleTrackName + ".mp4")
+    }
+    
+    func deleteTitleTrack() throws {
+        let url = titleTrackURL()
+        let mgr = NSFileManager.defaultManager()
+        if mgr.fileExistsAtPath(url.path!) {
+            try NSFileManager.defaultManager().removeItemAtURL(url)
+        }
+    }
+    
     func initializeSessionDir() throws {
         let manager = NSFileManager.defaultManager()
         let dir = sessionFileDir()

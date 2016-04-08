@@ -445,22 +445,40 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     }
     
     func getAssetForDevice() -> AVURLAsset {
-        let model = UIDevice.currentDevice().modelName
-        var assetName: String?
-        switch model {
-        case "iPhone 5": assetName = "iphone5"
-        case "iPhone 5s": assetName = "iphone5"
-        case "iPhone 5c": assetName = "iphone5"
-        case "iPhone 6" : assetName = "iphone6"
-        case "iPhone 6s" : assetName = "iphone6"
-        case "iPhone 6 Plus" : assetName = "iphone6p"
-        case "iPhone 6s Plus" : assetName = "iphone6p"
-        default: assetName = "iphone4sbelow"
+        let assetName: String = "iphone6p"
+        
+        // These were too small. Also, we don't want to support individual iPhone models
+//        let model = UIDevice.currentDevice().modelName
+//        switch model {
+//            case "iPhone 5": assetName = "iphone5"
+//            case "iPhone 5s": assetName = "iphone5"
+//            case "iPhone 5c": assetName = "iphone5"
+//            case "iPhone 6" : assetName = "iphone6"
+//            case "iPhone 6s" : assetName = "iphone6"
+//            case "iPhone 6 Plus" : assetName = "iphone6p"
+//            case "iPhone 6s Plus" : assetName = "iphone6p"
+//            default: assetName = "iphone4sbelow"
+//        }
+        
+        return AVURLAsset(URL:NSBundle.mainBundle().URLForResource(assetName, withExtension:"mov")!)
+        
+    }
+    
+    
+    
+    func prepareTitleTrack(movieTitle: String?) throws {
+        if let title = movieTitle {
+            self.titleGenerated=false
+            self.titDispGrp = dispatch_group_create()
+            self.titleFilePath = videoSession.titleTrackURL()
+            dispatch_group_enter(self.titDispGrp!)
+            print(title.endIndex)
+            self.createAnimatedTitleVideo(title, animGrp: self.getFadeTransformAnimGrp)
+            dispatch_group_wait(self.titDispGrp!, DISPATCH_TIME_FOREVER)
         }
-        
-        let asset = AVURLAsset(URL:NSBundle.mainBundle().URLForResource(assetName, withExtension:"mov")!)
-        return asset
-        
+        else {
+            try videoSession.deleteTitleTrack()
+        }
     }
     
     
@@ -488,7 +506,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             print(asset.duration)
             //
             let animComp = AVMutableVideoComposition(propertiesOfAsset: asset)
-            //
+            
             let parentLayer = CALayer()
             let videoLayer = CALayer()
             print(animComp.frameDuration)
@@ -500,7 +518,10 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             let al = CALayer()
             al.opacity=1.0
             //al.position=CGPointMake(animComp.renderSize.width/2, animComp.renderSize.height/2)
-            al.frame=CGRectMake(0, 0, animComp.renderSize.width,animComp.renderSize.height)
+            al.frame=CGRectMake(0, 0, animComp.renderSize.width, animComp.renderSize.height)
+            print("ANIM COMP SIZE", animComp.renderSize)
+            
+//            al.backgroundColor = UIColor.blueColor().CGColor
             al.geometryFlipped=false
             al.contentsGravity = "center"
             al.anchorPoint=CGPointMake(0.5, 0.5)
@@ -550,14 +571,13 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     try NSFileManager.defaultManager().removeItemAtPath(filePath)
                 }
                 catch let err as NSError {
-                    print(err)
+                    print("Remove Title Error", err)
                 }
                 
             }
             print(self.titleFilePath!)
             
             let exportSession = AVAssetExportSession(asset: comp, presetName: AVAssetExportPresetHighestQuality)
-            print(comp)
             exportSession?.outputURL=fileURL
             exportSession?.videoComposition=animComp
             exportSession?.outputFileType=AVFileTypeMPEG4
