@@ -49,27 +49,32 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBAction func donePressed(sender: AnyObject) {
         print("done pressed")
         showAlertWithCancel("Are You Sure You Want To Make Your Movie?", msg: "", comp: {
-            (alert: UIAlertAction!) in self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: { (alert: UIAlertAction!) in
-                self.generateTitleAndMakeMovie(self.videoView.movieTitle!)
+            (alert: UIAlertAction!) in
+                self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: { (alert: UIAlertAction!) in
+                    self.generateTitleAndMakeMovie(self.videoView.movieTitle!)
             })
         })
     }
     
     @IBAction func deletePressed() {
-        print("Delete last clip")
-        videoSession.deleteLastClip()
-        renderControls()
+        showAlertWithCancel("Delete your last video clip?", msg: "") {
+            (alert: UIAlertAction!) in
+            self.videoSession.deleteLastClip()
+            self.renderControls()
+        }
     }
     
     @IBAction func startOverPressed() {
-        print("START OVER")
-        do {
-            try videoSession.cleanupSessionDir()
+        showAlertWithCancel("Start over?", msg: "This will delete all video clips") {
+            (alert: UIAlertAction!) in
+            do {
+                try self.videoSession.cleanupSessionDir()
+            }
+            catch let err as NSError {
+                print("Error", err.localizedDescription)
+            }
+            self.renderControls()
         }
-        catch let err as NSError {
-            print("Error", err.localizedDescription)
-        }
-        renderControls()
     }
     
     func generateTitleAndMakeMovie(title: String)
@@ -91,10 +96,15 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         dispatch_async(GlobalUserInitiatedQueue){
             self.videoView.doneDispGroup = dispatch_group_create()
             dispatch_group_enter(self.videoView.doneDispGroup!)
-            var exportedURL : NSURL?
             var exportMessage: String?
+            
             do {
-                exportedURL = try self.videoView.finalizeOutput()
+                try self.videoView.finalizeOutput { exportedURL in
+                    dispatch_async(dispatch_get_main_queue()){
+                        self.showHideActivityIndicator(false)
+                        self.playVideo(exportedURL)
+                    }
+                }
             }
                 
             catch VideoExportError.CompositionFailed(let error) {
@@ -109,6 +119,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 exportMessage = "Track missing audio: \(url.absoluteString) \(time)"
             }
                 
+            catch VideoExportError.NoFiles() {
+                exportMessage = "No video clips found"
+            }
+                
             catch let err as NSError {
                 exportMessage = err.localizedDescription
             }
@@ -119,17 +133,11 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 }
             }
             
-            dispatch_group_wait(self.videoView.doneDispGroup!, DISPATCH_TIME_FOREVER)
-            dispatch_async(GlobalMainQueue){
-                self.showHideActivityIndicator(false)
-                if let url = exportedURL {
-                    self.playVideo(url)
-                }
-            }
         }
     }
     
     func playVideo(videoURL : NSURL) {
+        print("Play Video", videoURL)
         let player = AVPlayer(URL: videoURL)
         let playerController = VideoPlayerController()
         playerController.fullVideoURL = videoURL
@@ -161,14 +169,14 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             self.deleteButton.alpha    = toAlpha(isPortrait || self.isRecording || !hasClips)
             self.clipsButton.alpha     = toAlpha(isPortrait || !hasClips)
             self.recordButton.alpha    = toAlpha(isWorking || isPortrait)
+            
+            self.cameraSwitchButton.alpha = toAlpha(isPortrait || self.isRecording)
         })
         
         self.clipsButton.setTitle("\(numClips)", forState: .Normal)
         
         recordButton.recording = isRecording
-        
         recordLight.hidden = !isRecording
-        cameraSwitchButton.hidden = isPortrait || isRecording
     }
     
     //used by video mgr
@@ -284,12 +292,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     {
         print("view - app entered background")
         loadingFromBg = true
-        //
-        
-        //exit(0)
-        
-        
-        
     }
     
     func showAlert(tit: String, msg: String, comp: ((UIAlertAction!) -> Void)){
@@ -301,10 +303,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     func showAlertWithCancel(tit: String, msg: String, comp: ((UIAlertAction!) -> Void)){
-        
         let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.Alert)
         alertCtrller.addAction( UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: comp ))
-        alertCtrller.addAction( UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler: {(alert:UIAlertAction!) in } ))
+        alertCtrller.addAction( UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: {(alert:UIAlertAction!) in } ))
         self.presentViewController(alertCtrller, animated: true, completion: nil)
         
     }

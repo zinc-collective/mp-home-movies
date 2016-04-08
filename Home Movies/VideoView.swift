@@ -143,7 +143,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     //copy to camera roll
                     self.doneDispGroup = dispatch_group_create()
                     dispatch_group_enter(self.doneDispGroup!)
-                    self.copyFileToCameraRoll(fileURL, folderPath: fileURL)
+                    self.copyFileToCameraRoll(fileURL)
                     dispatch_async(GlobalUtilityQueue){
                         print("waiting for video copy  to camera roll finish")
                         dispatch_group_wait(self.doneDispGroup!, DISPATCH_TIME_FOREVER)
@@ -263,75 +263,20 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         return (front, back, audio)
     }
     
-    func isDoneFinalizingOutput() -> Bool {
-        let dir = videoSession.sessionFileDir()
-        let fileMgr = NSFileManager.defaultManager()
-        let pathURL = NSURL(fileURLWithPath: dir)
-        let completeMovieUrl = pathURL.URLByAppendingPathComponent("full.mp4")
-        if fileMgr.fileExistsAtPath(completeMovieUrl.path!){
-            return true
-        }
-        
-        return false
-    }
-    
-    func finalizeOutput() throws -> NSURL?
+    func finalizeOutput(complete:(NSURL) -> Void) throws -> Void
     {
-        let dir = videoSession.sessionFileDir()
-        let result = try processDirContents(dir)
-        
-        if result {
-            let url = NSURL(fileURLWithPath: dir)
-            return url.URLByAppendingPathComponent("full.mp4")
+        try videoSession.exportVideoSession { (url) in
+            print("Exported: ", url)
+            
+            self.authorizeAndCopyFile(url)
+            print("Copied: ", url)
+            
+            complete(url)
         }
-        
-        return nil
     }
     
-    func processDirContents(path: String) throws -> Bool {
-        
-        let fileMgr = NSFileManager.defaultManager()
-        var files = [String]()
-        
-        let pathURL = NSURL(fileURLWithPath: path)
-        
-        let completeMovieUrl = pathURL.URLByAppendingPathComponent("full.mp4")
-        
-        if fileMgr.fileExistsAtPath(completeMovieUrl.path!){
-            try fileMgr.removeItemAtURL(completeMovieUrl)
-        }
-        
-        try files = fileMgr.contentsOfDirectoryAtPath(path)
-        
-        if files.count <= 0 {
-            return false
-        }
-        
-        print(files)
-        
-        let fileUrls = files.map { (filePath) in
-            return pathURL.URLByAppendingPathComponent(filePath)
-        }
-        
-        try videoSession.exportVideo(fileUrls, toURL: completeMovieUrl)
-        
-        print("Exported: ", completeMovieUrl)
-        
-        self.authorizeAndCopyFile(completeMovieUrl, path:pathURL)
-        
-        print("Copied: ", completeMovieUrl)
-        
-        return true
-    }
     
-    // if this returns an error, I'd like to notify the user and send to us
-    
-    
-    
-    
-    
-    
-    func authorizeAndCopyFile(fileURL: NSURL, path: NSURL)
+    func authorizeAndCopyFile(fileURL: NSURL)
         
     {
         
@@ -343,7 +288,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 
                 // Permission Granted
                 
-                self.copyFileToCameraRoll(fileURL, folderPath: path)
+                self.copyFileToCameraRoll(fileURL)
                 //get the player ready to play the video
                 //self.playVideo(fileURL)
                 
@@ -363,7 +308,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
     }
     
-    func copyFileToCameraRoll(fileURL: NSURL, folderPath: NSURL){
+    func copyFileToCameraRoll(fileURL: NSURL){
         
         print("saving...")
             

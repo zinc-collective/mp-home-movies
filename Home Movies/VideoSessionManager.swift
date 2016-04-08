@@ -13,6 +13,7 @@ enum VideoExportError: ErrorType {
     case MissingAudio(url: NSURL, time:CMTime)
     case CompositionFailed(err: NSError)
     case CouldNotCreateExporter()
+    case NoFiles()
 }
 
 let TitleTrackName = "1title"
@@ -21,12 +22,35 @@ class VideoSessionManager: NSObject {
     
     static let defaultManager = VideoSessionManager()
     
+    let CompleteVideoName = "full"
+    
     override init() {
         super.init()
         try! initializeSessionDir()
     }
     
-    func exportVideo(sources: [NSURL], toURL: NSURL) throws -> Void {
+    func exportVideoSession(complete:(NSURL) -> Void) throws -> Void {
+        
+        let completeMovieUrl = self.completeMovieURL()
+        let fileUrls = sessionFileURLs()
+        
+        if (fileUrls.count < 0) {
+            throw VideoExportError.NoFiles()
+        }
+        
+        try self.exportVideo(fileUrls, toURL: completeMovieUrl, complete: {
+            print("Exported: ", completeMovieUrl)
+            complete(completeMovieUrl)
+        })
+    }
+    
+    func exportVideo(sources: [NSURL], toURL: NSURL, complete:() -> Void) throws -> Void {
+        
+        // clean up old export target
+        let mgr = NSFileManager.defaultManager()
+        if mgr.fileExistsAtPath(toURL.path!){
+            try mgr.removeItemAtURL(toURL)
+        }
         
         let composition = AVMutableComposition()
         let trackVideo:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: CMPersistentTrackID())
@@ -103,17 +127,19 @@ class VideoSessionManager: NSObject {
             
             exporter.outputFileType = AVFileTypeMPEG4 //AVFileTypeQuickTimeMovie
             
+            // export asynchronously!! Yikes!
+            // what a bad idea!
             exporter.exportAsynchronouslyWithCompletionHandler({
                 
-                switch exporter.status{
-                    
-                case  AVAssetExportSessionStatus.Failed:
-                    print("failed \(exporter.error)")
-                    print(exporter.error?.localizedDescription)
-                case AVAssetExportSessionStatus.Cancelled:
-                    print("cancelled \(exporter.error)")
-                default:
-                    print("complete")
+                switch exporter.status {
+                    case AVAssetExportSessionStatus.Failed:
+                        print("failed \(exporter.error)")
+                        print(exporter.error?.localizedDescription)
+                    case AVAssetExportSessionStatus.Cancelled:
+                        print("cancelled \(exporter.error)")
+                    default:
+                        print("complete")
+                        complete()
                 }
             })
         }
@@ -127,6 +153,11 @@ class VideoSessionManager: NSObject {
         let documentsDirectory = paths[0]
         let filePath:String = "\(documentsDirectory)/HomeMoviesSession"
         return filePath
+    }
+    
+    private func completeMovieURL() -> NSURL {
+        let base = NSURL.fileURLWithPath(sessionFileDir())
+        return base.URLByAppendingPathComponent(CompleteVideoName + ".mp4")
     }
     
     func initializeSessionDir() throws {
@@ -155,7 +186,6 @@ class VideoSessionManager: NSObject {
         return filePath
     }
     
-    
     func getClipsCount() -> Int {
         var count: Int = 0
         do {
@@ -167,7 +197,7 @@ class VideoSessionManager: NSObject {
                 {
                     count = count - 1
                 }
-                if file.containsString("full")
+                if file.containsString(CompleteVideoName)
                 {
                     count = count - 1
                 }
