@@ -71,7 +71,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     //
     let screenWidth = UIScreen.mainScreen().bounds.size.width
     
-    var movieTitle: String?
     var titleGenerated:Bool?
     var titleFilePath:NSURL?
     
@@ -463,7 +462,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         return asset
         
     }
-    
     
     
     func createAnimatedTitleVideo(label: String, animGrp: ()-> CAAnimationGroup)  {

@@ -35,6 +35,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var deleteButton: UIButton!
     
     @IBOutlet weak var startOverButton: OutlineButton!
+    @IBOutlet weak var topBar: UIView!
+    @IBOutlet weak var sideBar: UIView!
+    
     var alertController : UIAlertController?
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,8 +53,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         print("done pressed")
         showAlertWithCancel("Are You Sure You Want To Make Your Movie?", msg: "", comp: {
             (alert: UIAlertAction!) in
-                self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: { (alert: UIAlertAction!) in
-                    self.generateTitleAndMakeMovie(self.videoView.movieTitle!)
+                self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: { title in
+                    self.generateTitleAndMakeMovie(title)
             })
         })
     }
@@ -77,11 +80,11 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
     }
     
-    func generateTitleAndMakeMovie(title: String)
+    func generateTitleAndMakeMovie(movieTitle: String?)
     {
         showHideActivityIndicator(true)
         
-        if title != "" {
+        if let title = movieTitle {
             // TODO move this into VideoSessionManager?
             videoView.titleGenerated=false
             let dir = videoView.videoSession.sessionFileDir()
@@ -102,7 +105,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 try self.videoView.finalizeOutput { exportedURL in
                     dispatch_async(dispatch_get_main_queue()){
                         self.showHideActivityIndicator(false)
-                        self.playVideo(exportedURL)
+                        self.playVideo(exportedURL, movieTitle: movieTitle)
                     }
                 }
             }
@@ -136,13 +139,11 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
     }
     
-    func playVideo(videoURL : NSURL) {
-        print("Play Video", videoURL)
-        let player = AVPlayer(URL: videoURL)
-        let playerController = VideoPlayerController()
+    func playVideo(videoURL : NSURL, movieTitle: String?) {
+        let playerController = UIStoryboard(name: "Player", bundle: nil).instantiateInitialViewController() as! VideoPlayerController
         playerController.fullVideoURL = videoURL
-        playerController.player = player
-        self.presentViewController(playerController, animated: true, completion:{})
+        playerController.movieTitle = movieTitle
+        self.presentViewController(playerController, animated: true, completion: nil)
         
     }
     
@@ -153,7 +154,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         let numClips = videoSession.getClipsCount()
         let hasClips = (numClips > 0)
         
-        let toAlpha = { (hidden: Bool) -> CGFloat in
+        
+        let fromHidden = { (hidden: Bool) -> CGFloat in
             if hidden {
                 return 0.0
             }
@@ -164,13 +166,17 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
         UIView.animateWithDuration(0.200, animations: {
             
-            self.doneButton.alpha      = toAlpha(isPortrait || self.isRecording || !hasClips)
-            self.startOverButton.alpha = toAlpha(isPortrait || self.isRecording || !hasClips)
-            self.deleteButton.alpha    = toAlpha(isPortrait || self.isRecording || !hasClips)
-            self.clipsButton.alpha     = toAlpha(isPortrait || !hasClips)
-            self.recordButton.alpha    = toAlpha(isWorking || isPortrait)
+            self.doneButton.alpha      = fromHidden(self.isRecording || !hasClips || isPortrait || isWorking)
+            self.startOverButton.alpha = fromHidden(self.isRecording || !hasClips || isPortrait || isWorking)
             
-            self.cameraSwitchButton.alpha = toAlpha(isPortrait || self.isRecording)
+            self.topBar.alpha = fromHidden(isWorking || isPortrait)
+            self.sideBar.alpha = fromHidden(isWorking || isPortrait)
+            
+            // the following are on the top or side bar
+            self.deleteButton.alpha    = fromHidden(self.isRecording || !hasClips)
+            self.clipsButton.alpha     = fromHidden(!hasClips)
+            self.cameraSwitchButton.alpha = fromHidden(self.isRecording)
+            
         })
         
         self.clipsButton.setTitle("\(numClips)", forState: .Normal)
@@ -217,6 +223,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         activityIndicator.hidden=true
         renderControls()
 
@@ -346,7 +353,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
 
     override func viewWillDisappear(animated: Bool) {
-        print("view will disappesar")
+        super.viewWillDisappear(animated)
     }
     
     
@@ -378,23 +385,30 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     
     
-    func showAlertForTitle(tit: String, msg: String, comp: ((UIAlertAction!) -> Void)){
+    func showAlertForTitle(tit: String, msg: String, comp: ((title: String?) -> Void)){
         
-        self.videoView.movieTitle=""
+        var movieTitle : String? = nil
+        
         let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.Alert)
-        let okButton = UIAlertAction(title: "Add Title", style: UIAlertActionStyle.Default, handler: comp )
-        alertCtrller.addAction(okButton)
-        alertCtrller.addAction( UIAlertAction(title: "No Title", style: UIAlertActionStyle.Default, handler: {
-            (alert: UIAlertAction!) in
-            self.videoView.movieTitle=""
-            comp(okButton)
-        } ))
+        
+        alertCtrller.addAction( UIAlertAction(title: "Add Title", style: UIAlertActionStyle.Default) { alert in
+            comp(title: movieTitle)
+        })
+        
+        alertCtrller.addAction( UIAlertAction(title: "No Title", style: UIAlertActionStyle.Default) { alert in
+            comp(title: nil)
+        })
+        
         alertCtrller.addTextFieldWithConfigurationHandler {(textField) in
             textField.delegate = self
             textField.placeholder = "Title"
+            textField.autocapitalizationType = .AllCharacters
+            
+            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
+                movieTitle = textField.text?.uppercaseString
+            }
         }
         
-        // save for later
         self.alertController = alertCtrller
         self.presentViewController(alertCtrller, animated: true, completion: nil)
         

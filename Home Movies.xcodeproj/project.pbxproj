@@ -16,6 +16,7 @@
 		787598AA1CB5CA740017E213 /* OutlineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787598A91CB5CA740017E213 /* OutlineButton.swift */; };
 		787DD0441CADB1750031B10F /* RecordTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787DD0431CADB1750031B10F /* RecordTimer.swift */; };
 		78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D7629E1C85E00500797980 /* AVFoundation.framework */; };
+		78E638E41CB820A900C202D3 /* Player.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78E638E31CB820A900C202D3 /* Player.storyboard */; };
 		78F8BF961CAEC9D20016AE8A /* CameraFocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */; };
 		BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */; };
 		BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AC1C5E994B007F4A06 /* iphone6.mov */; };
@@ -42,6 +43,7 @@
 		787598A91CB5CA740017E213 /* OutlineButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutlineButton.swift; sourceTree = "<group>"; };
 		787DD0431CADB1750031B10F /* RecordTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTimer.swift; sourceTree = "<group>"; };
 		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		78E638E31CB820A900C202D3 /* Player.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Player.storyboard; sourceTree = "<group>"; };
 		78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFocusSquare.swift; sourceTree = "<group>"; };
 		BBD7CB34B83BADD8DC5210A0 /* Pods-Home Movies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Home Movies.release.xcconfig"; path = "Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies.release.xcconfig"; sourceTree = "<group>"; };
 		BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6p.mov; sourceTree = "<group>"; };
@@ -125,7 +127,6 @@
 				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
 				BDE762311BD18362008B74F7 /* VideoView.swift */,
 				784043C11CB2E20E008324FB /* VideoSessionManager.swift */,
-				7855FC201C87AFC800704231 /* VideoPlayerController.swift */,
 				BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */,
 				787DD0431CADB1750031B10F /* RecordTimer.swift */,
 				787598A71CB5A0340017E213 /* RecordLight.swift */,
@@ -142,6 +143,15 @@
 				BDE762301BD18362008B74F7 /* Utils.swift */,
 			);
 			name = Lib;
+			sourceTree = "<group>";
+		};
+		78E638E21CB81AF600C202D3 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				78E638E31CB820A900C202D3 /* Player.storyboard */,
+				7855FC201C87AFC800704231 /* VideoPlayerController.swift */,
+			);
+			name = Preview;
 			sourceTree = "<group>";
 		};
 		BD762F5E1BD17BDD003AEA6E = {
@@ -168,6 +178,7 @@
 			children = (
 				78D7629B1C85DC6E00797980 /* Home */,
 				78D7629C1C85DC7400797980 /* Record */,
+				78E638E21CB81AF600C202D3 /* Preview */,
 				78D7629D1C85DC8300797980 /* Lib */,
 				BD762F711BD17BDD003AEA6E /* Assets.xcassets */,
 				78D7629A1C85DBFB00797980 /* assets */,
@@ -243,6 +254,7 @@
 			files = (
 				7855FC231C87B6AF00704231 /* Record.storyboard in Resources */,
 				7855FC221C87B6AA00704231 /* Home.storyboard in Resources */,
+				78E638E41CB820A900C202D3 /* Player.storyboard in Resources */,
 				BDE7623A1BD18362008B74F7 /* Upload-50.png in Resources */,
 				BD1B09B11C5E99A7007F4A06 /* iphone4sbelow.mov in Resources */,
 				BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */,

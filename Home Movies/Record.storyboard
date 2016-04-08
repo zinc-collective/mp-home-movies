@@ -9,7 +9,7 @@
         <!--Record View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController storyboardIdentifier="MainViewController" id="vXZ-lx-hvc" customClass="RecordViewController" customModule="Home_Movies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="RecordViewController" customModule="Home_Movies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -222,7 +222,9 @@
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="wK0-PI-rSL"/>
                     <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
@@ -234,8 +236,10 @@
                         <outlet property="orientationIcon" destination="1Xg-oh-PSe" id="zk2-PO-zTp"/>
                         <outlet property="recordButton" destination="pFe-A2-koH" id="zOc-vH-kHx"/>
                         <outlet property="recordLight" destination="gwQ-aK-BFe" id="bhW-l1-ClU"/>
+                        <outlet property="sideBar" destination="fF9-KH-1Oj" id="hX6-Kx-kdp"/>
                         <outlet property="startOverButton" destination="YeP-Yy-BK8" id="nF3-Mh-qG0"/>
                         <outlet property="timerLabel" destination="GAU-qf-7Xk" id="NKc-Jg-kVl"/>
+                        <outlet property="topBar" destination="XS0-rF-Ur9" id="hh9-4z-oW8"/>
                         <outlet property="videoContainer" destination="aEd-w3-b5H" id="EwS-N9-EWg"/>
                     </connections>
                 </viewController>

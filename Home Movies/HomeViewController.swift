@@ -22,9 +22,8 @@ class HomeViewController: UIViewController {
         
         let mainStoryboard = UIStoryboard(name: "Record", bundle: NSBundle.mainBundle())
         
-        let camCtrllr:UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("MainViewController") as UIViewController
-        
-        self.presentViewController(camCtrllr, animated: true, completion: nil)
+        let recordController:UIViewController = mainStoryboard.instantiateInitialViewController()!
+        self.presentViewController(recordController, animated: true, completion: nil)
   
     }
 
