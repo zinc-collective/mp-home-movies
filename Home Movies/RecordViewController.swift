@@ -51,11 +51,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     @IBAction func donePressed(sender: AnyObject) {
         print("done pressed")
-        showAlertWithCancel("Are You Sure You Want To Make Your Movie?", msg: "", comp: {
-            (alert: UIAlertAction!) in
-                self.showAlertForTitle("Do You Want To Add A Title?",msg: "",comp: { title in
-                    self.generateTitleAndMakeMovie(title)
-            })
+        self.showAlertForTitle("Do You Want To Add A Title?", msg: "", comp: { title in
+            self.generateTitleAndMakeMovie(title)
         })
     }
     
