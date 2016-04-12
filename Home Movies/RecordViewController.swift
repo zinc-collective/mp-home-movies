@@ -18,6 +18,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     var videoSession = VideoSessionManager.defaultManager
     var isRecording = false
+    var isChooseContinueModal = false
     
     @IBOutlet weak var clipsButton: UIButton!
     @IBOutlet weak var recordButton: RecordButtonView!
@@ -34,9 +35,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     @IBOutlet weak var deleteButton: UIButton!
     
-    @IBOutlet weak var startOverButton: OutlineButton!
     @IBOutlet weak var topBar: UIView!
     @IBOutlet weak var sideBar: UIView!
+    @IBOutlet weak var continueButton: OutlineButton!
+    @IBOutlet weak var newMovieButton: OutlineButton!
     
     var alertController : UIAlertController?
     
@@ -65,16 +67,19 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     @IBAction func startOverPressed() {
-        showAlertWithCancel("Start over?", msg: "This will delete all video clips") {
-            (alert: UIAlertAction!) in
-            do {
-                try self.videoSession.cleanupSessionDir()
-            }
-            catch let err as NSError {
-                print("Error", err.localizedDescription)
-            }
-            self.renderControls()
+        do {
+            try self.videoSession.cleanupSessionDir()
         }
+        catch let err as NSError {
+            print("Error", err.localizedDescription)
+        }
+        isChooseContinueModal = false
+        self.renderControls()
+    }
+    
+    @IBAction func continuePressed() {
+        isChooseContinueModal = false
+        self.renderControls()
     }
     
     func generateTitleAndMakeMovie(movieTitle: String?)
@@ -136,8 +141,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         let playerController = UIStoryboard(name: "Player", bundle: nil).instantiateInitialViewController() as! VideoPlayerController
         playerController.fullVideoURL = videoURL
         playerController.movieTitle = movieTitle
-        self.presentViewController(playerController, animated: true, completion: nil)
-        
+        self.presentViewController(playerController, animated: true, completion: {
+            self.isChooseContinueModal = true
+        })
     }
     
     func renderControls() {
@@ -147,11 +153,13 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         let numClips = videoSession.getClipsCount()
         let hasClips = (numClips > 0)
         
+        let allControlsHidden = isPortrait || isWorking || isChooseContinueModal
         
         let fromHidden = { (hidden: Bool) -> CGFloat in
             if hidden {
                 return 0.0
             }
+            //
             else {
                 return 1.0
             }
@@ -159,17 +167,18 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
         UIView.animateWithDuration(0.200, animations: {
             
-            self.doneButton.alpha      = fromHidden(self.isRecording || !hasClips || isPortrait || isWorking)
-            self.startOverButton.alpha = fromHidden(self.isRecording || !hasClips || isPortrait || isWorking)
+            self.doneButton.alpha      = fromHidden(self.isRecording || !hasClips || allControlsHidden)
             
-            self.topBar.alpha = fromHidden(isWorking || isPortrait)
-            self.sideBar.alpha = fromHidden(isWorking || isPortrait)
+            self.topBar.alpha = fromHidden(allControlsHidden)
+            self.sideBar.alpha = fromHidden(allControlsHidden)
             
             // the following are on the top or side bar
             self.deleteButton.alpha    = fromHidden(self.isRecording || !hasClips)
             self.clipsButton.alpha     = fromHidden(!hasClips)
             self.cameraSwitchButton.alpha = fromHidden(self.isRecording)
             
+            self.newMovieButton.alpha = fromHidden(!self.isChooseContinueModal)
+            self.continueButton.alpha = fromHidden(!self.isChooseContinueModal)
         })
         
         self.clipsButton.setTitle("\(numClips)", forState: .Normal)
