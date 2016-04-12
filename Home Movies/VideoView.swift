@@ -26,8 +26,6 @@ typealias Devices = (front: AVCaptureDevice?, back: AVCaptureDevice?, audio: AVC
 @objc
 class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     
-//    var parentVC: RecordViewController?
-    
     weak var delegate: VideoViewDelegate?
     
     var videoSession = VideoSessionManager.defaultManager
@@ -36,32 +34,32 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     var videoDataOutput: AVCaptureMovieFileOutput?
     var previewLayer : AVCaptureVideoPreviewLayer?
     
-    var orientation : UIInterfaceOrientation {
+    // This is BACKWARDS and I have no idea why
+    var orientation : UIDeviceOrientation {
         get {
             if self.videoOrientation == .LandscapeLeft {
-                return .LandscapeLeft
+                return .LandscapeRight
             }
             else {
-                return .LandscapeRight
+                return .LandscapeLeft
             }
         }
         
         set(newValue) {
             if newValue == .LandscapeLeft {
-                self.videoOrientation = .LandscapeLeft
-            }
-            else {
                 self.videoOrientation = .LandscapeRight
             }
+            else {
+                self.videoOrientation = .LandscapeLeft
+            }
             
+            self.updateOrientation(self.videoOrientation)
         }
     }
     
     var videoOrientation = AVCaptureVideoOrientation.LandscapeRight
     
     var focusSquare : CameraFocusSquare?
-    
-    // If we find a device we'll store it here for later use
     
     var recording: Bool = false
     var recDispGrp : dispatch_group_t?
@@ -186,9 +184,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     self.previewLayer?.frame = self.layer.frame
                     self.captureSession?.startRunning()
                     
-                    if let preview = previewLayer {
-                        preview.connection.videoOrientation = self.videoOrientation
-                    }
+                    updateOrientation(self.videoOrientation)
                 
                     if captureSession!.canAddOutput(videoDataOutput)
                     {
@@ -202,6 +198,12 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 throw error
             }
             
+        }
+    }
+    
+    private func updateOrientation(videoOrientation:AVCaptureVideoOrientation) {
+        if let preview = previewLayer {
+            preview.connection.videoOrientation = videoOrientation
         }
     }
     

@@ -229,10 +229,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         activityIndicator.hidden=true
         renderControls()
 
-        print("view will appear")
-        
-        videoView?.orientation = UIApplication.sharedApplication().statusBarOrientation
-        
         UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:UIDeviceOrientationDidChangeNotification, object: nil)
     }
@@ -259,6 +255,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         videoView = VideoView(frame: videoContainer.bounds, device: device)
         videoContainer.addSubview(videoView)
         videoView.delegate = self
+        videoView.orientation = UIDevice.currentDevice().orientation
     }
     
     func addVideoView() {
@@ -446,7 +443,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         
-        let orientation = UIApplication.sharedApplication().statusBarOrientation
+        let orientation = UIDevice.currentDevice().orientation
         videoView?.orientation = orientation
     }
     
@@ -466,7 +463,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     func isDevicePortrait() -> Bool {
         let orientation = UIDevice.currentDevice().orientation
-        return ((orientation == UIDeviceOrientation.Portrait) || (orientation == UIDeviceOrientation.PortraitUpsideDown))
+        return ((orientation == .Portrait) || (orientation == .PortraitUpsideDown))
     }
     
     func textFieldShouldReturn(field: UITextField) -> Bool {
@@ -496,8 +493,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     override func shouldAutorotate() -> Bool {
-//        return !recordButton.recording
-        return false
+        return !isRecording
     }
     
 }

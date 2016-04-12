@@ -179,7 +179,7 @@
                                     </mask>
                                 </variation>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rI7-O8-CRh" customClass="OutlineButton" customModule="Home_Movies" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rI7-O8-CRh" customClass="OutlineButton" customModule="Home_Movies" customModuleProvider="target">
                                 <rect key="frame" x="188" y="186" width="150" height="42"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="T1k-9z-Gd2"/>
@@ -191,7 +191,7 @@
                                     <action selector="startOverPressed" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Oan-ee-mue"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OAL-yd-w4O" customClass="OutlineButton" customModule="Home_Movies" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OAL-yd-w4O" customClass="OutlineButton" customModule="Home_Movies" customModuleProvider="target">
                                 <rect key="frame" x="398" y="186" width="150" height="42"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="42" id="D60-YU-Iuk"/>

@@ -102,13 +102,19 @@ class VideoSessionManager: NSObject {
                         throw VideoExportError.MissingAssets(url: assets.url, time: insertTime)
                     }
                     
-                    // set the transform / orientation from the original. It scales from the bottom right
+                    // set the transform / orientation from the original.
                     // start with the naturalSize to get the correct orientation of reverse camera, etc
                     let size = assetVideo.naturalSize
                     let scaleX = renderSize.width / size.width
-                    let move = CGAffineTransformTranslate(assetVideo.preferredTransform, (size.width - renderSize.width), (size.height - renderSize.height))
-                    let moveAndScale = CGAffineTransformScale(move, scaleX, scaleX)
-                    layerInstruction.setTransform(moveAndScale, atTime: insertTime)
+                    let scale = CGAffineTransformMakeScale(scaleX, scaleX)
+                    
+                    layerInstruction.setTransform(
+                            CGAffineTransformConcat(assetVideo.preferredTransform,
+                            CGAffineTransformConcat(scale,
+                            CGAffineTransformIdentity
+                            ))
+                        , atTime: insertTime)
+                    
 //                    print(" - scale", scaleX)
 //                    print(" - translateX", (size.width - renderSize.width))
                     

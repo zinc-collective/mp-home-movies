@@ -127,11 +127,7 @@
 				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
 				BDE762311BD18362008B74F7 /* VideoView.swift */,
 				784043C11CB2E20E008324FB /* VideoSessionManager.swift */,
-				BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */,
-				787DD0431CADB1750031B10F /* RecordTimer.swift */,
-				787598A71CB5A0340017E213 /* RecordLight.swift */,
-				78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */,
-				787598A91CB5CA740017E213 /* OutlineButton.swift */,
+				78E5818A1CBD49CD00EA0ACE /* Components */,
 			);
 			name = Record;
 			sourceTree = "<group>";
@@ -143,6 +139,18 @@
 				BDE762301BD18362008B74F7 /* Utils.swift */,
 			);
 			name = Lib;
+			sourceTree = "<group>";
+		};
+		78E5818A1CBD49CD00EA0ACE /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BDE7622D1BD18362008B74F7 /* RecordButtonView.swift */,
+				787DD0431CADB1750031B10F /* RecordTimer.swift */,
+				787598A71CB5A0340017E213 /* RecordLight.swift */,
+				78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */,
+				787598A91CB5CA740017E213 /* OutlineButton.swift */,
+			);
+			name = Components;
 			sourceTree = "<group>";
 		};
 		78E638E21CB81AF600C202D3 /* Preview */ = {
