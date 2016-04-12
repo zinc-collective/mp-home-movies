@@ -448,17 +448,19 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     func orientationDidChange() {
-        let orientation = UIDevice.currentDevice().orientation
-        
-        orientationIcon.hidden = !isDevicePortrait()
-        var a = M_PI / 2.0
-        if (orientation == .Portrait) {
-            a = -(M_PI / 2.0)
+        if (!isRecording) {
+            let orientation = UIDevice.currentDevice().orientation
+            
+            orientationIcon.hidden = !isDevicePortrait()
+            var a = M_PI / 2.0
+            if (orientation == .Portrait) {
+                a = -(M_PI / 2.0)
+            }
+            let m = CGAffineTransformMakeRotation(CGFloat(a))
+            orientationIcon.transform = m
+            
+            renderControls()
         }
-        let m = CGAffineTransformMakeRotation(CGFloat(a))
-        orientationIcon.transform = m
-        
-        renderControls()
     }
     
     func isDevicePortrait() -> Bool {
