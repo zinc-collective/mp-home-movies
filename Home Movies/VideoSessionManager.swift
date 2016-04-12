@@ -245,8 +245,9 @@ class VideoSessionManager: NSObject {
     func deleteLastClip () {
         let urls = sessionFileURLs()
         
-        if let url = urls.last {
+        if let url = urls.last  {
             do {
+                print("URL", url.lastPathComponent)
                 try NSFileManager.defaultManager().removeItemAtURL(url)
             }
             catch _ {
@@ -269,8 +270,13 @@ class VideoSessionManager: NSObject {
             return []
         }
         
-        let fileUrls = files.map { (filePath) in
-            return pathURL.URLByAppendingPathComponent(filePath)
+        let fileUrls = files.flatMap { filePath -> NSURL? in
+            if (filePath.containsString(CompleteVideoName)) {
+                return nil
+            }
+            else {
+                return pathURL.URLByAppendingPathComponent(filePath)
+            }
         }
         
         return fileUrls
