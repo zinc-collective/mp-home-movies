@@ -10,10 +10,10 @@ import UIKit
 import AVFoundation
 
 enum VideoExportError: ErrorType {
-    case MissingAudio(url: NSURL, time:CMTime)
+    case MissingAssets(url: NSURL, time:CMTime)
     case CompositionFailed(err: NSError)
     case CouldNotCreateExporter()
-    case NoFiles()
+    case NoClips()
 }
 
 let TitleTrackName = "1title"
@@ -35,7 +35,7 @@ class VideoSessionManager: NSObject {
         let fileUrls = sessionFileURLs()
         
         if (fileUrls.count < 0) {
-            throw VideoExportError.NoFiles()
+            throw VideoExportError.NoClips()
         }
         
         try self.exportVideo(fileUrls, toURL: completeMovieUrl, complete: {
@@ -56,56 +56,64 @@ class VideoSessionManager: NSObject {
         let trackVideo:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: CMPersistentTrackID())
         let trackAudio:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: CMPersistentTrackID())
         
-        // Stuff
+        
+        // Composition (for getting the transforms right)
         let videoComposition = AVMutableVideoComposition()
         videoComposition.frameDuration = CMTimeMake(1,30)
         videoComposition.renderScale = 1.0
         
         let instruction = AVMutableVideoCompositionInstruction()
         let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: trackVideo)
-        
-        // Stuff
-        
         let videoLayerInstruction = AVMutableVideoCompositionInstruction()
         videoLayerInstruction.layerInstructions = []
         
+        let clipAssets = sources.map(assetsForURL)
+        
+        let mLargestClipSize = clipAssets
+            .flatMap({ (assets) in assets.video?.naturalSize })
+            .maxElement({ (one, two) -> Bool in
+                return one.height < two.height && one.width < two.width
+            })
+        
+        if (mLargestClipSize == nil) {
+            throw VideoExportError.NoClips()
+        }
+        
+        let renderSize = mLargestClipSize!
+        
+        print("Largest Clip Size", renderSize)
+        videoComposition.renderSize = renderSize
         
         var insertTime = kCMTimeZero
-        
         do {
-            for moviePathUrl in sources {
-//                let moviePathUrl =  pathURL.URLByAppendingPathComponent(assetFile)
-                let sourceAsset = AVURLAsset(URL: moviePathUrl, options: [AVURLAssetPreferPreciseDurationAndTimingKey:true,AVURLAssetReferenceRestrictionsKey:0])
-                let tracks = sourceAsset.tracksWithMediaType(AVMediaTypeVideo)
-                var audios: [AVAssetTrack] = sourceAsset.tracksWithMediaType(AVMediaTypeAudio)
-                if tracks.count > 0 {
+            for assets in clipAssets {
+                if let assetVideo = assets.video {
                     
-                    let assetTrack:AVAssetTrack = tracks[0]
+                    print("Inserting Video: ", assets.url.lastPathComponent, assetVideo.naturalSize)
                     
-                    videoComposition.renderSize = assetTrack.naturalSize
-                    layerInstruction.setTransform(assetTrack.preferredTransform, atTime: insertTime)
+                    // insert video
+                    try trackVideo.insertTimeRange(assetVideo.timeRange, ofTrack: assetVideo, atTime: insertTime)
                     
-                    try trackVideo.insertTimeRange(assetTrack.timeRange, ofTrack: assetTrack, atTime: insertTime)
-                    
-                    if audios.count > 0 {
-                        let assetTrackAudio:AVAssetTrack = audios[0]
-                   
-                        try trackAudio.insertTimeRange(CMTimeRangeMake(kCMTimeZero,sourceAsset.duration), ofTrack: assetTrackAudio, atTime: insertTime)
+                    // insert audio
+                    if let assetAudio = assets.audio {
+                        try trackAudio.insertTimeRange(assetAudio.timeRange, ofTrack: assetAudio, atTime: insertTime)
                     }
-                        
-                    else if !moviePathUrl.absoluteString.containsString(TitleTrackName) {
-                        throw VideoExportError.MissingAudio(url: moviePathUrl, time: insertTime)
+                    else if !assets.url.absoluteString.containsString(TitleTrackName) {
+                        throw VideoExportError.MissingAssets(url: assets.url, time: insertTime)
                     }
                     
-                    // set the transform / orientation from the original
-                    // for transforms, etc
-                    let instruction = AVMutableVideoCompositionLayerInstruction(assetTrack: trackVideo)
-                    instruction.setTransform(assetTrack.preferredTransform, atTime: insertTime)
+                    // set the transform / orientation from the original. It scales from the bottom right
+                    // start with the naturalSize to get the correct orientation of reverse camera, etc
+                    let size = assetVideo.naturalSize
+                    let scaleX = renderSize.width / size.width
+                    let move = CGAffineTransformTranslate(assetVideo.preferredTransform, (size.width - renderSize.width), (size.height - renderSize.height))
+                    let moveAndScale = CGAffineTransformScale(move, scaleX, scaleX)
+                    layerInstruction.setTransform(moveAndScale, atTime: insertTime)
+//                    print(" - scale", scaleX)
+//                    print(" - translateX", (size.width - renderSize.width))
                     
-                    videoLayerInstruction.layerInstructions.append(instruction)
-                    
-                    insertTime = CMTimeAdd(insertTime, sourceAsset.duration)
-                    
+                    // increment the time
+                    insertTime = CMTimeAdd(insertTime, assets.source.duration)
                 }
             }
         }
@@ -146,6 +154,13 @@ class VideoSessionManager: NSObject {
         else {
             throw VideoExportError.CouldNotCreateExporter()
         }
+    }
+    
+    func assetsForURL(url:NSURL) -> (url: NSURL, source: AVURLAsset, video: AVAssetTrack?, audio: AVAssetTrack?) {
+        let sourceAsset = AVURLAsset(URL: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey:true, AVURLAssetReferenceRestrictionsKey:0])
+        let videos = sourceAsset.tracksWithMediaType(AVMediaTypeVideo)
+        let audios = sourceAsset.tracksWithMediaType(AVMediaTypeAudio)
+        return (url: url, source: sourceAsset, video: videos.first, audio: audios.first)
     }
     
     func sessionFileDir() -> String {

@@ -104,18 +104,18 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             }
                 
             catch VideoExportError.CompositionFailed(let error) {
-                exportMessage = error.localizedDescription
+                exportMessage = "Composition Failed: " + error.description
             }
                 
             catch VideoExportError.CouldNotCreateExporter() {
                 exportMessage = "Could not create exporter"
             }
                 
-            catch VideoExportError.MissingAudio(let url, let time) {
-                exportMessage = "Track missing audio: \(url.absoluteString) \(time)"
+            catch VideoExportError.MissingAssets(let url, let time) {
+                exportMessage = "Track missing audio or video: \(url.absoluteString) \(time)"
             }
                 
-            catch VideoExportError.NoFiles() {
+            catch VideoExportError.NoClips() {
                 exportMessage = "No video clips found"
             }
                 

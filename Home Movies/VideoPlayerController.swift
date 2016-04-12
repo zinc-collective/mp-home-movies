@@ -110,6 +110,7 @@ class VideoPlayerController : UIViewController {
     func didFinishPlaying() {
         isFinished = true
         pause()
+        showNavbar()
     }
     
 
@@ -121,8 +122,6 @@ class VideoPlayerController : UIViewController {
     }
     
     @IBAction func viewTapped(sender: AnyObject) {
-        print("TAPPED")
-        
         if navigationBar.alpha == 1.0 {
             hideNavbar()
         }
