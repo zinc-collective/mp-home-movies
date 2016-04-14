@@ -448,19 +448,30 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     func orientationDidChange() {
-        if (!isRecording) {
-            let orientation = UIDevice.currentDevice().orientation
-            
-            orientationIcon.hidden = !isDevicePortrait()
-            var a = M_PI / 2.0
-            if (orientation == .Portrait) {
-                a = -(M_PI / 2.0)
-            }
-            let m = CGAffineTransformMakeRotation(CGFloat(a))
-            orientationIcon.transform = m
-            
-            renderControls()
+        let orientation = UIDevice.currentDevice().orientation
+        let isPortrait = isDevicePortrait()
+        
+        if (isRecording && isPortrait) {
+            toggleRecord()
         }
+        
+        orientationIcon.hidden = !isDevicePortrait() || isChooseContinueModal
+        
+        // either updside down or portrait
+        var a = M_PI / 2.0
+        if (orientation == .Portrait) {
+            a = -(M_PI / 2.0)
+        }
+        
+        // rotate depending on current interface orientation
+        if (videoView?.orientation == .LandscapeRight){
+            a += M_PI
+        }
+            
+        let m = CGAffineTransformMakeRotation(CGFloat(a))
+        orientationIcon.transform = m
+        
+        renderControls()
     }
     
     func isDevicePortrait() -> Bool {
