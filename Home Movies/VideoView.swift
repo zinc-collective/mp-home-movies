@@ -447,22 +447,22 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     }
     
     func getAssetForDevice() -> AVURLAsset {
-        let assetName: String = "iphone6p"
+        var assetName: String = "iphone6p"
         
         // These were too small. Also, we don't want to support individual iPhone models
-//        let model = UIDevice.currentDevice().modelName
-//        switch model {
-//            case "iPhone 4": assetName = "iphone4sbelow"
-//            case "iPhone 4s": assetName = "iphone4sbelow"
-//            case "iPhone 5": assetName = "iphone5"
-//            case "iPhone 5s": assetName = "iphone5"
-//            case "iPhone 5c": assetName = "iphone5"
-//            case "iPhone 6" : assetName = "iphone6"
-//            case "iPhone 6s" : assetName = "iphone6"
-//            case "iPhone 6 Plus" : assetName = "iphone6p"
-//            case "iPhone 6s Plus" : assetName = "iphone6p"
-//            default: assetName = "iphone6p"
-//        }
+        let model = UIDevice.currentDevice().modelName
+        switch model {
+            case "iPhone 4": assetName = "iphone4sbelow"
+            case "iPhone 4s": assetName = "iphone4sbelow"
+            case "iPhone 5": assetName = "iphone5"
+            case "iPhone 5s": assetName = "iphone5"
+            case "iPhone 5c": assetName = "iphone5"
+            case "iPhone 6" : assetName = "iphone6"
+            case "iPhone 6s" : assetName = "iphone6"
+            case "iPhone 6 Plus" : assetName = "iphone6p"
+            case "iPhone 6s Plus" : assetName = "iphone6p"
+            default: assetName = "iphone6p"
+        }
         
         return AVURLAsset(URL:NSBundle.mainBundle().URLForResource(assetName, withExtension:"mov")!)
         
