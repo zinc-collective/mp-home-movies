@@ -59,11 +59,21 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     @IBAction func deletePressed() {
-        showAlertWithCancel("Delete your last video clip?", msg: "") {
-            (alert: UIAlertAction!) in
+        
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Delete last clip", style: .Destructive, handler: { action in
             self.videoSession.deleteLastClip()
             self.renderControls()
-        }
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Start new movie", style: .Default, handler: { action in
+            self.startOverPressed()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        
+        self.presentViewController(actionSheet, animated: true, completion: {})
     }
     
     @IBAction func startOverPressed() {
