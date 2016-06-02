@@ -53,7 +53,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     @IBAction func donePressed(sender: AnyObject) {
         print("done pressed")
-        self.showAlertForTitle("Do You Want To Add A Title?", msg: "", comp: { title in
+        self.showAlertForTitle({ title in
             self.generateTitleAndMakeMovie(title)
         })
     }
@@ -410,23 +410,23 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     
     
-    func showAlertForTitle(tit: String, msg: String, comp: ((title: String?) -> Void)){
+    func showAlertForTitle(comp: ((title: String?) -> Void)){
         
         var movieTitle : String? = nil
         
-        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.Alert)
+        let alertCtrller = UIAlertController(title: "Do you want to add a title?", message: nil, preferredStyle: .Alert)
         
-        alertCtrller.addAction( UIAlertAction(title: "Add Title", style: UIAlertActionStyle.Default) { alert in
+        alertCtrller.addAction( UIAlertAction(title: "Continue", style: UIAlertActionStyle.Default) { alert in
             comp(title: movieTitle)
         })
         
-        alertCtrller.addAction( UIAlertAction(title: "No Title", style: UIAlertActionStyle.Default) { alert in
-            comp(title: nil)
+        alertCtrller.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { _ in
+            print("CANCEL")
         })
         
         alertCtrller.addTextFieldWithConfigurationHandler {(textField) in
             textField.delegate = self
-            textField.placeholder = "Title"
+            textField.placeholder = "No Title"
             textField.autocapitalizationType = .AllCharacters
             
             NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
@@ -436,8 +436,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
         self.alertController = alertCtrller
         self.presentViewController(alertCtrller, animated: true, completion: nil)
-        
-        
     }
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
