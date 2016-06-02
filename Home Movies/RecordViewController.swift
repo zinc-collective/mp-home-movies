@@ -40,6 +40,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var continueButton: OutlineButton!
     @IBOutlet weak var newMovieButton: OutlineButton!
     
+    @IBOutlet weak var thumbControlsLeading: NSLayoutConstraint!
+    
     var alertController : UIAlertController?
     
     required init?(coder aDecoder: NSCoder) {
@@ -467,8 +469,26 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         
+        print("WILL TRANSITION TO SIZE")
+        
         let orientation = UIDevice.currentDevice().orientation
         videoView?.orientation = orientation
+        
+//        if orientation == .LandscapeRight {
+//            thumbControlsLeading.priority = 900
+//        }
+//        else {
+//            thumbControlsLeading.priority = 500
+//        }
+        
+        UIView.setAnimationsEnabled(false)
+        coordinator.animateAlongsideTransition({ context in
+            print("Starting animation")
+//            self.view.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI))
+        }, completion: { context in
+            print("Finished animation")
+            UIView.setAnimationsEnabled(true)
+        })
     }
     
     func orientationDidChange() {
@@ -496,6 +516,14 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         orientationIcon.transform = m
         
         renderControls()
+    }
+    
+    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+        print("WILL ROTATE")
+    }
+    
+    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+        print("DID ROTATE")
     }
     
     func isDevicePortrait() -> Bool {

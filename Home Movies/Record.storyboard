@@ -210,7 +210,8 @@
                             <constraint firstItem="XS0-rF-Ur9" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" constant="3" id="4I9-4p-ihc"/>
                             <constraint firstItem="1Xg-oh-PSe" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="4lc-9G-Ssg"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="fF9-KH-1Oj" secondAttribute="bottom" id="62g-zP-oUr"/>
-                            <constraint firstAttribute="trailing" secondItem="fF9-KH-1Oj" secondAttribute="trailing" id="8Or-hc-Vof"/>
+                            <constraint firstAttribute="trailing" secondItem="fF9-KH-1Oj" secondAttribute="trailing" priority="750" id="8Or-hc-Vof"/>
+                            <constraint firstItem="fF9-KH-1Oj" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" priority="500" id="E22-WJ-y1a"/>
                             <constraint firstItem="fF9-KH-1Oj" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="Elj-RP-7la"/>
                             <constraint firstItem="aEd-w3-b5H" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="Hq5-0S-9tF"/>
                             <constraint firstItem="OAL-yd-w4O" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="U2H-7F-5Wm"/>
@@ -250,6 +251,7 @@
                         <outlet property="recordButton" destination="pFe-A2-koH" id="zOc-vH-kHx"/>
                         <outlet property="recordLight" destination="gwQ-aK-BFe" id="bhW-l1-ClU"/>
                         <outlet property="sideBar" destination="fF9-KH-1Oj" id="hX6-Kx-kdp"/>
+                        <outlet property="thumbControlsLeading" destination="E22-WJ-y1a" id="7zS-SU-gJU"/>
                         <outlet property="timerLabel" destination="GAU-qf-7Xk" id="NKc-Jg-kVl"/>
                         <outlet property="topBar" destination="XS0-rF-Ur9" id="hh9-4z-oW8"/>
                         <outlet property="videoContainer" destination="aEd-w3-b5H" id="EwS-N9-EWg"/>
