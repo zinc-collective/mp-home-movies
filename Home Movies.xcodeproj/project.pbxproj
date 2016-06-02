@@ -12,6 +12,7 @@
 		7855FC211C87AFC800704231 /* VideoPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855FC201C87AFC800704231 /* VideoPlayerController.swift */; };
 		7855FC221C87B6AA00704231 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD92A05C1C440755008ABFC5 /* Home.storyboard */; };
 		7855FC231C87B6AF00704231 /* Record.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDE7623E1BD1839D008B74F7 /* Record.storyboard */; };
+		786FA8201D00A36000900F98 /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FA81F1D00A36000900F98 /* RecordView.swift */; };
 		787598A81CB5A0340017E213 /* RecordLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787598A71CB5A0340017E213 /* RecordLight.swift */; };
 		787598AA1CB5CA740017E213 /* OutlineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787598A91CB5CA740017E213 /* OutlineButton.swift */; };
 		787DD0441CADB1750031B10F /* RecordTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787DD0431CADB1750031B10F /* RecordTimer.swift */; };
@@ -39,6 +40,7 @@
 		0C4A5C47FBCB561A64495A14 /* Pods-Home Movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Home Movies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies.debug.xcconfig"; sourceTree = "<group>"; };
 		784043C11CB2E20E008324FB /* VideoSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoSessionManager.swift; sourceTree = "<group>"; };
 		7855FC201C87AFC800704231 /* VideoPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerController.swift; sourceTree = "<group>"; };
+		786FA81F1D00A36000900F98 /* RecordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
 		787598A71CB5A0340017E213 /* RecordLight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordLight.swift; sourceTree = "<group>"; };
 		787598A91CB5CA740017E213 /* OutlineButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutlineButton.swift; sourceTree = "<group>"; };
 		787DD0431CADB1750031B10F /* RecordTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTimer.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 			children = (
 				BDE7623E1BD1839D008B74F7 /* Record.storyboard */,
 				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
+				786FA81F1D00A36000900F98 /* RecordView.swift */,
 				BDE762311BD18362008B74F7 /* VideoView.swift */,
 				784043C11CB2E20E008324FB /* VideoSessionManager.swift */,
 				78E5818A1CBD49CD00EA0ACE /* Components */,
@@ -345,6 +348,7 @@
 				787598AA1CB5CA740017E213 /* OutlineButton.swift in Sources */,
 				BDE7623D1BD18362008B74F7 /* RecordViewController.swift in Sources */,
 				784043C21CB2E20E008324FB /* VideoSessionManager.swift in Sources */,
+				786FA8201D00A36000900F98 /* RecordView.swift in Sources */,
 				BDE762391BD18362008B74F7 /* UIDeviceExtension.swift in Sources */,
 				787598A81CB5A0340017E213 /* RecordLight.swift in Sources */,
 				BDE762331BD18362008B74F7 /* AppDelegate.swift in Sources */,

@@ -474,20 +474,37 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         let orientation = UIDevice.currentDevice().orientation
         videoView?.orientation = orientation
         
-//        if orientation == .LandscapeRight {
-//            thumbControlsLeading.priority = 900
-//        }
-//        else {
-//            thumbControlsLeading.priority = 500
-//        }
+        let duration = coordinator.transitionDuration()
+        if orientation == .LandscapeRight {
+            thumbControlsLeading.priority = 900
+            self.sideBar.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+            
+            UIView.animateWithDuration(duration, animations: {
+                self.clipsButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+            })
+        }
+        else {
+            thumbControlsLeading.priority = 500
+            self.sideBar.transform = CGAffineTransformIdentity
+            UIView.animateWithDuration(duration, animations: {
+                self.clipsButton.transform = CGAffineTransformIdentity
+            })
+        }
         
+        
+        // prevent orientation change animation. Any animations really. Keep it pinned!
         UIView.setAnimationsEnabled(false)
         coordinator.animateAlongsideTransition({ context in
-            print("Starting animation")
-//            self.view.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI))
+            
+//            self.view.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+//            if orientation == .LandscapeRight {
+//                self.view.transform = CGAffineTransformIdentity
+//            }
+//            else {
+//            }
         }, completion: { context in
-            print("Finished animation")
             UIView.setAnimationsEnabled(true)
+            self.view.transform = CGAffineTransformIdentity
         })
     }
     

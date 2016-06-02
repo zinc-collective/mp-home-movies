@@ -14,7 +14,7 @@
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS" customClass="RecordView" customModule="Home_Movies" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
@@ -211,7 +211,7 @@
                             <constraint firstItem="1Xg-oh-PSe" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="4lc-9G-Ssg"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="fF9-KH-1Oj" secondAttribute="bottom" id="62g-zP-oUr"/>
                             <constraint firstAttribute="trailing" secondItem="fF9-KH-1Oj" secondAttribute="trailing" priority="750" id="8Or-hc-Vof"/>
-                            <constraint firstItem="fF9-KH-1Oj" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" priority="500" id="E22-WJ-y1a"/>
+                            <constraint firstItem="fF9-KH-1Oj" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" priority="500" id="E22-WJ-y1a"/>
                             <constraint firstItem="fF9-KH-1Oj" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="Elj-RP-7la"/>
                             <constraint firstItem="aEd-w3-b5H" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="Hq5-0S-9tF"/>
                             <constraint firstItem="OAL-yd-w4O" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="U2H-7F-5Wm"/>
