@@ -65,6 +65,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         actionSheet.addAction(UIAlertAction(title: "Delete last clip", style: .Destructive, handler: { action in
             self.videoSession.deleteLastClip()
             self.renderControls()
+            self.sessionChanged()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Start new movie", style: .Default, handler: { action in
@@ -85,6 +86,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
         isChooseContinueModal = false
         self.renderControls()
+        self.sessionChanged()
     }
     
     @IBAction func continuePressed() {
@@ -214,11 +216,22 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
         else
         {
-            videoView.stopRecording()
+            videoView.stopRecording({
+                print("STOP RECORDING", self.videoSession.sessionDuration())
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.sessionChanged()
+                }
+            })
             timerLabel.stopTimer()
         }
         
         renderControls()
+    }
+    
+    func sessionChanged() {
+        let duration = videoSession.sessionDuration()
+        print("DURATION", duration)
+        self.timerLabel.stoppedTime = duration
     }
     
     func showHideActivityIndicator(show: Bool){
@@ -252,6 +265,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         super.viewDidLoad()
         addVideoView()
         clipsButton.contentHorizontalAlignment = .Center
+        let duration = videoSession.sessionDuration()
+        print("INITIAL DURATION", duration)
+        timerLabel.stoppedTime = duration
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
@@ -299,7 +315,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         print("view - app will enter background")
         timerLabel.stopTimer()
         dispatch_async(GlobalUtilityQueue){
-            self.videoView.stopRecording()
+            self.videoView.stopRecording({})
             self.videoView.stopSession()
         }
     }

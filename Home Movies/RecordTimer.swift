@@ -12,6 +12,15 @@ class RecordTimer: UILabel {
     
     var timer:NSTimer?
     var startDate:NSDate?
+    var elapsed:NSTimeInterval = 0
+    
+    var stoppedTime:NSTimeInterval = 0 {
+        didSet {
+            if timer == nil {
+                self.text = stringFromTimeInterval(stoppedTime)
+            }
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -20,19 +29,23 @@ class RecordTimer: UILabel {
 
     func startTimer() {
         startDate = NSDate()
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.00, target: self, selector: #selector(RecordTimer.updateTime(_:)), userInfo: nil, repeats: true)
+        elapsed = 0
+        self.text = stringFromTimeInterval(0.0)
+        timer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: #selector(RecordTimer.updateTime(_:)), userInfo: nil, repeats: true)
     }
     
     func stopTimer() {
         timer?.invalidate()
         timer = nil
-        self.text = stringFromTimeInterval(0.0)
+        
+        // guess the new stop time
+        self.text = stringFromTimeInterval(stoppedTime + elapsed)
     }
     
     func updateTime(timer:NSTimer)
     {
         if let start = self.startDate {
-            let elapsed: NSTimeInterval = NSDate().timeIntervalSinceDate(start)
+            elapsed = NSDate().timeIntervalSinceDate(start)
             self.text = stringFromTimeInterval(elapsed)
         }
     }

@@ -122,7 +122,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    func stopRecording()
+    func stopRecording(complete:(() -> Void))
     {
         if videoDataOutput != nil  && videoDataOutput!.recording {
             
@@ -137,6 +137,10 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     print("waiting for video recording to finish")
                     dispatch_group_wait(self.recDispGrp!, DISPATCH_TIME_FOREVER)
                     print("done waiting for recording to complete...")
+                    
+                    // don't wait for copy to camera roll to finish
+                    complete()
+                    
                     //copy to camera roll
                     self.doneDispGroup = dispatch_group_create()
                     dispatch_group_enter(self.doneDispGroup!)
@@ -209,7 +213,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     
     func stopSession()
     {
-        stopRecording()
+        stopRecording({})
         captureSession?.stopRunning()
         previewLayer?.removeFromSuperlayer()
         previewLayer = nil

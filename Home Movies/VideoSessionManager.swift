@@ -262,6 +262,16 @@ class VideoSessionManager: NSObject {
         }
     }
     
+    // doesn't always work, especially right after finishing recording
+    func sessionDuration() -> NSTimeInterval {
+        let urls = sessionFileURLs()
+        let durations:[NSTimeInterval] = urls.map(assetsForURL).map({(_, source, video, _) in
+            return CMTimeGetSeconds(source.duration)
+        })
+        
+        return durations.reduce(0, combine: +)
+    }
+    
     func sessionFileURLs() -> [NSURL] {
         let dir = sessionFileDir()
         let fileMgr = NSFileManager.defaultManager()
