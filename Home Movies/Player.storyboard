@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="uow-kh-TL9">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="uow-kh-TL9">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -10,7 +10,6 @@
         <!--Video Player Controller-->
         <scene sceneID="ky2-D6-OaN">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Gu9-gv-Jbe" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="uow-kh-TL9" customClass="VideoPlayerController" customModule="Home_Movies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0qZ-mz-Wt9"/>
@@ -28,7 +27,7 @@
                                     <outletCollection property="gestureRecognizers" destination="B3S-JS-ylh" appends="YES" id="uXy-tV-GCw"/>
                                 </connections>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ir3-98-uBl">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ir3-98-uBl">
                                 <rect key="frame" x="308" y="163" width="50" height="50"/>
                                 <state key="normal" image="Play"/>
                                 <connections>
@@ -102,6 +101,7 @@
                         <outlet property="playerView" destination="s1S-gk-DQu" id="LxU-Qv-d7g"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Gu9-gv-Jbe" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="B3S-JS-ylh">
                     <connections>
                         <action selector="viewTapped:" destination="uow-kh-TL9" id="7m2-bd-vnp"/>
