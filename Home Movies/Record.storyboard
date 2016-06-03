@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="gyA-Eq-jyt">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="vSK-Zd-qSd">
+            <objects>
+                <navigationController id="gyA-Eq-jyt" sceneMemberID="viewController">
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2RD-a8-5TU">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" red="1" green="0.022464787999999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="Lf5-n6-Dcs"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2d9-8g-wHd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-740" y="333"/>
+        </scene>
         <!--Record View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
@@ -255,17 +277,171 @@
                         <outlet property="timerLabel" destination="GAU-qf-7Xk" id="NKc-Jg-kVl"/>
                         <outlet property="topBar" destination="XS0-rF-Ur9" id="hh9-4z-oW8"/>
                         <outlet property="videoContainer" destination="aEd-w3-b5H" id="EwS-N9-EWg"/>
+                        <segue destination="0i9-Y1-lxq" kind="show" identifier="TitleViewController" id="KyC-rM-erj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="181" y="333"/>
         </scene>
+        <!--Add a Title?-->
+        <scene sceneID="ZBY-SH-XDa">
+            <objects>
+                <viewController id="0i9-Y1-lxq" customClass="TitleViewController" customModule="Home_Movies" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ss3-jg-0QR"/>
+                        <viewControllerLayoutGuide type="bottom" id="qtb-qU-Wmk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="SkG-7i-B6D">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ADD A TITLE" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="qLP-XN-Hvq">
+                                <rect key="frame" x="20" y="64" width="440" height="30"/>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" spellCheckingType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="0i9-Y1-lxq" id="Tvp-LV-TjK"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UjR-pH-c2P">
+                                <rect key="frame" x="406" y="102" width="54" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="nPx-d7-K43"/>
+                                </constraints>
+                                <state key="normal" title="No Title"/>
+                                <connections>
+                                    <action selector="tappedNoTitle:" destination="0i9-Y1-lxq" eventType="touchUpInside" id="w7O-mx-Nme"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qLP-XN-Hvq" firstAttribute="top" secondItem="Ss3-jg-0QR" secondAttribute="bottom" constant="20" id="ElC-9G-pIk"/>
+                            <constraint firstItem="qLP-XN-Hvq" firstAttribute="trailing" secondItem="SkG-7i-B6D" secondAttribute="trailingMargin" id="OKO-As-GzH"/>
+                            <constraint firstItem="UjR-pH-c2P" firstAttribute="top" secondItem="qLP-XN-Hvq" secondAttribute="bottom" constant="8" id="Srf-Cq-Db0"/>
+                            <constraint firstItem="UjR-pH-c2P" firstAttribute="trailing" secondItem="SkG-7i-B6D" secondAttribute="trailingMargin" id="en5-an-JJW"/>
+                            <constraint firstItem="qLP-XN-Hvq" firstAttribute="leading" secondItem="SkG-7i-B6D" secondAttribute="leadingMargin" id="y1g-GG-UjH"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Add a Title?" id="RhC-3s-dd5">
+                        <barButtonItem key="rightBarButtonItem" title="Add Title" id="0gn-DA-lpo">
+                            <connections>
+                                <action selector="tappedAddTitle:" destination="0i9-Y1-lxq" id="kJP-j1-8mZ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="nextItem" destination="0gn-DA-lpo" id="3oa-9r-pfm"/>
+                        <outlet property="noTitleButton" destination="UjR-pH-c2P" id="xIa-4k-vIP"/>
+                        <outlet property="textField" destination="qLP-XN-Hvq" id="na8-jL-H7g"/>
+                        <segue destination="9VA-wh-Dcg" kind="show" identifier="VideoPlayerController" id="Fdd-uV-yIr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KdZ-7Y-flo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="181" y="823"/>
+        </scene>
+        <!--Video Player Controller-->
+        <scene sceneID="txW-iR-fag">
+            <objects>
+                <viewController id="9VA-wh-Dcg" customClass="VideoPlayerController" customModule="Home_Movies" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uSQ-EM-ocs"/>
+                        <viewControllerLayoutGuide type="bottom" id="wFN-eG-dgA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="awB-jc-3a7">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVc-b6-Prw">
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="GWt-1g-hQZ" appends="YES" id="OEy-pg-d4E"/>
+                                </connections>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vf7-hJ-GP4">
+                                <rect key="frame" x="308" y="163" width="50" height="50"/>
+                                <state key="normal" image="Play"/>
+                                <connections>
+                                    <action selector="playPressed:" destination="9VA-wh-Dcg" eventType="touchUpInside" id="GCx-qc-PB7"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="zwD-FE-Mdo">
+                                <rect key="frame" x="315" y="169" width="37" height="37"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.074509803920000006" green="0.074509803920000006" blue="0.1137254902" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="WVc-b6-Prw" secondAttribute="trailing" id="0Qi-fv-3U8"/>
+                            <constraint firstItem="Vf7-hJ-GP4" firstAttribute="centerX" secondItem="awB-jc-3a7" secondAttribute="centerX" id="2Gu-aS-OS7"/>
+                            <constraint firstItem="Vf7-hJ-GP4" firstAttribute="centerY" secondItem="awB-jc-3a7" secondAttribute="centerY" id="Hfc-AR-2t1"/>
+                            <constraint firstItem="zwD-FE-Mdo" firstAttribute="centerX" secondItem="awB-jc-3a7" secondAttribute="centerX" id="NtO-Uu-TMx"/>
+                            <constraint firstItem="wFN-eG-dgA" firstAttribute="top" secondItem="WVc-b6-Prw" secondAttribute="bottom" id="XnL-2K-l24"/>
+                            <constraint firstItem="wFN-eG-dgA" firstAttribute="top" secondItem="WVc-b6-Prw" secondAttribute="bottom" id="kgt-yQ-0hN"/>
+                            <constraint firstItem="WVc-b6-Prw" firstAttribute="top" secondItem="awB-jc-3a7" secondAttribute="top" id="mrN-vU-DJb"/>
+                            <constraint firstItem="zwD-FE-Mdo" firstAttribute="centerY" secondItem="awB-jc-3a7" secondAttribute="centerY" id="of6-4h-ggR"/>
+                            <constraint firstItem="WVc-b6-Prw" firstAttribute="leading" secondItem="awB-jc-3a7" secondAttribute="leading" id="suD-Hw-3ew"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="XnL-2K-l24"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" id="G9g-Fi-Uqi">
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="play" id="0c8-FX-mit">
+                                <connections>
+                                    <action selector="playPressed:" destination="9VA-wh-Dcg" id="oCo-uS-CNL"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="pause" id="L7V-jP-itZ">
+                                <connections>
+                                    <action selector="pausePressed:" destination="9VA-wh-Dcg" id="yHu-Hm-84H"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="action" id="OP5-Q3-HNf">
+                                <connections>
+                                    <action selector="sharePressed" destination="9VA-wh-Dcg" id="rww-0q-Wm0"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="actionItem" destination="OP5-Q3-HNf" id="ila-yp-sgC"/>
+                        <outlet property="activityIndicator" destination="zwD-FE-Mdo" id="lXq-Rw-VAS"/>
+                        <outlet property="pauseItem" destination="L7V-jP-itZ" id="NW9-uG-Eb6"/>
+                        <outlet property="playButton" destination="Vf7-hJ-GP4" id="yhL-yu-ndg"/>
+                        <outlet property="playItem" destination="0c8-FX-mit" id="NQE-iH-RvI"/>
+                        <outlet property="playerView" destination="WVc-b6-Prw" id="Led-G3-DpO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5mo-46-lrg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="GWt-1g-hQZ">
+                    <connections>
+                        <action selector="viewTapped:" destination="9VA-wh-Dcg" id="OEJ-Ac-0CH"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="181.5" y="1323.5"/>
+        </scene>
     </scenes>
     <resources>
         <image name="CameraSwitch" width="50" height="50"/>
         <image name="Delete" width="50" height="50"/>
         <image name="Orientation" width="125" height="125"/>
+        <image name="Play" width="50" height="50"/>
     </resources>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

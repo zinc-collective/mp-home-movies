@@ -24,7 +24,6 @@ class HomeViewController: UIViewController {
         
         let recordController:UIViewController = mainStoryboard.instantiateInitialViewController()!
         self.presentViewController(recordController, animated: true, completion: nil)
-  
     }
 
     @IBAction func onVideoButton(sender: AnyObject) {

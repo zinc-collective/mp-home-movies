@@ -15,8 +15,8 @@
 		787598A81CB5A0340017E213 /* RecordLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787598A71CB5A0340017E213 /* RecordLight.swift */; };
 		787598AA1CB5CA740017E213 /* OutlineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787598A91CB5CA740017E213 /* OutlineButton.swift */; };
 		787DD0441CADB1750031B10F /* RecordTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787DD0431CADB1750031B10F /* RecordTimer.swift */; };
+		78BCBB781D02030600714868 /* TitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BCBB771D02030600714868 /* TitleViewController.swift */; };
 		78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D7629E1C85E00500797980 /* AVFoundation.framework */; };
-		78E638E41CB820A900C202D3 /* Player.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78E638E31CB820A900C202D3 /* Player.storyboard */; };
 		78F8BF961CAEC9D20016AE8A /* CameraFocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */; };
 		B92155D83C10FE5102559D64 /* Pods_Home_Movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79743315BCE5ED4000D24033 /* Pods_Home_Movies.framework */; };
 		BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */; };
@@ -44,8 +44,8 @@
 		787598A71CB5A0340017E213 /* RecordLight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordLight.swift; sourceTree = "<group>"; };
 		787598A91CB5CA740017E213 /* OutlineButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutlineButton.swift; sourceTree = "<group>"; };
 		787DD0431CADB1750031B10F /* RecordTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTimer.swift; sourceTree = "<group>"; };
+		78BCBB771D02030600714868 /* TitleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleViewController.swift; sourceTree = "<group>"; };
 		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		78E638E31CB820A900C202D3 /* Player.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Player.storyboard; sourceTree = "<group>"; };
 		78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFocusSquare.swift; sourceTree = "<group>"; };
 		79743315BCE5ED4000D24033 /* Pods_Home_Movies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Home_Movies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6p.mov; sourceTree = "<group>"; };
@@ -98,6 +98,14 @@
 				79743315BCE5ED4000D24033 /* Pods_Home_Movies.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		78BCBB761D0202EE00714868 /* Edit Title */ = {
+			isa = PBXGroup;
+			children = (
+				78BCBB771D02030600714868 /* TitleViewController.swift */,
+			);
+			name = "Edit Title";
 			sourceTree = "<group>";
 		};
 		78D7629A1C85DBFB00797980 /* assets */ = {
@@ -159,7 +167,6 @@
 		78E638E21CB81AF600C202D3 /* Preview */ = {
 			isa = PBXGroup;
 			children = (
-				78E638E31CB820A900C202D3 /* Player.storyboard */,
 				7855FC201C87AFC800704231 /* VideoPlayerController.swift */,
 			);
 			name = Preview;
@@ -189,6 +196,7 @@
 			children = (
 				78D7629B1C85DC6E00797980 /* Home */,
 				78D7629C1C85DC7400797980 /* Record */,
+				78BCBB761D0202EE00714868 /* Edit Title */,
 				78E638E21CB81AF600C202D3 /* Preview */,
 				78D7629D1C85DC8300797980 /* Lib */,
 				BD762F711BD17BDD003AEA6E /* Assets.xcassets */,
@@ -265,7 +273,6 @@
 			files = (
 				7855FC231C87B6AF00704231 /* Record.storyboard in Resources */,
 				7855FC221C87B6AA00704231 /* Home.storyboard in Resources */,
-				78E638E41CB820A900C202D3 /* Player.storyboard in Resources */,
 				BDE7623A1BD18362008B74F7 /* Upload-50.png in Resources */,
 				BD1B09B11C5E99A7007F4A06 /* iphone4sbelow.mov in Resources */,
 				BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */,
@@ -359,6 +366,7 @@
 				7855FC211C87AFC800704231 /* VideoPlayerController.swift in Sources */,
 				BDE7623B1BD18362008B74F7 /* Utils.swift in Sources */,
 				787DD0441CADB1750031B10F /* RecordTimer.swift in Sources */,
+				78BCBB781D02030600714868 /* TitleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

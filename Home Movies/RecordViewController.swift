@@ -42,6 +42,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var newMovieButton: OutlineButton!
     
     @IBOutlet weak var thumbControlsLeading: NSLayoutConstraint!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var alertController : UIAlertController?
     
@@ -57,10 +58,12 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     @IBAction func donePressed(sender: AnyObject) {
+        doneButton.enabled = false
         print("done pressed")
-        self.showAlertForTitle({ title in
-            self.generateTitleAndMakeMovie(title)
-        })
+        self.performSegueWithIdentifier("TitleViewController", sender: self)
+        
+        // TODO move this
+        self.isChooseContinueModal = true
     }
     
     @IBAction func deletePressed() {
@@ -97,70 +100,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBAction func continuePressed() {
         isChooseContinueModal = false
         self.renderControls()
-    }
-    
-    func generateTitleAndMakeMovie(movieTitle: String?)
-    {
-        showHideActivityIndicator(true)
-        
-        do {
-            try videoView.prepareTitleTrack(movieTitle)
-        }
-        catch let err as NSError {
-            print("Title Error", err.localizedDescription)
-        }
-        
-        //concatenate video.
-        dispatch_async(GlobalUserInitiatedQueue){
-            self.videoView.doneDispGroup = dispatch_group_create()
-            dispatch_group_enter(self.videoView.doneDispGroup!)
-            var exportMessage: String?
-            
-            do {
-                try self.videoView.finalizeOutput { exportedURL in
-                    dispatch_async(dispatch_get_main_queue()){
-                        self.showHideActivityIndicator(false)
-                        self.playVideo(exportedURL, movieTitle: movieTitle)
-                    }
-                }
-            }
-                
-            catch VideoExportError.CompositionFailed(let error) {
-                exportMessage = "Composition Failed: " + error.description
-            }
-                
-            catch VideoExportError.CouldNotCreateExporter() {
-                exportMessage = "Could not create exporter"
-            }
-                
-            catch VideoExportError.MissingAssets(let url, let time) {
-                exportMessage = "Track missing audio or video: \(url.absoluteString) \(time)"
-            }
-                
-            catch VideoExportError.NoClips() {
-                exportMessage = "No video clips found"
-            }
-                
-            catch let err as NSError {
-                exportMessage = err.localizedDescription
-            }
-            
-            if let msg = exportMessage {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.showAlert("Video Error", msg: "Please contact support\n\n \(msg)", comp: {_ in })
-                }
-            }
-            
-        }
-    }
-    
-    func playVideo(videoURL : NSURL, movieTitle: String?) {
-        let playerController = UIStoryboard(name: "Player", bundle: nil).instantiateInitialViewController() as! VideoPlayerController
-        playerController.fullVideoURL = videoURL
-        playerController.movieTitle = movieTitle
-        self.presentViewController(playerController, animated: true, completion: {
-            self.isChooseContinueModal = true
-        })
     }
     
     func renderControls() {
@@ -254,11 +193,18 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        doneButton.enabled = true
         activityIndicator.hidden=true
         renderControls()
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
 
         UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:UIDeviceOrientationDidChangeNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
+         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
         
         // correct the layout for landscape right
         if (UIDevice.currentDevice().orientation == .LandscapeRight) {
@@ -266,12 +212,21 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
         else {
             landscapeLeftLayout(0)
+            
         }
+        
+        volumeHandler = JPSVolumeButtonHandler(upBlock: {
+            self.recordPressed(self)
+        }, downBlock: {
+            self.recordPressed(self)
+        })
+        
     }
     
     override func viewDidDisappear(animated: Bool) {
         print("view disappear")
         UIDevice.currentDevice().endGeneratingDeviceOrientationNotifications()
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     override func viewDidLoad() {
@@ -282,18 +237,11 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         print("INITIAL DURATION", duration)
         timerLabel.stoppedTime = duration
         
-        volumeHandler = JPSVolumeButtonHandler(upBlock: {
-            self.recordPressed(self)
-        }, downBlock: {
-            self.recordPressed(self)
-        })
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
-         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: nil)
         
         //doneButton.hidden = videoView.canFinalize()
         print("view did load")
+        
     }
     
     func addVideoView(device:AVCaptureDevice?) {
@@ -306,9 +254,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     func addVideoView() {
         addVideoView(nil)
     }
-    
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     
     func applicationDidBecomeActive()
     {
@@ -361,11 +306,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
     }
     
-    
-    
-    
-    
-        
     override func viewDidAppear(animated: Bool) {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         if(appDelegate.freeSpaceMb <= 50)
@@ -399,83 +339,6 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
     }
-    
-    
-    
-    /*func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!){
-        videoView.recording=false
-        if(error != nil)
-        {
-            let alert=UIAlertView()
-            alert.title="Error!"
-            alert.message=error.description
-            alert.show()
-        }
-        else {
-            print("done recording -> \(outputFileURL)")
-        }
-        
-        dispatch_group_leave(videoView.recDispGrp!)
-        
-    }
-    
-    
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
-        videoView.recording=true
-        print("started recording to -> \(fileURL)" )
-    }*/
-    
-        
-    
-    
-    
-    func showAlertForTitle(comp: ((title: String?) -> Void)){
-        
-        var movieTitle : String? = nil
-        
-        let alertCtrller = UIAlertController(title: "Do you want to add a title?", message: nil, preferredStyle: .Alert)
-        
-        alertCtrller.addAction( UIAlertAction(title: "Continue", style: UIAlertActionStyle.Default) { alert in
-            comp(title: movieTitle)
-        })
-        
-        alertCtrller.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { _ in
-            print("CANCEL")
-        })
-        
-        alertCtrller.addTextFieldWithConfigurationHandler {(textField) in
-            textField.delegate = self
-            textField.placeholder = "No Title"
-            textField.autocapitalizationType = .AllCharacters
-            
-            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
-                movieTitle = textField.text?.uppercaseString
-            }
-        }
-        
-        self.alertController = alertCtrller
-        self.presentViewController(alertCtrller, animated: true, completion: nil)
-    }
-    
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        var str : NSString = ""
-        if let old = textField.text {
-            str = old as NSString
-        }
-        
-        let newString = str.stringByReplacingCharactersInRange(range, withString: string)
-        
-        if (newString.characters.count > 40) {
-            self.alertController?.message = "Title too long. Maximum 40 characters."
-            return false
-        }
-        else {
-            self.alertController?.message = ""
-        }
-        
-        return true
-    }
-    
     
     func videoError(error: NSError) {
         if let msg = error.localizedRecoverySuggestion {
@@ -511,10 +374,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     func landscapeRightLayout(duration:NSTimeInterval) {
         thumbControlsLeading.priority = 900
-        self.sideBar.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+        self.sideBar.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI))
         
         UIView.animateWithDuration(duration, animations: {
-            self.clipsButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+            self.clipsButton.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI))
         })
     }
     
@@ -554,22 +417,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         renderControls()
     }
     
-    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
-        print("WILL ROTATE")
-    }
-    
-    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
-        print("DID ROTATE")
-    }
-    
     func isDevicePortrait() -> Bool {
         let orientation = UIDevice.currentDevice().orientation
         return ((orientation == .Portrait) || (orientation == .PortraitUpsideDown))
-    }
-    
-    func textFieldShouldReturn(field: UITextField) -> Bool {
-        field.resignFirstResponder()
-        return true
     }
     
     @IBAction func didTapCameraSwitch() {
@@ -595,6 +445,12 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     override func shouldAutorotate() -> Bool {
         return !isRecording
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let title = segue.destinationViewController as? TitleViewController {
+            title.videoView = videoView
+        }
     }
     
 }
