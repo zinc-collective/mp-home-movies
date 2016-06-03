@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import JPSVolumeButtonHandler
 
 // what are my unique possible states
 // Ready | Recording | Working
@@ -43,6 +44,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var thumbControlsLeading: NSLayoutConstraint!
     
     var alertController : UIAlertController?
+    
+    var volumeHandler:JPSVolumeButtonHandler!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -256,6 +259,14 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 
         UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:UIDeviceOrientationDidChangeNotification, object: nil)
+        
+        // correct the layout for landscape right
+        if (UIDevice.currentDevice().orientation == .LandscapeRight) {
+            landscapeRightLayout(0)
+        }
+        else {
+            landscapeLeftLayout(0)
+        }
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -270,6 +281,12 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         let duration = videoSession.sessionDuration()
         print("INITIAL DURATION", duration)
         timerLabel.stoppedTime = duration
+        
+        volumeHandler = JPSVolumeButtonHandler(upBlock: {
+            self.recordPressed(self)
+        }, downBlock: {
+            self.recordPressed(self)
+        })
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
@@ -469,47 +486,49 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         
-        print("WILL TRANSITION TO SIZE")
-        
+        // the orientation has already updated to the new one
         let orientation = UIDevice.currentDevice().orientation
         videoView?.orientation = orientation
         
         let duration = coordinator.transitionDuration()
+        
         if orientation == .LandscapeRight {
-            thumbControlsLeading.priority = 900
-            self.sideBar.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-            
-            UIView.animateWithDuration(duration, animations: {
-                self.clipsButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-            })
+            landscapeRightLayout(duration)
         }
         else {
-            thumbControlsLeading.priority = 500
-            self.sideBar.transform = CGAffineTransformIdentity
-            UIView.animateWithDuration(duration, animations: {
-                self.clipsButton.transform = CGAffineTransformIdentity
-            })
+            landscapeLeftLayout(duration)
         }
         
-        
-        // prevent orientation change animation. Any animations really. Keep it pinned!
+        // prevent all animations until the transition is complete
         UIView.setAnimationsEnabled(false)
         coordinator.animateAlongsideTransition({ context in
             
-//            self.view.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-//            if orientation == .LandscapeRight {
-//                self.view.transform = CGAffineTransformIdentity
-//            }
-//            else {
-//            }
         }, completion: { context in
+            // turn them back on
             UIView.setAnimationsEnabled(true)
-            self.view.transform = CGAffineTransformIdentity
+        })
+    }
+    
+    func landscapeRightLayout(duration:NSTimeInterval) {
+        thumbControlsLeading.priority = 900
+        self.sideBar.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+        
+        UIView.animateWithDuration(duration, animations: {
+            self.clipsButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+        })
+    }
+    
+    func landscapeLeftLayout(duration:NSTimeInterval) {
+        thumbControlsLeading.priority = 500
+        self.sideBar.transform = CGAffineTransformIdentity
+        UIView.animateWithDuration(duration, animations: {
+            self.clipsButton.transform = CGAffineTransformIdentity
         })
     }
     
     func orientationDidChange() {
         let orientation = UIDevice.currentDevice().orientation
+        print("ORIENTATION DID CHANGE", "left:", orientation == .LandscapeLeft, "right: ", orientation == .LandscapeRight)
         let isPortrait = isDevicePortrait()
         
         if (isRecording && isPortrait) {

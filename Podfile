@@ -6,6 +6,7 @@ use_frameworks!
 target 'Home Movies' do
     pod 'Fabric', '~> 1.6.7'
     pod 'Crashlytics', '~> 3.7.0'
+    pod 'JPSVolumeButtonHandler', '~> 1.0'
 end
 
 
