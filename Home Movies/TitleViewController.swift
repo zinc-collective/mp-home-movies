@@ -28,8 +28,14 @@ class TitleViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
-        nextItem.enabled = false
-        noTitleButton.enabled = true
+        
+        if let str = textField.text {
+            nextItem.enabled = str.characters.count > 0
+        }
+        else {
+            nextItem.enabled = false
+        }
+        noTitleButton.enabled = !nextItem.enabled
     }
 
     override func didReceiveMemoryWarning() {
