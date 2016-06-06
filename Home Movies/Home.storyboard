@@ -54,7 +54,7 @@
                                     <constraint firstAttribute="height" constant="42" id="vF3-sV-BdD"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                <state key="normal" title="WATCH THE TUTORIAL">
+                                <state key="normal" title="TUTORIAL">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>

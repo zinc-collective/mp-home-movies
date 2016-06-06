@@ -37,6 +37,19 @@ class TitleViewController: UIViewController, UITextFieldDelegate {
         }
         noTitleButton.enabled = !nextItem.enabled
     }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // remove this view controller from the stack
+        if let nav = self.navigationController {
+            let vcs = nav.viewControllers.filter {(vc) in
+                return (vc as? TitleViewController) == nil
+            }
+            
+            self.navigationController?.setViewControllers(vcs, animated: false)
+        }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
