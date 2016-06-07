@@ -14,12 +14,28 @@ class RecordParentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: nil)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let orientation = UIDevice.currentDevice().orientation
+        
+        // if the orientation is different from how it was designed, rotate it around without an animation
+        // causing it to remain in place while the surrounding view controller rotates
+        if orientation == .LandscapeRight {
+            self.recordView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+        }
+        else {
+            
+            self.recordView.transform = CGAffineTransformIdentity
+        }
     }
     
     

@@ -136,8 +136,8 @@
 			isa = PBXGroup;
 			children = (
 				BDE7623E1BD1839D008B74F7 /* Record.storyboard */,
-				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
 				78158BC71D071DF4005FD10A /* RecordParentViewController.swift */,
+				BDE762321BD18362008B74F7 /* RecordViewController.swift */,
 				786FA81F1D00A36000900F98 /* RecordView.swift */,
 				BDE762311BD18362008B74F7 /* VideoView.swift */,
 				784043C11CB2E20E008324FB /* VideoSessionManager.swift */,

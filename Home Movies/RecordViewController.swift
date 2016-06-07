@@ -156,7 +156,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
         if isRecording
         {
-            videoView.startRecording()
+            // this might need to be more complex
+            videoView.startRecording(UIDevice.currentDevice().orientation)
             timerLabel.startTimer()
         }
         else
@@ -208,19 +209,20 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
          NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
         
         // correct the layout for landscape right
-//        if (UIDevice.currentDevice().orientation == .LandscapeRight) {
-//            landscapeRightLayout(0)
-//        }
-//        else {
-//            landscapeLeftLayout(0)
-//            
-//        }
+        if (UIDevice.currentDevice().orientation == .LandscapeRight) {
+            landscapeRightLayout(0)
+        }
+        else {
+            defaultLayout(0)
+        }
         
         volumeHandler = JPSVolumeButtonHandler(upBlock: {
             self.recordPressed(self)
         }, downBlock: {
             self.recordPressed(self)
         })
+        
+        
         
     }
     
@@ -246,10 +248,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     func addVideoView(device:AVCaptureDevice?) {
-        videoView = VideoView(frame: videoContainer.bounds, device: device)
+        videoView = VideoView(frame: videoContainer.bounds, device: device, orientation: UIDevice.currentDevice().orientation)
         videoContainer.addSubview(videoView)
         videoView.delegate = self
-        videoView.orientation = UIDevice.currentDevice().orientation
     }
     
     func addVideoView() {
@@ -360,17 +361,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         // BUTTON ROTATION
         // it won't animate
         if orientation == .LandscapeRight {
-            let transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-            self.contentControlsView.transform = transform
-            UIView.animateWithDuration(duration) {
-                self.clipsButton.transform = transform
-            }
+            landscapeRightLayout(duration)
         }
         else {
-            self.contentControlsView.transform = CGAffineTransformIdentity
-            UIView.animateWithDuration(duration) {
-                self.clipsButton.transform = CGAffineTransformIdentity
-            }
+            defaultLayout(duration)
         }
         
 //        if orientation == .LandscapeRight {
@@ -391,25 +385,23 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     func landscapeRightLayout(duration:NSTimeInterval) {
-        thumbControlsLeading.priority = 900
-        self.sideBar.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI))
-        
-        UIView.animateWithDuration(duration, animations: {
-            self.clipsButton.transform = CGAffineTransformMakeRotation(CGFloat(-M_PI))
-        })
+        let transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+        self.contentControlsView.transform = transform
+        UIView.animateWithDuration(duration) {
+            self.clipsButton.transform = transform
+        }
     }
     
-    func landscapeLeftLayout(duration:NSTimeInterval) {
-        thumbControlsLeading.priority = 500
-        self.sideBar.transform = CGAffineTransformIdentity
-        UIView.animateWithDuration(duration, animations: {
+    func defaultLayout(duration:NSTimeInterval) {
+        self.contentControlsView.transform = CGAffineTransformIdentity
+        UIView.animateWithDuration(duration) {
             self.clipsButton.transform = CGAffineTransformIdentity
-        })
+        }
     }
     
     func orientationDidChange() {
         let orientation = UIDevice.currentDevice().orientation
-        print("ORIENTATION DID CHANGE", "left:", orientation == .LandscapeLeft, "right: ", orientation == .LandscapeRight)
+        
         let isPortrait = isDevicePortrait()
         
         if (isRecording && isPortrait) {
@@ -420,16 +412,17 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         orientationIcon.hidden = !isDevicePortrait() || isChooseContinueModal
         
         // either updside down or portrait
-        var a = M_PI / 2.0
+        var a = 0.0
         if (orientation == .Portrait) {
             a = -(M_PI / 2.0)
         }
-        
-        // rotate depending on current interface orientation
-        if (videoView?.orientation == .LandscapeRight){
-            a += M_PI
+        else if (orientation == .PortraitUpsideDown) {
+            a = M_PI / 2.0
         }
-            
+        else {
+            a = 0
+        }
+        
         let m = CGAffineTransformMakeRotation(CGFloat(a))
         orientationIcon.transform = m
         

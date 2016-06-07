@@ -34,31 +34,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     var videoDataOutput: AVCaptureMovieFileOutput?
     var previewLayer : AVCaptureVideoPreviewLayer?
     
-    // This is BACKWARDS and I have no idea why
-    var orientation : UIDeviceOrientation {
-        get {
-            if self.videoOrientation == .LandscapeLeft {
-                return .LandscapeRight
-            }
-            else {
-                return .LandscapeLeft
-            }
-        }
-        
-        set(newValue) {
-            if newValue == .LandscapeLeft {
-                self.videoOrientation = .LandscapeRight
-            }
-            else {
-                self.videoOrientation = .LandscapeLeft
-            }
-            
-            self.updateOrientation(self.videoOrientation)
-        }
-    }
-    
-    var videoOrientation = AVCaptureVideoOrientation.LandscapeRight
-    
     var focusSquare : CameraFocusSquare?
     
     var recording: Bool = false
@@ -91,7 +66,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         initialize(nil)
     }
     
-    init(frame: CGRect, device: AVCaptureDevice?) {
+    init(frame: CGRect, device: AVCaptureDevice?, orientation:UIDeviceOrientation) {
         super.init(frame: frame)
         initialize(device)
     }
@@ -107,15 +82,17 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    func startRecording()
+    func startRecording(orientation:UIDeviceOrientation)
     {
         let fileURL = NSURL(fileURLWithPath: videoSession.newVideoPath());
-        //
+        
         if captureSession!.running {
             print("session running")
             if(videoDataOutput?.connectionWithMediaType(AVMediaTypeVideo).supportsVideoOrientation == true) {
                 let vidConn = videoDataOutput?.connectionWithMediaType(AVMediaTypeVideo)
-                vidConn?.videoOrientation = self.videoOrientation
+                // I'm a little lost and I'm not sure why opposite orientation is required
+                // but it always is, no matter which way the device is currently facing
+                vidConn?.videoOrientation = oppositeOrientation(orientation)
             }
             videoDataOutput?.startRecordingToOutputFileURL(fileURL, recordingDelegate: self)
             print("Started recording")
@@ -158,7 +135,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
     }
     
-    
     func startSession(preview: Bool) throws
     {
         if let videoDevice = currentVideoDevice {
@@ -186,9 +162,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
                     self.layer.addSublayer(self.previewLayer!)
                     self.previewLayer?.frame = self.layer.frame
+                    self.previewLayer?.connection.videoOrientation = .LandscapeRight
                     self.captureSession?.startRunning()
-                    
-                    updateOrientation(self.videoOrientation)
                 
                     if captureSession!.canAddOutput(videoDataOutput)
                     {
@@ -202,12 +177,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 throw error
             }
             
-        }
-    }
-    
-    private func updateOrientation(videoOrientation:AVCaptureVideoOrientation) {
-        if let preview = previewLayer {
-            preview.connection.videoOrientation = videoOrientation
         }
     }
     
@@ -668,6 +637,13 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             self.focusSquare = square
         }
     }
- 
-
+    
+    func oppositeOrientation(orientation:UIDeviceOrientation) -> AVCaptureVideoOrientation {
+        if orientation == .LandscapeRight {
+            return .LandscapeLeft
+        }
+        else {
+            return .LandscapeRight
+        }
+    }
 }
