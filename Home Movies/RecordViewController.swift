@@ -40,6 +40,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     @IBOutlet weak var sideBar: UIView!
     @IBOutlet weak var continueButton: OutlineButton!
     @IBOutlet weak var newMovieButton: OutlineButton!
+    @IBOutlet weak var contentControlsView: UIView!
     
     @IBOutlet weak var thumbControlsLeading: NSLayoutConstraint!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -207,13 +208,13 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
          NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
         
         // correct the layout for landscape right
-        if (UIDevice.currentDevice().orientation == .LandscapeRight) {
-            landscapeRightLayout(0)
-        }
-        else {
-            landscapeLeftLayout(0)
-            
-        }
+//        if (UIDevice.currentDevice().orientation == .LandscapeRight) {
+//            landscapeRightLayout(0)
+//        }
+//        else {
+//            landscapeLeftLayout(0)
+//            
+//        }
         
         volumeHandler = JPSVolumeButtonHandler(upBlock: {
             self.recordPressed(self)
@@ -351,25 +352,42 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
         // the orientation has already updated to the new one
         let orientation = UIDevice.currentDevice().orientation
-        videoView?.orientation = orientation
+//        videoView?.orientation = orientation
         
         let duration = coordinator.transitionDuration()
+        print("TRANSITION TO SIZE")
         
+        // BUTTON ROTATION
+        // it won't animate
         if orientation == .LandscapeRight {
-            landscapeRightLayout(duration)
+            let transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+            self.contentControlsView.transform = transform
+            UIView.animateWithDuration(duration) {
+                self.clipsButton.transform = transform
+            }
         }
         else {
-            landscapeLeftLayout(duration)
+            self.contentControlsView.transform = CGAffineTransformIdentity
+            UIView.animateWithDuration(duration) {
+                self.clipsButton.transform = CGAffineTransformIdentity
+            }
         }
         
-        // prevent all animations until the transition is complete
-        UIView.setAnimationsEnabled(false)
-        coordinator.animateAlongsideTransition({ context in
-            
-        }, completion: { context in
-            // turn them back on
-            UIView.setAnimationsEnabled(true)
-        })
+//        if orientation == .LandscapeRight {
+//            landscapeRightLayout(duration)
+//        }
+//        else {
+//            landscapeLeftLayout(duration)
+//        }
+        
+//        // prevent all animations until the transition is complete
+//        UIView.setAnimationsEnabled(false)
+//        coordinator.animateAlongsideTransition({ context in
+//            
+//        }, completion: { context in
+//            // turn them back on
+//            UIView.setAnimationsEnabled(true)
+//        })
     }
     
     func landscapeRightLayout(duration:NSTimeInterval) {
@@ -398,6 +416,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             toggleRecord()
         }
         
+        // ORIENATION ICON
         orientationIcon.hidden = !isDevicePortrait() || isChooseContinueModal
         
         // either updside down or portrait
