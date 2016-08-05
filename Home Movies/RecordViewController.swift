@@ -465,5 +465,11 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
     }
     
+    
+    @IBAction func didTapControls(gesture: UIGestureRecognizer) {
+        let point = gesture.locationInView(self.videoView)
+        videoView.focusPoint(point)
+    }
+    
 }
 

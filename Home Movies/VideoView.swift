@@ -594,43 +594,53 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     }
     
     // Tap to focus and exposure
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touchPoint = touches.first?.locationInView(self), device = currentVideoDevice, preview = previewLayer {
+//    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//        if let touchPoint = touches.first?.locationInView(self), device = currentVideoDevice, preview = previewLayer {
+//            
+//            let focusPoint = preview.captureDevicePointOfInterestForPoint(touchPoint)
+//            
+//        }
+//    }
+    
+    func focusPoint(touchPoint:CGPoint) {
+        guard let device = currentVideoDevice, preview = previewLayer else {
+            return
             
-            let focusPoint = preview.captureDevicePointOfInterestForPoint(touchPoint)
-            
-            do {
-                try device.lockForConfiguration()
-            } catch let err as NSError {
-                print("Device Lock Error:", err.description)
-            }
-            
-            if device.focusPointOfInterestSupported {
-                device.focusPointOfInterest = focusPoint
-                device.focusMode = .ContinuousAutoFocus
-            }
-            
-            if device.exposurePointOfInterestSupported {
-                device.exposurePointOfInterest = focusPoint
-                device.exposureMode = AVCaptureExposureMode.AutoExpose
-            }
-            
-            
-            device.unlockForConfiguration()
-            
-            if let oldSquare = focusSquare {
-                oldSquare.removeFromSuperview()
-            }
-            
-            let square = CameraFocusSquare(frame: CameraFocusSquare.centerFrame(size: 80, center: touchPoint))
-            addSubview(square)
-            
-            square.animate {
-                square.removeFromSuperview()
-            }
-            
-            self.focusSquare = square
         }
+        
+        let focusPoint = preview.captureDevicePointOfInterestForPoint(touchPoint)
+    
+        do {
+            try device.lockForConfiguration()
+        } catch let err as NSError {
+            print("Device Lock Error:", err.description)
+        }
+        
+        if device.focusPointOfInterestSupported {
+            device.focusPointOfInterest = focusPoint
+            device.focusMode = .ContinuousAutoFocus
+        }
+        
+        if device.exposurePointOfInterestSupported {
+            device.exposurePointOfInterest = focusPoint
+            device.exposureMode = AVCaptureExposureMode.AutoExpose
+        }
+        
+        
+        device.unlockForConfiguration()
+        
+        if let oldSquare = focusSquare {
+            oldSquare.removeFromSuperview()
+        }
+        
+        let square = CameraFocusSquare(frame: CameraFocusSquare.centerFrame(size: 80, center: touchPoint))
+        addSubview(square)
+        
+        square.animate {
+            square.removeFromSuperview()
+        }
+        
+        self.focusSquare = square
     }
     
     func oppositeOrientation(orientation:UIDeviceOrientation) -> AVCaptureVideoOrientation {

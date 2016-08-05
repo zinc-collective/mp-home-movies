@@ -99,8 +99,6 @@ class VideoPlayerController : UIViewController {
     }
     
     @IBAction func viewTapped(sender: AnyObject) {
-        let isHidden = self.navigationController?.navigationBarHidden
-        self.navigationController?.setNavigationBarHidden(isHidden != true, animated: true)
     }
     
     /// Generate Movie //////////////////////////////
