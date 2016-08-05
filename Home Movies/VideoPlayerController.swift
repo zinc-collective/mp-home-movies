@@ -92,8 +92,10 @@ class VideoPlayerController : UIViewController {
     
 
     func displayShareSheet(){
-        if let url = fullVideoURL {
-            let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        if let videoURL = fullVideoURL {
+            let shareText = "Made with #HomeMovies"
+            let shareURL = NSURL(string: "https://itunes.apple.com/us/app/home-movies-video/id1075104413?mt=8")!
+            let activityViewController = UIActivityViewController(activityItems: [videoURL, shareText, shareURL], applicationActivities: nil)
             self.presentViewController(activityViewController, animated: true, completion: {})
         }
     }
