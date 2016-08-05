@@ -142,7 +142,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             do {
                 
                 try configureDevice(videoDevice)
-                let err : NSError? = nil
                 captureSession = AVCaptureSession()
                 videoDataOutput = AVCaptureMovieFileOutput()
                 
@@ -153,10 +152,6 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 
                 try captureSession!.addInput(AVCaptureDeviceInput(device: videoDevice))
                 try captureSession!.addInput(AVCaptureDeviceInput(device: devices.audio))
-                //
-                if err != nil {
-                    print("error: \(err?.localizedDescription)")
-                }
                 
                 if preview {
                     previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -173,7 +168,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 }
             }
             catch let error as NSError{
-                print(error.description)
+                print("session error: ", error.description)
                 throw error
             }
             

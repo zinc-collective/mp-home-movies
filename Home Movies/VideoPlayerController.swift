@@ -19,14 +19,12 @@ class VideoPlayerController : UIViewController {
     
     var player = AVPlayer()
     var playerLayer : AVPlayerLayer!
-    var isPlaying = false
-    var isFinished = false
+    var playerView : AVPlayerViewController?
     
-    @IBOutlet weak var playerView: UIView!
+    
+    @IBOutlet weak var playerContainer: UIView!
     
     @IBOutlet weak var playButton: UIButton!
-    @IBOutlet var playItem: UIBarButtonItem!
-    @IBOutlet var pauseItem: UIBarButtonItem!
     @IBOutlet var actionItem: UIBarButtonItem!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
@@ -36,19 +34,9 @@ class VideoPlayerController : UIViewController {
         super.init(coder: aDecoder)
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        isPlaying = false
-        self.navigationItem.rightBarButtonItems = []
-        playButton.hidden = true
-        
-        // generate movie when we load
-        generateTitleAndMakeMovie()
-    }
-    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        playerLayer.frame = playerView.bounds
+        playerLayer.frame = playerContainer.bounds
     }
     
     override func viewDidLoad() {
@@ -59,56 +47,47 @@ class VideoPlayerController : UIViewController {
             navigationItem.title = title
         }
         
-        playerLayer = AVPlayerLayer(player: player)
-        playerView.layer.insertSublayer(playerLayer, atIndex: 0)
+        playButton.hidden = true
+        self.navigationItem.rightBarButtonItems = []
         
+        playerLayer = AVPlayerLayer(player: player)
+        playerContainer.layer.insertSublayer(playerLayer, atIndex: 0)
+        
+        
+        // generate movie when we load
+        generateTitleAndMakeMovie()
     }
     
     @IBAction func sharePressed(){
-        pause()
         displayShareSheet()
-    }
-    
-    @IBAction func donePressed() {
-        pause()
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func playPressed(sender: AnyObject) {
         play()
     }
     
-    @IBAction func pausePressed(sender: AnyObject) {
-        pause()
-    }
-    
     func play() {
         
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-        
-        if isFinished {
-            isFinished = false
-            player.seekToTime(kCMTimeZero)
+        guard let url = self.fullVideoURL else {
+            return
         }
         
-        isPlaying = true
-        player.play()
+        let playerItem = AVPlayerItem(URL: url)
+        let localPlayer = AVPlayer(playerItem: playerItem)
         
-        playButton.hidden = true
-        navigationItem.rightBarButtonItems = [pauseItem, actionItem]
-    }
-    
-    func pause() {
-        isPlaying = false
-        player.pause()
-        playButton.hidden = false
-        navigationItem.rightBarButtonItems = [playItem, actionItem]
+        let vc = AVPlayerViewController()
+        vc.player = localPlayer
+        vc.showsPlaybackControls = true
+        self.playerView = vc
+        
+        self.presentViewController(vc, animated: true, completion: {
+            localPlayer.play()
+        })
+        
     }
     
     func didFinishPlaying() {
-        isFinished = true
-        pause()
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        
     }
     
 
@@ -150,7 +129,7 @@ class VideoPlayerController : UIViewController {
                     dispatch_async(dispatch_get_main_queue()){
                         self.activityIndicator.stopAnimating()
                         self.activityIndicator.hidden = true
-                        self.playVideo(exportedURL)
+                        self.displayVideo(exportedURL)
                     }
                 }
             }
@@ -187,14 +166,15 @@ class VideoPlayerController : UIViewController {
         }
     }
     
-    func playVideo(videoURL : NSURL) {
+    func displayVideo(videoURL : NSURL) {
         self.fullVideoURL = videoURL
         let playerItem = AVPlayerItem(URL: videoURL)
         player.replaceCurrentItemWithPlayerItem(playerItem)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didFinishPlaying), name: AVPlayerItemDidPlayToEndTimeNotification, object: playerItem)
+        NSNotificationCenter.defaultCenter()
+            .addObserver(self, selector: #selector(didFinishPlaying), name: AVPlayerItemDidPlayToEndTimeNotification, object: playerItem)
         
-        navigationItem.rightBarButtonItems = [playItem, actionItem]
+        navigationItem.rightBarButtonItems = [actionItem]
         playButton.hidden = false
     }
     

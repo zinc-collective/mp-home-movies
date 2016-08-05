@@ -4,7 +4,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -412,7 +411,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVc-b6-Prw">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WVc-b6-Prw" userLabel="Player Container">
                                 <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
@@ -450,23 +449,11 @@
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="G9g-Fi-Uqi">
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="play" id="0c8-FX-mit">
-                                <connections>
-                                    <action selector="playPressed:" destination="9VA-wh-Dcg" id="oCo-uS-CNL"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="pause" id="L7V-jP-itZ">
-                                <connections>
-                                    <action selector="pausePressed:" destination="9VA-wh-Dcg" id="yHu-Hm-84H"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="action" id="OP5-Q3-HNf">
-                                <connections>
-                                    <action selector="sharePressed" destination="9VA-wh-Dcg" id="rww-0q-Wm0"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="OP5-Q3-HNf">
+                            <connections>
+                                <action selector="sharePressed" destination="9VA-wh-Dcg" id="rww-0q-Wm0"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -474,10 +461,8 @@
                     <connections>
                         <outlet property="actionItem" destination="OP5-Q3-HNf" id="ila-yp-sgC"/>
                         <outlet property="activityIndicator" destination="zwD-FE-Mdo" id="lXq-Rw-VAS"/>
-                        <outlet property="pauseItem" destination="L7V-jP-itZ" id="NW9-uG-Eb6"/>
                         <outlet property="playButton" destination="Vf7-hJ-GP4" id="yhL-yu-ndg"/>
-                        <outlet property="playItem" destination="0c8-FX-mit" id="NQE-iH-RvI"/>
-                        <outlet property="playerView" destination="WVc-b6-Prw" id="Led-G3-DpO"/>
+                        <outlet property="playerContainer" destination="WVc-b6-Prw" id="6xr-rC-HQk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5mo-46-lrg" userLabel="First Responder" sceneMemberID="firstResponder"/>
