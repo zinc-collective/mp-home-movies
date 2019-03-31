@@ -54,14 +54,14 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     
-    @IBAction func recordPressed(sender: AnyObject) {
+    @IBAction func recordPressed(_ sender: AnyObject) {
         toggleRecord()
     }
     
-    @IBAction func donePressed(sender: AnyObject) {
-        doneButton.enabled = false
+    @IBAction func donePressed(_ sender: AnyObject) {
+        doneButton.isEnabled = false
         print("done pressed")
-        self.performSegueWithIdentifier("TitleViewController", sender: self)
+        self.performSegue(withIdentifier: "TitleViewController", sender: self)
         
         // TODO move this
         self.isChooseContinueModal = true
@@ -69,21 +69,21 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     @IBAction func deletePressed() {
         
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        actionSheet.addAction(UIAlertAction(title: "Delete last clip", style: .Destructive, handler: { action in
+        actionSheet.addAction(UIAlertAction(title: "Delete last clip", style: .destructive, handler: { action in
             self.videoSession.deleteLastClip()
             self.renderControls()
             self.sessionChanged()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Start new movie", style: .Default, handler: { action in
+        actionSheet.addAction(UIAlertAction(title: "Start new movie", style: .default, handler: { action in
             self.startOverPressed()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-        self.presentViewController(actionSheet, animated: true, completion: {})
+        self.present(actionSheet, animated: true, completion: {})
     }
     
     @IBAction func startOverPressed() {
@@ -106,7 +106,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     func renderControls() {
         
         let isPortrait = isDevicePortrait()
-        let isWorking = activityIndicator.hidden == false
+        let isWorking = activityIndicator.isHidden == false
         let numClips = videoSession.getClipsCount()
         let hasClips = (numClips > 0)
         
@@ -122,7 +122,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             }
         }
         
-        UIView.animateWithDuration(0.200, animations: {
+        UIView.animate(withDuration: 0.200, animations: {
             
             self.doneButton.alpha      = fromHidden(self.isRecording || !hasClips || allControlsHidden)
             
@@ -138,10 +138,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             self.continueButton.alpha = fromHidden(!self.isChooseContinueModal)
         })
         
-        self.clipsButton.setTitle("\(numClips)", forState: .Normal)
+        self.clipsButton.setTitle("\(numClips)", for: UIControlState())
         
         recordButton.recording = isRecording
-        recordLight.hidden = !isRecording
+        recordLight.isHidden = !isRecording
     }
     
     //used by video mgr
@@ -157,14 +157,14 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         if isRecording
         {
             // this might need to be more complex
-            videoView.startRecording(UIDevice.currentDevice().orientation)
+            videoView.startRecording(UIDevice.current.orientation)
             timerLabel.startTimer()
         }
         else
         {
             videoView.stopRecording({
                 print("STOP RECORDING", self.videoSession.sessionDuration())
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.sessionChanged()
                 }
             })
@@ -180,43 +180,43 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         self.timerLabel.stoppedTime = duration
     }
     
-    func showHideActivityIndicator(show: Bool){
+    func showHideActivityIndicator(_ show: Bool){
         if show {
-            activityIndicator.hidden = false
+            activityIndicator.isHidden = false
             activityIndicator.center = self.view.center
             activityIndicator.startAnimating()
         }
         else{
             self.activityIndicator.stopAnimating()
-            activityIndicator.hidden=true
+            activityIndicator.isHidden=true
         }
         renderControls()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        doneButton.enabled = true
-        activityIndicator.hidden=true
+        doneButton.isEnabled = true
+        activityIndicator.isHidden=true
         renderControls()
         
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
 
-        UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:UIDeviceOrientationDidChangeNotification, object: nil)
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
-         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+         NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         
         // correct the layout for landscape right
-        if (UIDevice.currentDevice().orientation == .LandscapeRight) {
+        if (UIDevice.current.orientation == .landscapeRight) {
             landscapeRightLayout(0)
         }
         else {
             defaultLayout(0)
         }
         
-        volumeHandler = JPSVolumeButtonHandler(upBlock: {
+        volumeHandler = JPSVolumeButtonHandler(up: {
             self.recordPressed(self)
         }, downBlock: {
             self.recordPressed(self)
@@ -226,29 +226,29 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         print("view disappear")
-        UIDevice.currentDevice().endGeneratingDeviceOrientationNotifications()
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addVideoView()
-        clipsButton.contentHorizontalAlignment = .Center
+        clipsButton.contentHorizontalAlignment = .center
         let duration = videoSession.sessionDuration()
         print("INITIAL DURATION", duration)
         timerLabel.stoppedTime = duration
         
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
         
         //doneButton.hidden = videoView.canFinalize()
         print("view did load")
         
     }
     
-    func addVideoView(device:AVCaptureDevice?) {
-        videoView = VideoView(frame: videoContainer.bounds, device: device, orientation: UIDevice.currentDevice().orientation)
+    func addVideoView(_ device:AVCaptureDevice?) {
+        videoView = VideoView(frame: videoContainer.bounds, device: device, orientation: UIDevice.current.orientation)
         videoContainer.addSubview(videoView)
         videoView.delegate = self
     }
@@ -280,7 +280,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     {
         print("view - app will enter background")
         timerLabel.stopTimer()
-        dispatch_async(GlobalUtilityQueue){
+        GlobalUtilityQueue.async{
             self.videoView.stopRecording({})
             self.videoView.stopSession()
         }
@@ -292,24 +292,24 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         loadingFromBg = true
     }
     
-    func showAlert(tit: String, msg: String, comp: ((UIAlertAction!) -> Void)){
+    func showAlert(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
         
-        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.Alert)
-        alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: comp ))
-        self.presentViewController(alertCtrller, animated: true, completion: nil)
+        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.alert)
+        alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: comp ))
+        self.present(alertCtrller, animated: true, completion: nil)
     
     }
     
-    func showAlertWithCancel(tit: String, msg: String, comp: ((UIAlertAction!) -> Void)){
-        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.Alert)
-        alertCtrller.addAction( UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: comp ))
-        alertCtrller.addAction( UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: {(alert:UIAlertAction!) in } ))
-        self.presentViewController(alertCtrller, animated: true, completion: nil)
+    func showAlertWithCancel(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
+        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.alert)
+        alertCtrller.addAction( UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: comp ))
+        alertCtrller.addAction( UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: {(alert:UIAlertAction!) in } ))
+        self.present(alertCtrller, animated: true, completion: nil)
         
     }
     
-    override func viewDidAppear(animated: Bool) {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    override func viewDidAppear(_ animated: Bool) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if(appDelegate.freeSpaceMb <= 50)
         {
             showAlert("Warning!",msg: "You have less than 50 MB storage left! Please free up some space and try again!", comp: {(alert: UIAlertAction!) in exit(0)
@@ -338,29 +338,29 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         //
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
     
-    func videoError(error: NSError) {
+    func videoError(_ error: NSError) {
         if let msg = error.localizedRecoverySuggestion {
             self.showAlert("Error!", msg: msg, comp: {(alert: UIAlertAction!) in exit(0)})
         }
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         
         // the orientation has already updated to the new one
-        let orientation = UIDevice.currentDevice().orientation
+        let orientation = UIDevice.current.orientation
 //        videoView?.orientation = orientation
         
-        let duration = coordinator.transitionDuration()
+        let duration = coordinator.transitionDuration
         print("TRANSITION TO SIZE")
         
         // BUTTON ROTATION
         // it won't animate
-        if orientation == .LandscapeRight {
+        if orientation == .landscapeRight {
             landscapeRightLayout(duration)
         }
         else {
@@ -384,23 +384,23 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 //        })
     }
     
-    func landscapeRightLayout(duration:NSTimeInterval) {
-        let transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+    func landscapeRightLayout(_ duration:TimeInterval) {
+        let transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
         self.contentControlsView.transform = transform
-        UIView.animateWithDuration(duration) {
+        UIView.animate(withDuration: duration, animations: {
             self.clipsButton.transform = transform
-        }
+        }) 
     }
     
-    func defaultLayout(duration:NSTimeInterval) {
-        self.contentControlsView.transform = CGAffineTransformIdentity
-        UIView.animateWithDuration(duration) {
-            self.clipsButton.transform = CGAffineTransformIdentity
-        }
+    func defaultLayout(_ duration:TimeInterval) {
+        self.contentControlsView.transform = CGAffineTransform.identity
+        UIView.animate(withDuration: duration, animations: {
+            self.clipsButton.transform = CGAffineTransform.identity
+        }) 
     }
     
     func orientationDidChange() {
-        let orientation = UIDevice.currentDevice().orientation
+        let orientation = UIDevice.current.orientation
         
         let isPortrait = isDevicePortrait()
         
@@ -409,35 +409,35 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
         
         // ORIENATION ICON
-        orientationIcon.hidden = !isDevicePortrait() || isChooseContinueModal
+        orientationIcon.isHidden = !isDevicePortrait() || isChooseContinueModal
         
         // either updside down or portrait
         var a = 0.0
-        if (orientation == .Portrait) {
+        if (orientation == .portrait) {
             a = -(M_PI / 2.0)
         }
-        else if (orientation == .PortraitUpsideDown) {
+        else if (orientation == .portraitUpsideDown) {
             a = M_PI / 2.0
         }
         else {
             a = 0
         }
         
-        let m = CGAffineTransformMakeRotation(CGFloat(a))
+        let m = CGAffineTransform(rotationAngle: CGFloat(a))
         orientationIcon.transform = m
         
         renderControls()
     }
     
     func isDevicePortrait() -> Bool {
-        let orientation = UIDevice.currentDevice().orientation
-        return ((orientation == .Portrait) || (orientation == .PortraitUpsideDown))
+        let orientation = UIDevice.current.orientation
+        return ((orientation == .portrait) || (orientation == .portraitUpsideDown))
     }
     
     @IBAction func didTapCameraSwitch() {
         let oldVideoView = videoView
         if let device = videoView.switchedCameraDevice() {
-            UIView.transitionWithView(videoContainer, duration: 0.250, options: .TransitionFlipFromTop, animations: {
+            UIView.transition(with: videoContainer, duration: 0.250, options: .transitionFlipFromTop, animations: {
                 self.videoView.removeFromSuperview()
                 self.addVideoView(device)
                 
@@ -450,24 +450,24 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 }
                 
             }, completion: { (_) in
-                oldVideoView.stopSession()
+                oldVideoView?.stopSession()
             })
         }
     }
     
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return !isRecording
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let title = segue.destinationViewController as? TitleViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let title = segue.destination as? TitleViewController {
             title.videoView = videoView
         }
     }
     
     
-    @IBAction func didTapControls(gesture: UIGestureRecognizer) {
-        let point = gesture.locationInView(self.videoView)
+    @IBAction func didTapControls(_ gesture: UIGestureRecognizer) {
+        let point = gesture.location(in: self.videoView)
         videoView.focusPoint(point)
     }
     

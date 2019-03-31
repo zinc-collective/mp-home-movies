@@ -18,24 +18,24 @@ class HomeViewController: UIViewController {
     
     
     
-    @IBAction func onLaunchButtonClick(sender: AnyObject) {
+    @IBAction func onLaunchButtonClick(_ sender: AnyObject) {
         
-        let mainStoryboard = UIStoryboard(name: "Record", bundle: NSBundle.mainBundle())
+        let mainStoryboard = UIStoryboard(name: "Record", bundle: Bundle.main)
         
         let recordController:UIViewController = mainStoryboard.instantiateInitialViewController()!
-        self.presentViewController(recordController, animated: true, completion: nil)
+        self.present(recordController, animated: true, completion: nil)
     }
 
-    @IBAction func onVideoButton(sender: AnyObject) {
-        UIApplication.sharedApplication().openURL(NSURL( string: "http://www.momentpark.com/homemoviestutorial")!)
+    @IBAction func onVideoButton(_ sender: AnyObject) {
+        UIApplication.shared.openURL(URL( string: "http://www.momentpark.com/homemoviestutorial")!)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
   
         launchButton.layer.cornerRadius = 5
         launchButton.layer.borderWidth = 1
         videoButton.layer.borderWidth = 1
         videoButton.layer.cornerRadius=5
-        self.view.layer.backgroundColor=UIColor.whiteColor().CGColor
+        self.view.layer.backgroundColor=UIColor.white.cgColor
     }
 }

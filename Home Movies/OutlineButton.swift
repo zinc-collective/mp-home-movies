@@ -22,7 +22,7 @@ class OutlineButton: UIButton {
     
     func initialize() {
         layer.borderWidth=CGFloat(1.0)
-        layer.borderColor = UIColor.whiteColor().CGColor
+        layer.borderColor = UIColor.white.cgColor
         layer.cornerRadius = CGFloat(5.0)
     }
 

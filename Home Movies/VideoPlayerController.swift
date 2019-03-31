@@ -14,7 +14,7 @@ import AVFoundation
 
 class VideoPlayerController : UIViewController {
     
-    var fullVideoURL: NSURL?
+    var fullVideoURL: URL?
     var movieTitle: String?
     
     var player = AVPlayer()
@@ -47,11 +47,11 @@ class VideoPlayerController : UIViewController {
             navigationItem.title = title
         }
         
-        playButton.hidden = true
+        playButton.isHidden = true
         self.navigationItem.rightBarButtonItems = []
         
         playerLayer = AVPlayerLayer(player: player)
-        playerContainer.layer.insertSublayer(playerLayer, atIndex: 0)
+        playerContainer.layer.insertSublayer(playerLayer, at: 0)
         
         
         // generate movie when we load
@@ -62,7 +62,7 @@ class VideoPlayerController : UIViewController {
         displayShareSheet()
     }
     
-    @IBAction func playPressed(sender: AnyObject) {
+    @IBAction func playPressed(_ sender: AnyObject) {
         play()
     }
     
@@ -72,7 +72,7 @@ class VideoPlayerController : UIViewController {
             return
         }
         
-        let playerItem = AVPlayerItem(URL: url)
+        let playerItem = AVPlayerItem(url: url)
         let localPlayer = AVPlayer(playerItem: playerItem)
         
         let vc = AVPlayerViewController()
@@ -80,7 +80,7 @@ class VideoPlayerController : UIViewController {
         vc.showsPlaybackControls = true
         self.playerView = vc
         
-        self.presentViewController(vc, animated: true, completion: {
+        self.present(vc, animated: true, completion: {
             localPlayer.play()
         })
         
@@ -94,13 +94,13 @@ class VideoPlayerController : UIViewController {
     func displayShareSheet(){
         if let videoURL = fullVideoURL {
             let shareText = "Made with #HomeMovies"
-            let shareURL = NSURL(string: "https://itunes.apple.com/us/app/home-movies-video/id1075104413?mt=8")!
+            let shareURL = URL(string: "https://itunes.apple.com/us/app/home-movies-video/id1075104413?mt=8")!
             let activityViewController = UIActivityViewController(activityItems: [videoURL, shareText, shareURL], applicationActivities: nil)
-            self.presentViewController(activityViewController, animated: true, completion: {})
+            self.present(activityViewController, animated: true, completion: {})
         }
     }
     
-    @IBAction func viewTapped(sender: AnyObject) {
+    @IBAction func viewTapped(_ sender: AnyObject) {
     }
     
     /// Generate Movie //////////////////////////////
@@ -108,7 +108,7 @@ class VideoPlayerController : UIViewController {
     
     func generateTitleAndMakeMovie()
     {
-        activityIndicator.hidden = false
+        activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         
         do {
@@ -119,34 +119,34 @@ class VideoPlayerController : UIViewController {
         }
         
         //concatenate video.
-        dispatch_async(GlobalUserInitiatedQueue){
-            self.videoView.doneDispGroup = dispatch_group_create()
-            dispatch_group_enter(self.videoView.doneDispGroup!)
+        GlobalUserInitiatedQueue.async{
+            self.videoView.doneDispGroup = DispatchGroup()
+            self.videoView.doneDispGroup!.enter()
             var exportMessage: String?
             
             do {
                 try self.videoView.finalizeOutput { exportedURL in
-                    dispatch_async(dispatch_get_main_queue()){
+                    DispatchQueue.main.async{
                         self.activityIndicator.stopAnimating()
-                        self.activityIndicator.hidden = true
+                        self.activityIndicator.isHidden = true
                         self.displayVideo(exportedURL)
                     }
                 }
             }
                 
-            catch VideoExportError.CompositionFailed(let error) {
+            catch VideoExportError.compositionFailed(let error) {
                 exportMessage = "Composition Failed: " + error.description
             }
                 
-            catch VideoExportError.CouldNotCreateExporter() {
+            catch VideoExportError.couldNotCreateExporter() {
                 exportMessage = "Could not create exporter"
             }
                 
-            catch VideoExportError.MissingAssets(let url, let time) {
+            catch VideoExportError.missingAssets(let url, let time) {
                 exportMessage = "Track missing audio or video: \(url.absoluteString) \(time)"
             }
                 
-            catch VideoExportError.NoClips() {
+            catch VideoExportError.noClips() {
                 exportMessage = "No video clips found"
             }
                 
@@ -155,7 +155,7 @@ class VideoPlayerController : UIViewController {
             }
             
             if let msg = exportMessage {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.showAlert("Video Error", msg: "Please contact support\n\n \(msg)", comp: {_ in })
                     
                     
@@ -166,23 +166,23 @@ class VideoPlayerController : UIViewController {
         }
     }
     
-    func displayVideo(videoURL : NSURL) {
+    func displayVideo(_ videoURL : URL) {
         self.fullVideoURL = videoURL
-        let playerItem = AVPlayerItem(URL: videoURL)
-        player.replaceCurrentItemWithPlayerItem(playerItem)
+        let playerItem = AVPlayerItem(url: videoURL)
+        player.replaceCurrentItem(with: playerItem)
         
-        NSNotificationCenter.defaultCenter()
-            .addObserver(self, selector: #selector(didFinishPlaying), name: AVPlayerItemDidPlayToEndTimeNotification, object: playerItem)
+        NotificationCenter.default
+            .addObserver(self, selector: #selector(didFinishPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerItem)
         
         navigationItem.rightBarButtonItems = [actionItem]
-        playButton.hidden = false
+        playButton.isHidden = false
     }
     
-    func showAlert(tit: String, msg: String, comp: ((UIAlertAction!) -> Void)){
+    func showAlert(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
         
-        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.Alert)
-        alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: comp ))
-        self.presentViewController(alertCtrller, animated: true, completion: nil)
+        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.alert)
+        alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: comp ))
+        self.present(alertCtrller, animated: true, completion: nil)
     
     }
     

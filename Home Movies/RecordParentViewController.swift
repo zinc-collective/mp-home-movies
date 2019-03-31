@@ -14,7 +14,7 @@ class RecordParentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -22,40 +22,40 @@ class RecordParentViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let orientation = UIDevice.currentDevice().orientation
+        let orientation = UIDevice.current.orientation
         
         // if the orientation is different from how it was designed, rotate it around without an animation
         // causing it to remain in place while the surrounding view controller rotates
-        if orientation == .LandscapeRight {
-            self.recordView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+        if orientation == .landscapeRight {
+            self.recordView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
         }
         else {
             
-            self.recordView.transform = CGAffineTransformIdentity
+            self.recordView.transform = CGAffineTransform.identity
         }
     }
     
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         
         // prevent all animations until the transition is complete
         UIView.setAnimationsEnabled(false)
-        coordinator.animateAlongsideTransition({ context in
+        coordinator.animate(alongsideTransition: { context in
             
-            let orientation = UIDevice.currentDevice().orientation
+            let orientation = UIDevice.current.orientation
             
             // if the orientation is different from how it was designed, rotate it around without an animation
             // causing it to remain in place while the surrounding view controller rotates
-            if orientation == .LandscapeRight {
-                self.recordView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+            if orientation == .landscapeRight {
+                self.recordView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
             }
             else {
                 
-                self.recordView.transform = CGAffineTransformIdentity
+                self.recordView.transform = CGAffineTransform.identity
             }
             
         }, completion: { context in
@@ -77,16 +77,16 @@ class RecordParentViewController: UIViewController {
     }
     */
     
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return true
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return [.LandscapeLeft, .LandscapeRight]
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return [.landscapeLeft, .landscapeRight]
     }
 
 }

@@ -10,7 +10,7 @@ import UIKit
 
 class RecordLight: UIView {
     
-    var timer : NSTimer?
+    var timer : Timer?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,14 +23,14 @@ class RecordLight: UIView {
     }
     
     func initialize() {
-        backgroundColor = UIColor.redColor()
+        backgroundColor = UIColor.red
         layer.cornerRadius = frame.width / 2.0
         startBlinking()
     }
     
-    override var hidden: Bool {
+    override var isHidden: Bool {
         set(val) {
-            super.hidden = val
+            super.isHidden = val
             
             if val {
                 stopBlinking()
@@ -41,17 +41,17 @@ class RecordLight: UIView {
         }
         
         get {
-            return super.hidden
+            return super.isHidden
         }
     }
     
     func startBlinking() {
         stopBlinking()
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.600, target: self, selector: #selector(blink), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.600, target: self, selector: #selector(blink), userInfo: nil, repeats: true)
     }
     
     func blink() {
-        super.hidden = !super.hidden
+        super.isHidden = !super.isHidden
     }
     
     func stopBlinking() {

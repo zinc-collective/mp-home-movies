@@ -21,24 +21,24 @@ class TitleViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
 
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
         
         if let str = textField.text {
-            nextItem.enabled = str.characters.count > 0
+            nextItem.isEnabled = str.characters.count > 0
         }
         else {
-            nextItem.enabled = false
+            nextItem.isEnabled = false
         }
-        noTitleButton.enabled = !nextItem.enabled
+        noTitleButton.isEnabled = !nextItem.isEnabled
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // remove this view controller from the stack
@@ -56,21 +56,21 @@ class TitleViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func tappedNoTitle(sender: AnyObject) {
+    @IBAction func tappedNoTitle(_ sender: AnyObject) {
         nextPlayer(nil)
     }
     
-    @IBAction func tappedAddTitle(sender: AnyObject) {
+    @IBAction func tappedAddTitle(_ sender: AnyObject) {
         nextPlayer(textField.text)
     }
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         var str : NSString = ""
         if let old = textField.text {
             str = old as NSString
         }
         
-        let newString = str.stringByReplacingCharactersInRange(range, withString: string)
+        let newString = str.replacingCharacters(in: range, with: string)
         
         if (newString.characters.count > 40) {
             self.navigationItem.prompt = "Title too long. Maximum 40 characters."
@@ -80,29 +80,29 @@ class TitleViewController: UIViewController, UITextFieldDelegate {
             self.navigationItem.prompt = nil
         }
         
-        nextItem.enabled = (newString.characters.count > 0)
-        noTitleButton.enabled = !nextItem.enabled
+        nextItem.isEnabled = (newString.characters.count > 0)
+        noTitleButton.isEnabled = !nextItem.isEnabled
         
         return true
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
-    func textFieldShouldClear(textField: UITextField) -> Bool {
-        nextItem.enabled = false
-        noTitleButton.enabled = true
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        nextItem.isEnabled = false
+        noTitleButton.isEnabled = true
         return true
     }
     
-    func nextPlayer(movieTitle:String?) {
-        self.performSegueWithIdentifier("VideoPlayerController", sender: movieTitle)
+    func nextPlayer(_ movieTitle:String?) {
+        self.performSegue(withIdentifier: "VideoPlayerController", sender: movieTitle)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let videoPlayer = segue.destinationViewController as? VideoPlayerController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let videoPlayer = segue.destination as? VideoPlayerController {
             let movieTitle = sender as? String
             videoPlayer.movieTitle = movieTitle
             videoPlayer.videoView = videoView

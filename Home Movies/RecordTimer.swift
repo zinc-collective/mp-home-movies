@@ -10,11 +10,11 @@ import UIKit
 
 class RecordTimer: UILabel {
     
-    var timer:NSTimer?
-    var startDate:NSDate?
-    var elapsed:NSTimeInterval = 0
+    var timer:Timer?
+    var startDate:Date?
+    var elapsed:TimeInterval = 0
     
-    var stoppedTime:NSTimeInterval = 0 {
+    var stoppedTime:TimeInterval = 0 {
         didSet {
             if timer == nil {
                 self.text = stringFromTimeInterval(stoppedTime)
@@ -24,14 +24,14 @@ class RecordTimer: UILabel {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.textAlignment = .Center
+        self.textAlignment = .center
     }
 
     func startTimer() {
-        startDate = NSDate()
+        startDate = Date()
         elapsed = 0
         self.text = stringFromTimeInterval(0.0)
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: #selector(RecordTimer.updateTime(_:)), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(RecordTimer.updateTime(_:)), userInfo: nil, repeats: true)
     }
     
     func stopTimer() {
@@ -42,15 +42,15 @@ class RecordTimer: UILabel {
         self.text = stringFromTimeInterval(stoppedTime + elapsed)
     }
     
-    func updateTime(timer:NSTimer)
+    func updateTime(_ timer:Timer)
     {
         if let start = self.startDate {
-            elapsed = NSDate().timeIntervalSinceDate(start)
+            elapsed = Date().timeIntervalSince(start)
             self.text = stringFromTimeInterval(elapsed)
         }
     }
     
-    func stringFromTimeInterval(interval: NSTimeInterval) -> String {
+    func stringFromTimeInterval(_ interval: TimeInterval) -> String {
         let interval = Int(interval)
         let seconds = interval % 60
         let minutes = (interval / 60) % 60
