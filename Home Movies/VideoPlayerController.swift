@@ -86,7 +86,7 @@ class VideoPlayerController : UIViewController {
         
     }
     
-    func didFinishPlaying() {
+    @objc func didFinishPlaying() {
         
     }
     
@@ -180,8 +180,8 @@ class VideoPlayerController : UIViewController {
     
     func showAlert(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
         
-        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.alert)
-        alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: comp ))
+        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertController.Style.alert)
+        alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: comp ))
         self.present(alertCtrller, animated: true, completion: nil)
     
     }

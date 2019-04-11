@@ -14,18 +14,18 @@ var GlobalMainQueue: DispatchQueue {
 }
 
 var GlobalUserInteractiveQueue: DispatchQueue {
-    return DispatchQueue.global(priority: Int(DispatchQoS.QoSClass.userInteractive.rawValue))
+    return DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive)
 }
 
 var GlobalUserInitiatedQueue: DispatchQueue {
-    return DispatchQueue.global(priority: Int(DispatchQoS.QoSClass.userInitiated.rawValue))
+    return DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)
 }
 
 var GlobalUtilityQueue: DispatchQueue {
-    return DispatchQueue.global(priority: Int(DispatchQoS.QoSClass.utility.rawValue))
+    return DispatchQueue.global(qos: DispatchQoS.QoSClass.utility)
 }
 
 var GlobalBackgroundQueue: DispatchQueue {
-    return DispatchQueue.global(priority: Int(DispatchQoS.QoSClass.background.rawValue))
+    return DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
 }
 

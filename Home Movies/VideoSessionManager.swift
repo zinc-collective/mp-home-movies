@@ -53,13 +53,13 @@ class VideoSessionManager: NSObject {
         }
         
         let composition = AVMutableComposition()
-        let trackVideo:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaTypeVideo, preferredTrackID: CMPersistentTrackID())
-        let trackAudio:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaTypeAudio, preferredTrackID: CMPersistentTrackID())
+        let trackVideo:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: CMPersistentTrackID())!
+        let trackAudio:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: CMPersistentTrackID())!
         
         
         // Composition (for getting the transforms right)
         let videoComposition = AVMutableVideoComposition()
-        videoComposition.frameDuration = CMTimeMake(1,30)
+        videoComposition.frameDuration = CMTimeMake(value: 1,timescale: 30)
         videoComposition.renderScale = 1.0
         
         let instruction = AVMutableVideoCompositionInstruction()
@@ -70,7 +70,7 @@ class VideoSessionManager: NSObject {
         let clipAssets = sources.map(assetsForURL)
         
         let mLargestClipSize = clipAssets
-            .flatMap({ (assets) in assets.video?.naturalSize })
+            .compactMap({ (assets) in assets.video?.naturalSize })
             .max(by: { (one, two) -> Bool in
                 return one.height < two.height && one.width < two.width
             })
@@ -84,7 +84,7 @@ class VideoSessionManager: NSObject {
         print("Largest Clip Size", renderSize)
         videoComposition.renderSize = renderSize
         
-        var insertTime = kCMTimeZero
+        var insertTime = CMTime.zero
         do {
             for assets in clipAssets {
                 if let assetVideo = assets.video {
@@ -137,17 +137,17 @@ class VideoSessionManager: NSObject {
             
             exporter.outputURL = toURL
             
-            exporter.outputFileType = AVFileTypeMPEG4 //AVFileTypeQuickTimeMovie
+            exporter.outputFileType = AVFileType.mp4 //AVFileTypeQuickTimeMovie
             
             // export asynchronously!! Yikes!
             // what a bad idea!
             exporter.exportAsynchronously(completionHandler: {
                 
                 switch exporter.status {
-                    case AVAssetExportSessionStatus.failed:
+                    case AVAssetExportSession.Status.failed:
                         print("failed \(exporter.error)")
                         print(exporter.error?.localizedDescription)
-                    case AVAssetExportSessionStatus.cancelled:
+                    case AVAssetExportSession.Status.cancelled:
                         print("cancelled \(exporter.error)")
                     default:
                         print("complete")
@@ -162,8 +162,8 @@ class VideoSessionManager: NSObject {
     
     func assetsForURL(_ url:URL) -> (url: URL, source: AVURLAsset, video: AVAssetTrack?, audio: AVAssetTrack?) {
         let sourceAsset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey:true, AVURLAssetReferenceRestrictionsKey:0])
-        let videos = sourceAsset.tracks(withMediaType: AVMediaTypeVideo)
-        let audios = sourceAsset.tracks(withMediaType: AVMediaTypeAudio)
+        let videos = sourceAsset.tracks(withMediaType: AVMediaType.video)
+        let audios = sourceAsset.tracks(withMediaType: AVMediaType.audio)
         return (url: url, source: sourceAsset, video: videos.first, audio: audios.first)
     }
     
@@ -284,7 +284,7 @@ class VideoSessionManager: NSObject {
             return []
         }
         
-        let fileUrls = files.flatMap { filePath -> URL? in
+        let fileUrls = files.compactMap { filePath -> URL? in
             if (filePath.contains(CompleteVideoName)) {
                 return nil
             }

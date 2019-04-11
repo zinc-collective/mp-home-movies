@@ -50,7 +50,7 @@ class RecordLight: UIView {
         timer = Timer.scheduledTimer(timeInterval: 0.600, target: self, selector: #selector(blink), userInfo: nil, repeats: true)
     }
     
-    func blink() {
+    @objc func blink() {
         super.isHidden = !super.isHidden
     }
     

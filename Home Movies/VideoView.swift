@@ -88,13 +88,13 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
         if captureSession!.isRunning {
             print("session running")
-            if(videoDataOutput?.connection(withMediaType: AVMediaTypeVideo).isVideoOrientationSupported == true) {
-                let vidConn = videoDataOutput?.connection(withMediaType: AVMediaTypeVideo)
+            if(videoDataOutput?.connection(with: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video)))?.isVideoOrientationSupported == true) {
+                let vidConn = videoDataOutput?.connection(with: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video)))
                 // I'm a little lost and I'm not sure why opposite orientation is required
                 // but it always is, no matter which way the device is currently facing
                 vidConn?.videoOrientation = oppositeOrientation(orientation)
             }
-            videoDataOutput?.startRecording(toOutputFileURL: fileURL, recordingDelegate: self)
+            videoDataOutput?.startRecording(to: fileURL, recordingDelegate: self)
             print("Started recording")
         }
     }
@@ -121,7 +121,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     //copy to camera roll
                     self.doneDispGroup = DispatchGroup()
                     self.doneDispGroup!.enter()
-                    self.copyFileToCameraRoll(fileURL)
+                    self.copyFileToCameraRoll(fileURL!)
                     GlobalUtilityQueue.async{
                         print("waiting for video copy  to camera roll finish")
                         self.doneDispGroup!.wait(timeout: DispatchTime.distantFuture)
@@ -148,22 +148,21 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 // disable fragment writing to fix loss of audio
                 // http://stackoverflow.com/questions/26768987/avcapturesession-audio-doesnt-work-for-long-videos
                 // https://developer.apple.com/library/prerelease/ios/documentation/AVFoundation/Reference/AVCaptureMovieFileOutput_Class/index.html#//apple_ref/occ/instp/AVCaptureMovieFileOutput/movieFragmentInterval
-                videoDataOutput?.movieFragmentInterval = kCMTimeInvalid;
+                videoDataOutput?.movieFragmentInterval = CMTime.invalid;
                 
                 try captureSession!.addInput(AVCaptureDeviceInput(device: videoDevice))
-                try captureSession!.addInput(AVCaptureDeviceInput(device: devices.audio))
+                try captureSession!.addInput(AVCaptureDeviceInput(device: devices.audio!))
                 
                 if preview {
-                    previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+                    previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
                     self.layer.addSublayer(self.previewLayer!)
                     self.previewLayer?.frame = self.layer.frame
-                    self.previewLayer?.connection.videoOrientation = .landscapeRight
+                    self.previewLayer?.connection!.videoOrientation = .landscapeRight
                     self.captureSession?.startRunning()
                 
-                    if captureSession!.canAddOutput(videoDataOutput)
+                    if captureSession!.canAddOutput(videoDataOutput!)
                     {
-                        captureSession!.addOutput(videoDataOutput)
-
+                        captureSession!.addOutput(videoDataOutput!)
                     }
                 }
             }
@@ -206,7 +205,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     
     func availableDevices() -> Devices {
         
-        let devices = AVCaptureDevice.devices() as! [AVCaptureDevice]
+        let devices = AVCaptureDevice.devices() 
         var front : AVCaptureDevice?
         var back : AVCaptureDevice?
         var audio : AVCaptureDevice?
@@ -214,7 +213,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         // Loop through all the capture devices on this phone
         for device in devices {
             // Make sure this particular device supports video
-            if device.hasMediaType(AVMediaTypeVideo) {
+            if device.hasMediaType(AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video))) {
                 // Finally check the position and confirm we've got the back camera
                 if(device.position == .back) {
                     back = device
@@ -224,7 +223,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 }
             }
             
-            if device.hasMediaType(AVMediaTypeAudio) {
+            if device.hasMediaType(AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.audio))) {
                 audio = device
             }
         }
@@ -232,7 +231,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         return (front, back, audio)
     }
     
-    func finalizeOutput(_ complete:(URL) -> Void) throws -> Void
+    func finalizeOutput(_ complete:@escaping (URL) -> Void) throws -> Void
     {
         try videoSession.exportVideoSession { (url) in
             print("Exported: ", url)
@@ -288,8 +287,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             // Set a property of the request to change the asset itself.
             print(request?.description)
             }, completionHandler: { success, error in
-                NSLog("Finished updating asset. %@", (success ? "Success." : error!))
-                print("finished")
+                // print("Finished updating asset. %@", (success ? "Success." : error!))
+                // print("finished")
                 self.doneDispGroup!.leave()
         })
         
@@ -298,14 +297,14 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     func checkAllAuthorizations() -> Bool{
         self.recDispGrp = DispatchGroup()
         self.recDispGrp!.enter()
-        AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeAudio, completionHandler: {(granted: Bool)-> Void in
+        AVCaptureDevice.requestAccess(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.audio)), completionHandler: {(granted: Bool)-> Void in
             print("perm \(granted)")
             self.recDispGrp!.leave()
         })
         self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
         //
         self.recDispGrp!.enter()
-        AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: {(granted: Bool)-> Void in
+        AVCaptureDevice.requestAccess(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video)), completionHandler: {(granted: Bool)-> Void in
             print("perm \(granted)")
             self.recDispGrp!.leave()
         })
@@ -318,8 +317,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         }
         self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
         
-        let videoAccess = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
-        let audioAccess = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeAudio)
+        let videoAccess = AVCaptureDevice.authorizationStatus(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video)))
+        let audioAccess = AVCaptureDevice.authorizationStatus(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.audio)))
         let photoLibAcces = PHPhotoLibrary.authorizationStatus()
         
         var retVal = true
@@ -361,7 +360,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     
     
     
-    func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!){
+    func fileOutput(_ captureOutput: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?){
         self.recording=false
         if(error != nil)
         {
@@ -382,7 +381,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     
     
     
-    func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) {
+    func fileOutput(_ captureOutput: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
         self.recording=true
         print("started recording to -> \(fileURL)" )
     }
@@ -395,7 +394,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         animation.fromValue = NSValue(caTransform3D: CATransform3DMakeScale(1, 1,1))
         animation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(1.5, 1, 1))
         animation.duration = 4
-        animation.fillMode=kCAFillModeBoth
+        animation.fillMode=CAMediaTimingFillMode.both
         animation.beginTime=AVCoreAnimationBeginTimeAtZero
         //
        
@@ -404,7 +403,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         animGrp.beginTime=AVCoreAnimationBeginTimeAtZero
         animGrp.animations=[animation]
         animGrp.isRemovedOnCompletion=false
-        animGrp.fillMode=kCAFillModeBoth
+        animGrp.fillMode=CAMediaTimingFillMode.both
         animGrp.duration = 4
         //
         
@@ -466,11 +465,11 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             let comp = AVMutableComposition()
             //video asset
             let asset = self.getAssetForDevice()
-            let track = comp.addMutableTrack(withMediaType: AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
-            let asset_track = asset.tracks(withMediaType: AVMediaTypeVideo)[0]
-            print(asset.tracks(withMediaType: AVMediaTypeVideo)[0])
+            let track = comp.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+            let asset_track = asset.tracks(withMediaType: AVMediaType.video)[0]
+            print(asset.tracks(withMediaType: AVMediaType.video)[0])
             do {
-                try track.insertTimeRange(CMTimeRangeMake(kCMTimeZero, asset.duration), of: asset_track, at: kCMTimeZero)
+                try track!.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: asset.duration), of: asset_track, at: CMTime.zero)
             }
             catch let err as NSError {
                 print(err)
@@ -495,7 +494,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             
 //            al.backgroundColor = UIColor.blueColor().CGColor
             al.isGeometryFlipped=false
-            al.contentsGravity = "center"
+            al.contentsGravity = convertToCALayerContentsGravity("center")
             al.anchorPoint=CGPoint(x: 0.5, y: 0.5)
             //animation
             let textLayer = CATextLayer()
@@ -505,14 +504,14 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             let lineHeight : CGFloat = 50.0
             textLayer.frame = CGRect(x: ((pw - w)/2), y: 0, width: w, height: ph/2 + lineHeight)
             textLayer.string = label
-            let fontName: CFStringRef = "HelveticaNeue-Bold"
+            let fontName: CFString = "HelveticaNeue-Bold" as CFString
             textLayer.font = CTFontCreateWithName(fontName, 10.0, nil)
             textLayer.foregroundColor = UIColor.white.cgColor
 //            textLayer.backgroundColor = UIColor.redColor().CGColor
             textLayer.fontSize = 55.0;
             textLayer.contentsScale=UIScreen.main.scale*2
             textLayer.isWrapped = true
-            textLayer.alignmentMode = kCAAlignmentCenter
+            textLayer.alignmentMode = CATextLayerAlignmentMode.center
             textLayer.opacity=1
             textLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)//
             
@@ -527,9 +526,9 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             animComp.animationTool=animTool
             
             let compInstr = AVMutableVideoCompositionInstruction()
-            compInstr.timeRange=CMTimeRangeMake(kCMTimeZero, asset.duration)
+            compInstr.timeRange=CMTimeRangeMake(start: CMTime.zero, duration: asset.duration)
             let layerInstr = AVMutableVideoCompositionLayerInstruction(assetTrack: asset_track)
-            layerInstr.setOpacity(1, at: kCMTimeZero)
+            layerInstr.setOpacity(1, at: CMTime.zero)
             
             
             compInstr.layerInstructions=[layerInstr]
@@ -537,7 +536,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             
             //
             let fileURL = self.titleFilePath!
-            let filePath = self.titleFilePath!.path!
+            let filePath = self.titleFilePath!.path
             if FileManager.default.fileExists(atPath: filePath) {
                 do {
                     try FileManager.default.removeItem(atPath: filePath)
@@ -552,11 +551,11 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             let exportSession = AVAssetExportSession(asset: comp, presetName: AVAssetExportPresetHighestQuality)
             exportSession?.outputURL=fileURL
             exportSession?.videoComposition=animComp
-            exportSession?.outputFileType=AVFileTypeMPEG4
+            exportSession?.outputFileType=AVFileType.mp4
             print(exportSession?.estimatedOutputFileLength)
             exportSession?.exportAsynchronously(){
                 switch exportSession!.status{
-                case  AVAssetExportSessionStatus.completed:
+                case  AVAssetExportSession.Status.completed:
                     self.titleGenerated = true
                 default:
                     print("cancelled \(exportSession!.error)")
@@ -571,7 +570,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         let asset = AVURLAsset(url: url, options: nil)
         let imgGenerator = AVAssetImageGenerator(asset: asset)
         do {
-            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
+            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
             // !! check the error before proceeding
             let uiImage = UIImage(cgImage: cgImage)
             return uiImage
@@ -608,7 +607,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             
         }
         
-        let focusPoint = preview.captureDevicePointOfInterest(for: touchPoint)
+        let focusPoint = preview.captureDevicePointConverted(fromLayerPoint: touchPoint)
     
         do {
             try device.lockForConfiguration()
@@ -623,7 +622,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         
         if device.isExposurePointOfInterestSupported {
             device.exposurePointOfInterest = focusPoint
-            device.exposureMode = AVCaptureExposureMode.autoExpose
+            device.exposureMode = AVCaptureDevice.ExposureMode.autoExpose
         }
         
         
@@ -651,4 +650,14 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             return .landscapeRight
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromAVMediaType(_ input: AVMediaType) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToCALayerContentsGravity(_ input: String) -> CALayerContentsGravity {
+	return CALayerContentsGravity(rawValue: input)
 }

@@ -42,7 +42,7 @@ class RecordTimer: UILabel {
         self.text = stringFromTimeInterval(stoppedTime + elapsed)
     }
     
-    func updateTime(_ timer:Timer)
+    @objc func updateTime(_ timer:Timer)
     {
         if let start = self.startDate {
             elapsed = Date().timeIntervalSince(start)

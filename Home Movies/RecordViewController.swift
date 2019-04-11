@@ -138,7 +138,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             self.continueButton.alpha = fromHidden(!self.isChooseContinueModal)
         })
         
-        self.clipsButton.setTitle("\(numClips)", for: UIControlState())
+        self.clipsButton.setTitle("\(numClips)", for: UIControl.State())
         
         recordButton.recording = isRecording
         recordLight.isHidden = !isRecording
@@ -202,11 +202,11 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
 
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
-        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:UIDevice.orientationDidChangeNotification, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-         NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+         NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplication.willResignActiveNotification, object: nil)
         
         // correct the layout for landscape right
         if (UIDevice.current.orientation == .landscapeRight) {
@@ -257,7 +257,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         addVideoView(nil)
     }
     
-    func applicationDidBecomeActive()
+    @objc func applicationDidBecomeActive()
     {
         print("view - app became active")
         if loadingFromBg {
@@ -276,7 +276,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
     }
     
-    func applicationWillEnterBackground()
+    @objc func applicationWillEnterBackground()
     {
         print("view - app will enter background")
         timerLabel.stopTimer()
@@ -286,7 +286,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
     }
     
-    func applicationDidEnterBackground()
+    @objc func applicationDidEnterBackground()
     {
         print("view - app entered background")
         loadingFromBg = true
@@ -294,16 +294,16 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     func showAlert(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
         
-        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.alert)
-        alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: comp ))
+        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertController.Style.alert)
+        alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: comp ))
         self.present(alertCtrller, animated: true, completion: nil)
     
     }
     
     func showAlertWithCancel(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
-        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertControllerStyle.alert)
-        alertCtrller.addAction( UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: comp ))
-        alertCtrller.addAction( UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: {(alert:UIAlertAction!) in } ))
+        let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertController.Style.alert)
+        alertCtrller.addAction( UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: comp ))
+        alertCtrller.addAction( UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {(alert:UIAlertAction!) in } ))
         self.present(alertCtrller, animated: true, completion: nil)
         
     }
@@ -399,7 +399,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }) 
     }
     
-    func orientationDidChange() {
+    @objc func orientationDidChange() {
         let orientation = UIDevice.current.orientation
         
         let isPortrait = isDevicePortrait()

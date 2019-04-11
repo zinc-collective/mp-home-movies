@@ -30,7 +30,7 @@ class RecordParentViewController: UIViewController {
         // if the orientation is different from how it was designed, rotate it around without an animation
         // causing it to remain in place while the surrounding view controller rotates
         if orientation == .landscapeRight {
-            self.recordView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+            self.recordView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
         }
         else {
             
