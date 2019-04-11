@@ -178,7 +178,7 @@ class VideoPlayerController : UIViewController {
         playButton.isHidden = false
     }
     
-    func showAlert(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
+    func showAlert(_ tit: String, msg: String, comp: @escaping ((UIAlertAction?) -> Void)){
         
         let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertController.Style.alert)
         alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: comp ))

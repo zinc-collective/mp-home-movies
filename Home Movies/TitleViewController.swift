@@ -30,7 +30,7 @@ class TitleViewController: UIViewController, UITextFieldDelegate {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
         
         if let str = textField.text {
-            nextItem.isEnabled = str.characters.count > 0
+            nextItem.isEnabled = str.count > 0
         }
         else {
             nextItem.isEnabled = false
@@ -72,7 +72,7 @@ class TitleViewController: UIViewController, UITextFieldDelegate {
         
         let newString = str.replacingCharacters(in: range, with: string)
         
-        if (newString.characters.count > 40) {
+        if (newString.count > 40) {
             self.navigationItem.prompt = "Title too long. Maximum 40 characters."
             return false
         }
@@ -80,7 +80,7 @@ class TitleViewController: UIViewController, UITextFieldDelegate {
             self.navigationItem.prompt = nil
         }
         
-        nextItem.isEnabled = (newString.characters.count > 0)
+        nextItem.isEnabled = (newString.count > 0)
         noTitleButton.isEnabled = !nextItem.isEnabled
         
         return true

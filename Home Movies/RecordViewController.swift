@@ -292,7 +292,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         loadingFromBg = true
     }
     
-    func showAlert(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
+    func showAlert(_ tit: String, msg: String, comp: @escaping ((UIAlertAction?) -> Void)){
         
         let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertController.Style.alert)
         alertCtrller.addAction( UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: comp ))
@@ -300,7 +300,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     
     }
     
-    func showAlertWithCancel(_ tit: String, msg: String, comp: @escaping ((UIAlertAction!) -> Void)){
+    func showAlertWithCancel(_ tit: String, msg: String, comp: @escaping ((UIAlertAction?) -> Void)){
         let alertCtrller = UIAlertController(title: tit, message: msg, preferredStyle: UIAlertController.Style.alert)
         alertCtrller.addAction( UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: comp ))
         alertCtrller.addAction( UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {(alert:UIAlertAction!) in } ))
