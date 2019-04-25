@@ -308,14 +308,14 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             print("perm \(granted)")
             self.recDispGrp!.leave()
         })
-        self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
+        _ = self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
         //
         self.recDispGrp!.enter()
         PHPhotoLibrary.requestAuthorization { (status : PHAuthorizationStatus) -> Void in
             print("perm \(status)")
             self.recDispGrp!.leave()
         }
-        self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
+        _ = self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
         
         let videoAccess = AVCaptureDevice.authorizationStatus(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video)))
         let audioAccess = AVCaptureDevice.authorizationStatus(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.audio)))
@@ -364,7 +364,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         self.recording=false
         if(error != nil)
         {
-            delegate?.videoError(error as! NSError)
+            delegate?.videoError(error! as NSError)
             
         }
         else {
@@ -445,7 +445,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             self.titDispGrp!.enter()
             print(title.endIndex)
             self.createAnimatedTitleVideo(title, animGrp: self.getFadeTransformAnimGrp)
-            self.titDispGrp!.wait(timeout: DispatchTime.distantFuture)
+            _ = self.titDispGrp!.wait(timeout: DispatchTime.distantFuture)
         }
         else {
             try videoSession.deleteTitleTrack()
@@ -552,13 +552,13 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             exportSession?.outputURL=fileURL
             exportSession?.videoComposition=animComp
             exportSession?.outputFileType=AVFileType.mp4
-            print(exportSession?.estimatedOutputFileLength)
+            print(exportSession?.estimatedOutputFileLength as Any)
             exportSession?.exportAsynchronously(){
                 switch exportSession!.status{
                 case  AVAssetExportSession.Status.completed:
                     self.titleGenerated = true
                 default:
-                    print("cancelled \(exportSession!.error)")
+                    print("cancelled \(String(describing: exportSession!.error))")
                     
                 }
                 self.titDispGrp!.leave()
