@@ -47,7 +47,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     var titleGenerated:Bool?
     var titleFilePath:URL?
     
-    var devices : Devices
+    var devices : Devices!
     var currentVideoDevice : AVCaptureDevice?
     
     var devicesPresent : Bool {
@@ -103,7 +103,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     {
         if videoDataOutput != nil  && videoDataOutput!.isRecording {
             
-            print("saving video \(videoDataOutput!.outputFileURL)")
+            print("saving video \(videoDataOutput!.outputFileURL!.absoluteString)")
             let fileURL = videoDataOutput!.outputFileURL;
             GlobalUserInitiatedQueue.sync{
                 self.recDispGrp = DispatchGroup()
@@ -112,7 +112,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                 self.videoDataOutput?.stopRecording()
                 GlobalUserInitiatedQueue.async{
                     print("waiting for video recording to finish")
-                    self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
+                    _ = self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
                     print("done waiting for recording to complete...")
                     
                     // don't wait for copy to camera roll to finish
@@ -124,7 +124,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
                     self.copyFileToCameraRoll(fileURL!)
                     GlobalUtilityQueue.async{
                         print("waiting for video copy  to camera roll finish")
-                        self.doneDispGroup!.wait(timeout: DispatchTime.distantFuture)
+                        _ = self.doneDispGroup!.wait(timeout: DispatchTime.distantFuture)
                         print("done waiting for video copy  to camera roll finish.")
                     }
                 }
@@ -285,7 +285,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             let request = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileURL)
             
             // Set a property of the request to change the asset itself.
-            print(request?.description)
+            print(request?.description as Any)
             }, completionHandler: { success, error in
                 // print("Finished updating asset. %@", (success ? "Success." : error!))
                 // print("finished")
@@ -301,7 +301,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             print("perm \(granted)")
             self.recDispGrp!.leave()
         })
-        self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
+        _ = self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
         //
         self.recDispGrp!.enter()
         AVCaptureDevice.requestAccess(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video)), completionHandler: {(granted: Bool)-> Void in

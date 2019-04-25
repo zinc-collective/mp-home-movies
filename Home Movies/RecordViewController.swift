@@ -385,7 +385,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
     
     func landscapeRightLayout(_ duration:TimeInterval) {
-        let transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+        let transform = CGAffineTransform(rotationAngle: CGFloat(Float.pi))
         self.contentControlsView.transform = transform
         UIView.animate(withDuration: duration, animations: {
             self.clipsButton.transform = transform
@@ -413,11 +413,12 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         
         // either updside down or portrait
         var a = 0.0
+        let quarterPi = (Double.pi / 2.0)
         if (orientation == .portrait) {
-            a = -(M_PI / 2.0)
+            a = -(quarterPi)
         }
         else if (orientation == .portraitUpsideDown) {
-            a = M_PI / 2.0
+            a = quarterPi
         }
         else {
             a = 0

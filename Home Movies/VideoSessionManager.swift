@@ -12,8 +12,8 @@ import AVFoundation
 enum VideoExportError: Error {
     case missingAssets(url: URL, time:CMTime)
     case compositionFailed(err: NSError)
-    case couldNotCreateExporter()
-    case noClips()
+    case couldNotCreateExporter
+    case noClips
 }
 
 let TitleTrackName = "1title"
@@ -35,7 +35,7 @@ class VideoSessionManager: NSObject {
         let fileUrls = sessionFileURLs()
         
         if (fileUrls.count < 0) {
-            throw VideoExportError.noClips()
+            throw VideoExportError.noClips
         }
         
         try self.exportVideo(fileUrls, toURL: completeMovieUrl, complete: {
@@ -76,7 +76,7 @@ class VideoSessionManager: NSObject {
             })
         
         if (mLargestClipSize == nil) {
-            throw VideoExportError.noClips()
+            throw VideoExportError.noClips
         }
         
         let renderSize = mLargestClipSize!
@@ -145,10 +145,10 @@ class VideoSessionManager: NSObject {
                 
                 switch exporter.status {
                     case AVAssetExportSession.Status.failed:
-                        print("failed \(exporter.error)")
-                        print(exporter.error?.localizedDescription)
+                        print("failed \(String(describing: exporter.error))")
+                        print(exporter.error?.localizedDescription ?? "Missing Error")
                     case AVAssetExportSession.Status.cancelled:
-                        print("cancelled \(exporter.error)")
+                        print("cancelled \(String(describing: exporter.error))")
                     default:
                         print("complete")
                         complete()
@@ -156,7 +156,7 @@ class VideoSessionManager: NSObject {
             })
         }
         else {
-            throw VideoExportError.couldNotCreateExporter()
+            throw VideoExportError.couldNotCreateExporter
         }
     }
     

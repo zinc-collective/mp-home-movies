@@ -138,7 +138,7 @@ class VideoPlayerController : UIViewController {
                 exportMessage = "Composition Failed: " + error.description
             }
                 
-            catch VideoExportError.couldNotCreateExporter() {
+            catch VideoExportError.couldNotCreateExporter {
                 exportMessage = "Could not create exporter"
             }
                 
@@ -146,7 +146,7 @@ class VideoPlayerController : UIViewController {
                 exportMessage = "Track missing audio or video: \(url.absoluteString) \(time)"
             }
                 
-            catch VideoExportError.noClips() {
+            catch VideoExportError.noClips {
                 exportMessage = "No video clips found"
             }
                 
