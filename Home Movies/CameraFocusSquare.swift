@@ -7,13 +7,9 @@
 //
 
 
-func delay(delay:Double, closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
+func delay(_ delay:Double, closure:@escaping ()->()) {
+    DispatchQueue.main.asyncAfter(
+        deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
 
 import UIKit
@@ -21,8 +17,8 @@ import UIKit
 class CameraFocusSquare: UIView {
 
     
-    private var _selectionBlink : CABasicAnimation!
-    private var _completion : () -> Void
+    fileprivate var _selectionBlink : CABasicAnimation!
+    fileprivate var _completion : () -> Void
     
     required init?(coder aDecoder: NSCoder) {
         _completion = {}
@@ -33,21 +29,21 @@ class CameraFocusSquare: UIView {
         _completion = {}
         super.init(frame: frame)
         
-        backgroundColor = UIColor.clearColor()
+        backgroundColor = UIColor.clear
         layer.borderWidth = 1.0
         layer.cornerRadius = 0.0
-        layer.borderColor = UIColor.yellowColor().CGColor
+        layer.borderColor = UIColor.yellow.cgColor
     }
     
-    class func centerFrame(size size:CGFloat, center: CGPoint) -> CGRect {
+    class func centerFrame(size:CGFloat, center: CGPoint) -> CGRect {
         return CGRect(x: center.x - size/2, y: center.y - size/2, width: size, height: size)
     }
     
-    func animate(completion: () -> Void) {
-        self.transform = CGAffineTransformMakeScale(1.5, 1.5)
+    func animate(_ completion: @escaping () -> Void) {
+        self.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
             
-        UIView.animateWithDuration(0.300, animations: {
-            self.transform = CGAffineTransformMakeScale(1.0, 1.0)
+        UIView.animate(withDuration: 0.300, animations: {
+            self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         }, completion: {(completed) in
             delay(0.500) {
                 completion()

@@ -9,11 +9,11 @@
 import UIKit
 import AVFoundation
 
-enum VideoExportError: ErrorType {
-    case MissingAssets(url: NSURL, time:CMTime)
-    case CompositionFailed(err: NSError)
-    case CouldNotCreateExporter()
-    case NoClips()
+enum VideoExportError: Error {
+    case missingAssets(url: URL, time:CMTime)
+    case compositionFailed(err: NSError)
+    case couldNotCreateExporter
+    case noClips
 }
 
 let TitleTrackName = "1title"
@@ -29,13 +29,13 @@ class VideoSessionManager: NSObject {
         try! initializeSessionDir()
     }
     
-    func exportVideoSession(complete:(NSURL) -> Void) throws -> Void {
+    func exportVideoSession(_ complete:@escaping (URL) -> Void) throws -> Void {
         
         let completeMovieUrl = self.completeMovieURL()
         let fileUrls = sessionFileURLs()
         
         if (fileUrls.count < 0) {
-            throw VideoExportError.NoClips()
+            throw VideoExportError.noClips
         }
         
         try self.exportVideo(fileUrls, toURL: completeMovieUrl, complete: {
@@ -44,22 +44,22 @@ class VideoSessionManager: NSObject {
         })
     }
     
-    func exportVideo(sources: [NSURL], toURL: NSURL, complete:() -> Void) throws -> Void {
+    func exportVideo(_ sources: [URL], toURL: URL, complete:@escaping () -> Void) throws -> Void {
         
         // clean up old export target
-        let mgr = NSFileManager.defaultManager()
-        if mgr.fileExistsAtPath(toURL.path!){
-            try mgr.removeItemAtURL(toURL)
+        let mgr = FileManager.default
+        if mgr.fileExists(atPath: toURL.path){
+            try mgr.removeItem(at: toURL)
         }
         
         let composition = AVMutableComposition()
-        let trackVideo:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: CMPersistentTrackID())
-        let trackAudio:AVMutableCompositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: CMPersistentTrackID())
+        let trackVideo:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: CMPersistentTrackID())!
+        let trackAudio:AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: CMPersistentTrackID())!
         
         
         // Composition (for getting the transforms right)
         let videoComposition = AVMutableVideoComposition()
-        videoComposition.frameDuration = CMTimeMake(1,30)
+        videoComposition.frameDuration = CMTimeMake(value: 1,timescale: 30)
         videoComposition.renderScale = 1.0
         
         let instruction = AVMutableVideoCompositionInstruction()
@@ -70,13 +70,13 @@ class VideoSessionManager: NSObject {
         let clipAssets = sources.map(assetsForURL)
         
         let mLargestClipSize = clipAssets
-            .flatMap({ (assets) in assets.video?.naturalSize })
-            .maxElement({ (one, two) -> Bool in
+            .compactMap({ (assets) in assets.video?.naturalSize })
+            .max(by: { (one, two) -> Bool in
                 return one.height < two.height && one.width < two.width
             })
         
         if (mLargestClipSize == nil) {
-            throw VideoExportError.NoClips()
+            throw VideoExportError.noClips
         }
         
         let renderSize = mLargestClipSize!
@@ -84,7 +84,7 @@ class VideoSessionManager: NSObject {
         print("Largest Clip Size", renderSize)
         videoComposition.renderSize = renderSize
         
-        var insertTime = kCMTimeZero
+        var insertTime = CMTime.zero
         do {
             for assets in clipAssets {
                 if let assetVideo = assets.video {
@@ -92,28 +92,26 @@ class VideoSessionManager: NSObject {
                     print("Inserting Video: ", assets.url.lastPathComponent, assetVideo.naturalSize)
                     
                     // insert video
-                    try trackVideo.insertTimeRange(assetVideo.timeRange, ofTrack: assetVideo, atTime: insertTime)
+                    try trackVideo.insertTimeRange(assetVideo.timeRange, of: assetVideo, at: insertTime)
                     
                     // insert audio
                     if let assetAudio = assets.audio {
-                        try trackAudio.insertTimeRange(assetAudio.timeRange, ofTrack: assetAudio, atTime: insertTime)
+                        try trackAudio.insertTimeRange(assetAudio.timeRange, of: assetAudio, at: insertTime)
                     }
-                    else if !assets.url.absoluteString.containsString(TitleTrackName) {
-                        throw VideoExportError.MissingAssets(url: assets.url, time: insertTime)
+                    else if !assets.url.absoluteString.contains(TitleTrackName) {
+                        throw VideoExportError.missingAssets(url: assets.url, time: insertTime)
                     }
                     
                     // set the transform / orientation from the original.
                     // start with the naturalSize to get the correct orientation of reverse camera, etc
                     let size = assetVideo.naturalSize
                     let scaleX = renderSize.width / size.width
-                    let scale = CGAffineTransformMakeScale(scaleX, scaleX)
+                    let scale = CGAffineTransform(scaleX: scaleX, y: scaleX)
                     
                     layerInstruction.setTransform(
-                            CGAffineTransformConcat(assetVideo.preferredTransform,
-                            CGAffineTransformConcat(scale,
-                            CGAffineTransformIdentity
+                            assetVideo.preferredTransform.concatenating(scale.concatenating(CGAffineTransform.identity
                             ))
-                        , atTime: insertTime)
+                        , at: insertTime)
                     
 //                    print(" - scale", scaleX)
 //                    print(" - translateX", (size.width - renderSize.width))
@@ -125,7 +123,7 @@ class VideoSessionManager: NSObject {
         }
             
         catch let err as NSError {
-            throw VideoExportError.CompositionFailed(err: err)
+            throw VideoExportError.compositionFailed(err: err)
         }
         
         instruction.layerInstructions = [layerInstruction]
@@ -139,18 +137,18 @@ class VideoSessionManager: NSObject {
             
             exporter.outputURL = toURL
             
-            exporter.outputFileType = AVFileTypeMPEG4 //AVFileTypeQuickTimeMovie
+            exporter.outputFileType = AVFileType.mp4 //AVFileTypeQuickTimeMovie
             
             // export asynchronously!! Yikes!
             // what a bad idea!
-            exporter.exportAsynchronouslyWithCompletionHandler({
+            exporter.exportAsynchronously(completionHandler: {
                 
                 switch exporter.status {
-                    case AVAssetExportSessionStatus.Failed:
-                        print("failed \(exporter.error)")
-                        print(exporter.error?.localizedDescription)
-                    case AVAssetExportSessionStatus.Cancelled:
-                        print("cancelled \(exporter.error)")
+                    case AVAssetExportSession.Status.failed:
+                        print("failed \(String(describing: exporter.error))")
+                        print(exporter.error?.localizedDescription ?? "Missing Error")
+                    case AVAssetExportSession.Status.cancelled:
+                        print("cancelled \(String(describing: exporter.error))")
                     default:
                         print("complete")
                         complete()
@@ -158,61 +156,61 @@ class VideoSessionManager: NSObject {
             })
         }
         else {
-            throw VideoExportError.CouldNotCreateExporter()
+            throw VideoExportError.couldNotCreateExporter
         }
     }
     
-    func assetsForURL(url:NSURL) -> (url: NSURL, source: AVURLAsset, video: AVAssetTrack?, audio: AVAssetTrack?) {
-        let sourceAsset = AVURLAsset(URL: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey:true, AVURLAssetReferenceRestrictionsKey:0])
-        let videos = sourceAsset.tracksWithMediaType(AVMediaTypeVideo)
-        let audios = sourceAsset.tracksWithMediaType(AVMediaTypeAudio)
+    func assetsForURL(_ url:URL) -> (url: URL, source: AVURLAsset, video: AVAssetTrack?, audio: AVAssetTrack?) {
+        let sourceAsset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey:true, AVURLAssetReferenceRestrictionsKey:0])
+        let videos = sourceAsset.tracks(withMediaType: AVMediaType.video)
+        let audios = sourceAsset.tracks(withMediaType: AVMediaType.audio)
         return (url: url, source: sourceAsset, video: videos.first, audio: audios.first)
     }
     
     func sessionFileDir() -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]
         let filePath:String = "\(documentsDirectory)/HomeMoviesSession"
         return filePath
     }
     
-    private func completeMovieURL() -> NSURL {
-        let base = NSURL.fileURLWithPath(sessionFileDir())
-        return base.URLByAppendingPathComponent(CompleteVideoName + ".mp4")
+    fileprivate func completeMovieURL() -> URL {
+        let base = URL(fileURLWithPath: sessionFileDir())
+        return base.appendingPathComponent(CompleteVideoName + ".mp4")
     }
     
-    func titleTrackURL() -> NSURL {
+    func titleTrackURL() -> URL {
         let dir = self.sessionFileDir()
-        return NSURL(fileURLWithPath: dir).URLByAppendingPathComponent(TitleTrackName + ".mp4")
+        return URL(fileURLWithPath: dir).appendingPathComponent(TitleTrackName + ".mp4")
     }
     
     func deleteTitleTrack() throws {
         let url = titleTrackURL()
-        let mgr = NSFileManager.defaultManager()
-        if mgr.fileExistsAtPath(url.path!) {
-            try NSFileManager.defaultManager().removeItemAtURL(url)
+        let mgr = FileManager.default
+        if mgr.fileExists(atPath: url.path) {
+            try FileManager.default.removeItem(at: url)
         }
     }
     
     func initializeSessionDir() throws {
-        let manager = NSFileManager.defaultManager()
+        let manager = FileManager.default
         let dir = sessionFileDir()
-        if (!manager.fileExistsAtPath(dir)) {
-            try NSFileManager.defaultManager().createDirectoryAtPath(dir, withIntermediateDirectories: false, attributes: nil)
+        if (!manager.fileExists(atPath: dir)) {
+            try FileManager.default.createDirectory(atPath: dir, withIntermediateDirectories: false, attributes: nil)
         }
     }
     
     func cleanupSessionDir() throws {
         let dir = self.sessionFileDir()
-        try NSFileManager.defaultManager().removeItemAtPath(dir)
+        try FileManager.default.removeItem(atPath: dir)
         try self.initializeSessionDir()
     }
     
     
     func newVideoPath() -> String {
-        let formatter: NSDateFormatter = NSDateFormatter()
+        let formatter: DateFormatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss.SSS"
-        let dateTimePrefix: String = formatter.stringFromDate(NSDate())
+        let dateTimePrefix: String = formatter.string(from: Date())
         
         let path = self.sessionFileDir()
         
@@ -224,14 +222,14 @@ class VideoSessionManager: NSObject {
         var count: Int = 0
         do {
             let path = sessionFileDir()
-            let contents = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(path)
+            let contents = try FileManager.default.contentsOfDirectory(atPath: path)
             for file in contents {
                 count = count + 1
-                if file.containsString(TitleTrackName)
+                if file.contains(TitleTrackName)
                 {
                     count = count - 1
                 }
-                if file.containsString(CompleteVideoName)
+                if file.contains(CompleteVideoName)
                 {
                     count = count - 1
                 }
@@ -254,7 +252,7 @@ class VideoSessionManager: NSObject {
         if let url = urls.last  {
             do {
                 print("URL", url.lastPathComponent)
-                try NSFileManager.defaultManager().removeItemAtURL(url)
+                try FileManager.default.removeItem(at: url)
             }
             catch _ {
                 print("Could not delete url: ", url)
@@ -263,35 +261,35 @@ class VideoSessionManager: NSObject {
     }
     
     // doesn't always work, especially right after finishing recording
-    func sessionDuration() -> NSTimeInterval {
+    func sessionDuration() -> TimeInterval {
         let urls = sessionFileURLs()
-        let durations:[NSTimeInterval] = urls.map(assetsForURL).map({(_, source, video, _) in
+        let durations:[TimeInterval] = urls.map(assetsForURL).map({(_, source, video, _) in
             return CMTimeGetSeconds(source.duration)
         })
         
-        return durations.reduce(0, combine: +)
+        return durations.reduce(0, +)
     }
     
-    func sessionFileURLs() -> [NSURL] {
+    func sessionFileURLs() -> [URL] {
         let dir = sessionFileDir()
-        let fileMgr = NSFileManager.defaultManager()
+        let fileMgr = FileManager.default
         var files = [String]()
         
-        let pathURL = NSURL(fileURLWithPath: dir)
+        let pathURL = URL(fileURLWithPath: dir)
         
         do {
-            try files = fileMgr.contentsOfDirectoryAtPath(dir)
+            try files = fileMgr.contentsOfDirectory(atPath: dir)
         }
         catch _ {
             return []
         }
         
-        let fileUrls = files.flatMap { filePath -> NSURL? in
-            if (filePath.containsString(CompleteVideoName)) {
+        let fileUrls = files.compactMap { filePath -> URL? in
+            if (filePath.contains(CompleteVideoName)) {
                 return nil
             }
             else {
-                return pathURL.URLByAppendingPathComponent(filePath)
+                return pathURL.appendingPathComponent(filePath)
             }
         }
         
