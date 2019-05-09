@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_5" orientation="landscape">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -15,47 +18,21 @@
                         <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="Loj-RG-IDS">
-                                <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="Loj-RG-IDS" secondAttribute="height" multiplier="15:8" id="u9A-vc-bha"/>
-                                </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="u9A-vc-bha"/>
-                                    </mask>
-                                </variation>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="Loj-RG-IDS">
+                                <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Loj-RG-IDS" secondAttribute="bottom" id="6c9-Ev-TK2"/>
-                            <constraint firstItem="Loj-RG-IDS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="77D-Dg-Fvl"/>
-                            <constraint firstItem="Loj-RG-IDS" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="A5b-Zo-U4u"/>
-                            <constraint firstItem="Loj-RG-IDS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="23" id="BMx-yP-ODJ"/>
-                            <constraint firstItem="Loj-RG-IDS" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-80" id="OZ0-L9-Zgb"/>
-                            <constraint firstAttribute="trailing" secondItem="Loj-RG-IDS" secondAttribute="trailing" id="bKu-PU-1fK"/>
-                            <constraint firstItem="Loj-RG-IDS" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="height" multiplier="3:4" id="deY-SE-il1"/>
-                            <constraint firstItem="Loj-RG-IDS" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="gq8-e4-H2P"/>
-                            <constraint firstItem="Loj-RG-IDS" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="sdj-1f-gBm"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Loj-RG-IDS" secondAttribute="bottom" id="sha-Iy-l5Q"/>
+                            <constraint firstItem="Loj-RG-IDS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Dw6-s6-ZsY"/>
+                            <constraint firstItem="Loj-RG-IDS" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="P2I-My-vlr"/>
+                            <constraint firstItem="Loj-RG-IDS" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" id="fSq-xc-wbj"/>
+                            <constraint firstItem="Loj-RG-IDS" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="rpU-e2-Ii5"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="77D-Dg-Fvl"/>
-                                <exclude reference="BMx-yP-ODJ"/>
-                                <exclude reference="OZ0-L9-Zgb"/>
-                                <exclude reference="deY-SE-il1"/>
-                                <exclude reference="gq8-e4-H2P"/>
-                                <exclude reference="sha-Iy-l5Q"/>
-                            </mask>
-                        </variation>
                     </view>
-                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
