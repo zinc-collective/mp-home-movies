@@ -19,6 +19,7 @@
 		78BCBB781D02030600714868 /* TitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BCBB771D02030600714868 /* TitleViewController.swift */; };
 		78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D7629E1C85E00500797980 /* AVFoundation.framework */; };
 		78F8BF961CAEC9D20016AE8A /* CameraFocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */; };
+		890F5F67229721F400957557 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 890F5F66229721F400957557 /* GoogleService-Info.plist */; };
 		B92155D83C10FE5102559D64 /* Pods_Home_Movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79743315BCE5ED4000D24033 /* Pods_Home_Movies.framework */; };
 		BD1B09AB1C5E97B6007F4A06 /* iphone6p.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */; };
 		BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD1B09AC1C5E994B007F4A06 /* iphone6.mov */; };
@@ -50,6 +51,7 @@
 		78D7629E1C85E00500797980 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		78F8BF951CAEC9D20016AE8A /* CameraFocusSquare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFocusSquare.swift; sourceTree = "<group>"; };
 		79743315BCE5ED4000D24033 /* Pods_Home_Movies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Home_Movies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		890F5F66229721F400957557 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BD1B09AA1C5E97B6007F4A06 /* iphone6p.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6p.mov; sourceTree = "<group>"; };
 		BD1B09AC1C5E994B007F4A06 /* iphone6.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone6.mov; sourceTree = "<group>"; };
 		BD1B09AE1C5E9977007F4A06 /* iphone5.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iphone5.mov; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		BD762F5E1BD17BDD003AEA6E = {
 			isa = PBXGroup;
 			children = (
+				890F5F66229721F400957557 /* GoogleService-Info.plist */,
 				78D7629E1C85E00500797980 /* AVFoundation.framework */,
 				BD762F691BD17BDD003AEA6E /* Home Movies */,
 				BD762F681BD17BDD003AEA6E /* Products */,
@@ -220,10 +223,10 @@
 			buildPhases = (
 				1E9CA68E5A55AD609C7FCCC7 /* [CP] Check Pods Manifest.lock */,
 				BD762F631BD17BDD003AEA6E /* Sources */,
+				164E433803E79A4363406113 /* [CP] Embed Pods Frameworks */,
 				BD762F641BD17BDD003AEA6E /* Frameworks */,
 				BD762F651BD17BDD003AEA6E /* Resources */,
-				782A06691CAAE83C004AFE92 /* ShellScript */,
-				164E433803E79A4363406113 /* [CP] Embed Pods Frameworks */,
+				890F5F682297251400957557 /* Setup Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -283,6 +286,7 @@
 				BD1B09AF1C5E9977007F4A06 /* iphone5.mov in Resources */,
 				BD762F751BD17BDD003AEA6E /* LaunchScreen.storyboard in Resources */,
 				BD762F721BD17BDD003AEA6E /* Assets.xcassets in Resources */,
+				890F5F67229721F400957557 /* GoogleService-Info.plist in Resources */,
 				BD1B09AD1C5E994C007F4A06 /* iphone6.mov in Resources */,
 				BDE762411BD1840A008B74F7 /* Upload-50r.png in Resources */,
 			);
@@ -297,16 +301,20 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Home Movies/Pods-Home Movies-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/JPSVolumeButtonHandler/JPSVolumeButtonHandler.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JPSVolumeButtonHandler.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Home Movies/Pods-Home Movies-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Home Movies/Pods-Home Movies-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		1E9CA68E5A55AD609C7FCCC7 /* [CP] Check Pods Manifest.lock */ = {
@@ -327,18 +335,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		782A06691CAAE83C004AFE92 /* ShellScript */ = {
+		890F5F682297251400957557 /* Setup Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Setup Crashlytics";
+			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" 6a09c19815c2f7f42d12f74f97f8f87c0f139e62 d29b37ba3305e7a136158c7684175a69995c401705890454f260b5b758d91816";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
