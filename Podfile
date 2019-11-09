@@ -4,7 +4,7 @@ platform :ios, '8.0'
 use_frameworks!
 
 target 'Home Movies' do
-    pod 'Firebase/Core'
+    pod 'Firebase/Analytics'
     pod 'Fabric', '~> 1.10.1'
     pod 'Crashlytics', '~> 3.13.1'
     pod 'JPSVolumeButtonHandler', '~> 1.0'
