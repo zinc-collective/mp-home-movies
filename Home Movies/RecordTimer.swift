@@ -3,17 +3,17 @@
 //  Home Movies
 //
 //  Created by Sean Hess on 3/31/16.
-//  Copyright © 2016 HomeMoviesDev. All rights reserved.
+//  Copyright © 2019 Zinc Collective LLC. All rights reserved.
 //
 
 import UIKit
 
 class RecordTimer: UILabel {
-    
+
     var timer:Timer?
     var startDate:Date?
     var elapsed:TimeInterval = 0
-    
+
     var stoppedTime:TimeInterval = 0 {
         didSet {
             if timer == nil {
@@ -21,7 +21,7 @@ class RecordTimer: UILabel {
             }
         }
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.textAlignment = .center
@@ -33,15 +33,15 @@ class RecordTimer: UILabel {
         self.text = stringFromTimeInterval(0.0)
         timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(RecordTimer.updateTime(_:)), userInfo: nil, repeats: true)
     }
-    
+
     func stopTimer() {
         timer?.invalidate()
         timer = nil
-        
+
         // guess the new stop time
         self.text = stringFromTimeInterval(stoppedTime + elapsed)
     }
-    
+
     @objc func updateTime(_ timer:Timer)
     {
         if let start = self.startDate {
@@ -49,7 +49,7 @@ class RecordTimer: UILabel {
             self.text = stringFromTimeInterval(elapsed)
         }
     }
-    
+
     func stringFromTimeInterval(_ interval: TimeInterval) -> String {
         let interval = Int(interval)
         let seconds = interval % 60

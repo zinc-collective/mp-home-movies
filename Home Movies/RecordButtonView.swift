@@ -3,7 +3,7 @@
 //  Home Movies
 //
 //  Created by sudhir on 9/2/15.
-//  Copyright (c) 2015 HomeMoviesDev. All rights reserved.
+//  Copyright © 2019 Zinc Collective LLC. All rights reserved.
 //
 
 import Foundation
@@ -12,9 +12,9 @@ import UIKit
 @IBDesignable
 
 class RecordButtonView : UIButton {
-    
+
     fileprivate var _recording:Bool = false
-    
+
     var recording: Bool {
         get {
             return _recording
@@ -24,16 +24,16 @@ class RecordButtonView : UIButton {
             self.setNeedsDisplay()
         }
     }
-    
+
     override func draw(_ rect: CGRect)
     {
         if !_recording {
-            
+
             //let inner = CGRectMake(rect.minX-10, rect.minY-10, rect.width-10,rect.height-10)
-            
-           
+
+
 //            CGRectGetMidX(rect), CGRectGetMidY(rect)
-            
+
             //let inner = CGRectMake( rect.minX-10, rect.minY-10, rect.width-10,rect.height-10)
             let inner = rect.insetBy(dx: 10 ,dy: 10)
             var path = UIBezierPath(ovalIn: inner)

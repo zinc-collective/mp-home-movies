@@ -3,7 +3,7 @@
 //  Home Movies
 //
 //  Created by Sean Hess on 6/2/16.
-//  Copyright © 2016 HomeMoviesDev. All rights reserved.
+//  Copyright © 2019 Zinc Collective LLC. All rights reserved.
 //
 
 import UIKit

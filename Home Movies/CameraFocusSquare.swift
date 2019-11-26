@@ -3,7 +3,7 @@
 //  Home Movies
 //
 //  Created by Sean Hess on 4/1/16.
-//  Copyright © 2016 HomeMoviesDev. All rights reserved.
+//  Copyright © 2019 Zinc Collective LLC. All rights reserved.
 //
 
 
@@ -16,32 +16,32 @@ import UIKit
 
 class CameraFocusSquare: UIView {
 
-    
+
     fileprivate var _selectionBlink : CABasicAnimation!
     fileprivate var _completion : () -> Void
-    
+
     required init?(coder aDecoder: NSCoder) {
         _completion = {}
         super.init(coder: aDecoder)
     }
-    
+
     override init(frame: CGRect) {
         _completion = {}
         super.init(frame: frame)
-        
+
         backgroundColor = UIColor.clear
         layer.borderWidth = 1.0
         layer.cornerRadius = 0.0
         layer.borderColor = UIColor.yellow.cgColor
     }
-    
+
     class func centerFrame(size:CGFloat, center: CGPoint) -> CGRect {
         return CGRect(x: center.x - size/2, y: center.y - size/2, width: size, height: size)
     }
-    
+
     func animate(_ completion: @escaping () -> Void) {
         self.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-            
+
         UIView.animate(withDuration: 0.300, animations: {
             self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         }, completion: {(completed) in
