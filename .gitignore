@@ -8,3 +8,4 @@ Podfile.lock
 *.ipa
 img
 todo.md
+GoogleService-Info.plist
