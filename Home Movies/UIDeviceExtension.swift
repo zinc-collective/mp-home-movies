@@ -3,7 +3,7 @@
 //  Home Movies
 //
 //  Created by sudhir on 9/28/15.
-//  Copyright © 2015 HomeMoviesDev. All rights reserved.
+//  Copyright © 2019 Zinc Collective LLC. All rights reserved.
 //
 
 import UIKit
