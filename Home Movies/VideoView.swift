@@ -204,8 +204,14 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     }
 
     func availableDevices() -> Devices {
-
-        let devices = AVCaptureDevice.devices()
+//        find a better solution here:  I need a listing of all devices on this phone INCLUDEING AUDIO DEVICES
+//        OR I need to add logic to find and set audio devices seperately below around: VideoView.swift - line #230
+        let videoDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:
+            [.builtInTrueDepthCamera, .builtInDualCamera, .builtInWideAngleCamera],
+            mediaType: .video, position: .unspecified)
+        let audioDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:
+            [.builtInMicrophone], mediaType: .audio, position: .unspecified)
+        let devices = videoDiscoverySession.devices + audioDiscoverySession.devices
         var front : AVCaptureDevice?
         var back : AVCaptureDevice?
         var audio : AVCaptureDevice?

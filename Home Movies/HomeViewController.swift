@@ -27,7 +27,7 @@ class HomeViewController: UIViewController {
     }
 
     @IBAction func onVideoButton(_ sender: AnyObject) {
-        UIApplication.shared.openURL(URL( string: "http://www.momentpark.com/homemoviestutorial")!)
+        UIApplication.shared.open (URL (string :  "http://www.momentpark.com/homemoviestutorial")!, options: [:], completionHandler: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {

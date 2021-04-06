@@ -1,92 +1,114 @@
 PODS:
-  - Crashlytics (3.13.2):
-    - Fabric (~> 1.10.2)
-  - Fabric (1.10.2)
-  - Firebase/Analytics (6.3.0):
+  - Firebase/Analytics (7.10.0):
     - Firebase/Core
-  - Firebase/Core (6.3.0):
+  - Firebase/Core (7.10.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 6.0.2)
-  - Firebase/CoreOnly (6.3.0):
-    - FirebaseCore (= 6.0.3)
-  - FirebaseAnalytics (6.0.2):
-    - FirebaseCore (~> 6.0)
-    - FirebaseInstanceID (~> 4.2)
-    - GoogleAppMeasurement (= 6.0.2)
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
-    - GoogleUtilities/MethodSwizzler (~> 6.0)
-    - GoogleUtilities/Network (~> 6.0)
-    - "GoogleUtilities/NSData+zlib (~> 6.0)"
-    - nanopb (~> 0.3)
-  - FirebaseCore (6.0.3):
-    - GoogleUtilities/Environment (~> 6.0)
-    - GoogleUtilities/Logger (~> 6.0)
-  - FirebaseInstanceID (4.2.0):
-    - FirebaseCore (~> 6.0)
-    - GoogleUtilities/Environment (~> 6.0)
-    - GoogleUtilities/UserDefaults (~> 6.0)
-  - GoogleAppMeasurement (6.0.2):
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
-    - GoogleUtilities/MethodSwizzler (~> 6.0)
-    - GoogleUtilities/Network (~> 6.0)
-    - "GoogleUtilities/NSData+zlib (~> 6.0)"
-    - nanopb (~> 0.3)
-  - GoogleUtilities/AppDelegateSwizzler (6.2.0):
+    - FirebaseAnalytics (~> 7.10.0)
+  - Firebase/CoreOnly (7.10.0):
+    - FirebaseCore (= 7.10.0)
+  - Firebase/Crashlytics (7.10.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 7.10.0)
+  - FirebaseAnalytics (7.10.0):
+    - FirebaseCore (~> 7.0)
+    - FirebaseInstallations (~> 7.0)
+    - GoogleAppMeasurement (= 7.10.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
+    - GoogleUtilities/MethodSwizzler (~> 7.0)
+    - GoogleUtilities/Network (~> 7.0)
+    - "GoogleUtilities/NSData+zlib (~> 7.0)"
+    - nanopb (~> 2.30908.0)
+  - FirebaseCore (7.10.0):
+    - FirebaseCoreDiagnostics (~> 7.4)
+    - GoogleUtilities/Environment (~> 7.0)
+    - GoogleUtilities/Logger (~> 7.0)
+  - FirebaseCoreDiagnostics (7.10.0):
+    - GoogleDataTransport (~> 8.4)
+    - GoogleUtilities/Environment (~> 7.0)
+    - GoogleUtilities/Logger (~> 7.0)
+    - nanopb (~> 2.30908.0)
+  - FirebaseCrashlytics (7.10.0):
+    - FirebaseCore (~> 7.0)
+    - FirebaseInstallations (~> 7.0)
+    - GoogleDataTransport (~> 8.4)
+    - nanopb (~> 2.30908.0)
+    - PromisesObjC (~> 1.2)
+  - FirebaseInstallations (7.10.0):
+    - FirebaseCore (~> 7.0)
+    - GoogleUtilities/Environment (~> 7.0)
+    - GoogleUtilities/UserDefaults (~> 7.0)
+    - PromisesObjC (~> 1.2)
+  - GoogleAppMeasurement (7.10.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
+    - GoogleUtilities/MethodSwizzler (~> 7.0)
+    - GoogleUtilities/Network (~> 7.0)
+    - "GoogleUtilities/NSData+zlib (~> 7.0)"
+    - nanopb (~> 2.30908.0)
+  - GoogleDataTransport (8.4.0):
+    - GoogleUtilities/Environment (~> 7.2)
+    - nanopb (~> 2.30908.0)
+    - PromisesObjC (~> 1.2)
+  - GoogleUtilities/AppDelegateSwizzler (7.3.1):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (6.2.0)
-  - GoogleUtilities/Logger (6.2.0):
+  - GoogleUtilities/Environment (7.3.1):
+    - PromisesObjC (~> 1.2)
+  - GoogleUtilities/Logger (7.3.1):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (6.2.0):
+  - GoogleUtilities/MethodSwizzler (7.3.1):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (6.2.0):
+  - GoogleUtilities/Network (7.3.1):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (6.2.0)"
-  - GoogleUtilities/Reachability (6.2.0):
+  - "GoogleUtilities/NSData+zlib (7.3.1)"
+  - GoogleUtilities/Reachability (7.3.1):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (6.2.0):
+  - GoogleUtilities/UserDefaults (7.3.1):
     - GoogleUtilities/Logger
   - JPSVolumeButtonHandler (1.0.5)
-  - nanopb (0.3.901):
-    - nanopb/decode (= 0.3.901)
-    - nanopb/encode (= 0.3.901)
-  - nanopb/decode (0.3.901)
-  - nanopb/encode (0.3.901)
+  - nanopb (2.30908.0):
+    - nanopb/decode (= 2.30908.0)
+    - nanopb/encode (= 2.30908.0)
+  - nanopb/decode (2.30908.0)
+  - nanopb/encode (2.30908.0)
+  - PromisesObjC (1.2.12)
 
 DEPENDENCIES:
-  - Crashlytics (~> 3.13.1)
-  - Fabric (~> 1.10.1)
   - Firebase/Analytics
+  - Firebase/Crashlytics
   - JPSVolumeButtonHandler (~> 1.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - Crashlytics
-    - Fabric
+  trunk:
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
-    - FirebaseInstanceID
+    - FirebaseCoreDiagnostics
+    - FirebaseCrashlytics
+    - FirebaseInstallations
     - GoogleAppMeasurement
+    - GoogleDataTransport
     - GoogleUtilities
     - JPSVolumeButtonHandler
     - nanopb
+    - PromisesObjC
 
 SPEC CHECKSUMS:
-  Crashlytics: 611738c7847f8291a1a51084e35987b86ba6b3ee
-  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
-  Firebase: 8432d732974498afd5987e9001a05f90f1a3d625
-  FirebaseAnalytics: 470ddab7253b21ad5a40bebd4a9903d7ae19386a
-  FirebaseCore: 68f8a7f50cdae542715d4e86afa37c4067217dcb
-  FirebaseInstanceID: f20243a1d828e0e9a3798b995174dedc16f1b32a
-  GoogleAppMeasurement: a35a645835bae31b6bdc0576396bc23908f12a22
-  GoogleUtilities: 996e0db07153674fd1b54b220fda3a3dc3547cba
+  Firebase: fffddd0bab8677d07376538365faa93ff3889b39
+  FirebaseAnalytics: 4641d7ae4220174f6ca5626163ffc5de2e90391e
+  FirebaseCore: ec566d917b2195fc2610aeb148dae99f57a788f9
+  FirebaseCoreDiagnostics: 5662a3823ffcc0acbaa9a21ba5ed302fac634705
+  FirebaseCrashlytics: e7669d368a22d202f1d0c7546ffdfdff496e1a8c
+  FirebaseInstallations: bf2ec8dbf36ff4c91af6b9a003d15855757680c1
+  GoogleAppMeasurement: 1c863b1161fc3c8cf614a7460d1be6a7c262aab3
+  GoogleDataTransport: cd9db2180fcecd8da1b561aea31e3e56cf834aa7
+  GoogleUtilities: e1d9ed4e544fc32a93e00e721400cbc3f377200d
   JPSVolumeButtonHandler: 53110330c9168ed325def93eabff39f0fe3e8082
-  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
+  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
 
-PODFILE CHECKSUM: cf11a7f364ef2408ef8d1b28086ee2aadefe8e17
+PODFILE CHECKSUM: 984b24142a5d8c65fa464668ffeb3d0cfad58bb2
 
-COCOAPODS: 1.7.2
+COCOAPODS: 1.10.1
