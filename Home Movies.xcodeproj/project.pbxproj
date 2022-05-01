@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -256,7 +256,7 @@
 				};
 			};
 			buildConfigurationList = BD762F621BD17BDD003AEA6E /* Build configuration list for PBXProject "Home Movies" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -524,7 +524,10 @@
 				DEVELOPMENT_TEAM = 5GGD34ZNFU;
 				INFOPLIST_FILE = "Home Movies/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.homemoviesapp.homemovies;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -546,7 +549,10 @@
 				DEVELOPMENT_TEAM = 5GGD34ZNFU;
 				INFOPLIST_FILE = "Home Movies/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.homemoviesapp.homemovies;
 				PRODUCT_NAME = "$(TARGET_NAME)";
