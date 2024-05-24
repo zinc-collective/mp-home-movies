@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D73B5CD2C00F80C00A5E2A5 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 6D73B5CC2C00F80C00A5E2A5 /* Sentry */; };
 		78158BC81D071DF4005FD10A /* RecordParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78158BC71D071DF4005FD10A /* RecordParentViewController.swift */; };
 		784043C21CB2E20E008324FB /* VideoSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784043C11CB2E20E008324FB /* VideoSessionManager.swift */; };
 		7855FC211C87AFC800704231 /* VideoPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855FC201C87AFC800704231 /* VideoPlayerController.swift */; };
@@ -81,6 +82,7 @@
 			files = (
 				78D7629F1C85E00500797980 /* AVFoundation.framework in Frameworks */,
 				B92155D83C10FE5102559D64 /* Pods_Home_Movies.framework in Frameworks */,
+				6D73B5CD2C00F80C00A5E2A5 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,13 +228,15 @@
 				164E433803E79A4363406113 /* [CP] Embed Pods Frameworks */,
 				BD762F641BD17BDD003AEA6E /* Frameworks */,
 				BD762F651BD17BDD003AEA6E /* Resources */,
-				890F5F682297251400957557 /* Setup Crashlytics */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = "Home Movies";
+			packageProductDependencies = (
+				6D73B5CC2C00F80C00A5E2A5 /* Sentry */,
+			);
 			productName = "Home Movies";
 			productReference = BD762F671BD17BDD003AEA6E /* Home Movies.app */;
 			productType = "com.apple.product-type.application";
@@ -249,7 +253,6 @@
 				TargetAttributes = {
 					BD762F661BD17BDD003AEA6E = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 5GGD34ZNFU;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -264,6 +267,9 @@
 				Base,
 			);
 			mainGroup = BD762F5E1BD17BDD003AEA6E;
+			packageReferences = (
+				6D73B5CB2C00F80C00A5E2A5 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+			);
 			productRefGroup = BD762F681BD17BDD003AEA6E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -300,29 +306,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Home Movies/Pods-Home Movies-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/JPSVolumeButtonHandler/JPSVolumeButtonHandler.framework",
-				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Home Movies/Pods-Home Movies-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreDiagnostics.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCrashlytics.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JPSVolumeButtonHandler.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Home Movies/Pods-Home Movies-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -346,26 +335,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		890F5F682297251400957557 /* Setup Crashlytics */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
-			);
-			name = "Setup Crashlytics";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -521,9 +490,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5GGD34ZNFU;
+				DEVELOPMENT_TEAM = 7G5K7Y23NM;
 				INFOPLIST_FILE = "Home Movies/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -546,9 +515,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5GGD34ZNFU;
+				DEVELOPMENT_TEAM = 7G5K7Y23NM;
 				INFOPLIST_FILE = "Home Movies/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -584,6 +553,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6D73B5CB2C00F80C00A5E2A5 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.26.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6D73B5CC2C00F80C00A5E2A5 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6D73B5CB2C00F80C00A5E2A5 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BD762F5F1BD17BDD003AEA6E /* Project object */;
 }

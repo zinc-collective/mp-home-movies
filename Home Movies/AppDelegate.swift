@@ -6,7 +6,7 @@
 //  Copyright © 2019 Zinc Collective LLC. All rights reserved.
 //
 import UIKit
-import Firebase
+import Sentry
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("free space: \(freeSpaceMb) Mb")
         }
 
-        FirebaseApp.configure()
+        setupAnalytics()
         return true
     }
 
@@ -67,10 +67,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // something failed
         return nil
     }
-
-
-
-
-
 }
 
+
+private extension AppDelegate {
+    func setupAnalytics() {
+        //Add Sentry
+        SentrySDK.start { options in
+            options.dsn = "https://d0dd7ee6acc34d5ebbf6d8ab7fdd85a4@o268108.ingest.us.sentry.io/4503926170255360"
+            options.debug = false; // Enabled debug when first installing is always helpful
+            // Example uniform sample rate: capture 100% of transactions for performance monitoring
+            options.tracesSampleRate = 1.0
+            
+            // Features turned off by default, but worth checking out
+            options.enableAppHangTracking = true
+            options.enableFileIOTracing = true
+            options.enableCoreDataTracing = true
+            
+            // Enable all experimental features
+            options.enableUserInteractionTracing = true
+            options.attachScreenshot = true
+            options.attachViewHierarchy = true
+        }
+    }
+}
