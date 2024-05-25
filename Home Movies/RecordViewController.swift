@@ -14,7 +14,23 @@ import JPSVolumeButtonHandler
 // Ready | Recording | Working
 
 class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDelegate {
+    enum RecordViewError: LocalizedError {
+        case cleanupFailed(_ error: Error)
+        case sessionStartFailed(_ error: Error)
+        
+        public var errorDescription: String {
+            switch self {
+            case let .cleanupFailed(error):
+                let msg = "Directory cleanup failed: \(error)"
+                return NSLocalizedString("cleanup-failed", comment: msg)
+            case let .sessionStartFailed(error):
+                let msg = "Video capture session failed: \(error)"
+                return NSLocalizedString("session-start", comment: msg)
+            }
+        }
+    }
 
+    var logger: AppLogger? = LogManager()
     var loadingFromBg: Bool = false
 
     var videoSession = VideoSessionManager.defaultManager
@@ -60,7 +76,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 
     @IBAction func donePressed(_ sender: AnyObject) {
         doneButton.isEnabled = false
-        print("done pressed")
+        let msg = "done pressed"
+        self.logger?.logToConsole(msg, .debug, .recordVC)
         self.performSegue(withIdentifier: "TitleViewController", sender: self)
 
         // TODO move this
@@ -91,7 +108,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
             try self.videoSession.cleanupSessionDir()
         }
         catch let err as NSError {
-            print("Error", err.localizedDescription)
+            self.logger?.logError(RecordViewError.cleanupFailed(err))
+            self.logger?.logToConsole(RecordViewError.cleanupFailed(err).errorDescription,
+                                      .error,
+                                      .recordVC)
         }
         isChooseContinueModal = false
         self.renderControls()
@@ -163,7 +183,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         else
         {
             videoView.stopRecording({
-                print("STOP RECORDING", self.videoSession.sessionDuration())
+                let msg = "STOP RECORDING: \(self.videoSession.sessionDuration())"
+                self.logger?.logToConsole(msg, .debug, .recordVC)
                 DispatchQueue.main.async {
                     self.sessionChanged()
                 }
@@ -176,7 +197,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 
     func sessionChanged() {
         let duration = videoSession.sessionDuration()
-        print("DURATION", duration)
+        let msg = "DURATION: \(duration)"
+        self.logger?.logToConsole(msg, .debug, .recordVC)
         self.timerLabel.stoppedTime = duration
     }
 
@@ -227,7 +249,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        print("view disappear")
+        let msg = "view disappear"
+        self.logger?.logToConsole(msg, .debug, .recordVC)
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
         NotificationCenter.default.removeObserver(self)
     }
@@ -237,13 +260,18 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         addVideoView()
         clipsButton.contentHorizontalAlignment = .center
         let duration = videoSession.sessionDuration()
-        print("INITIAL DURATION", duration)
+        
+        let msg = "INITIAL DURATION: \(duration)"
+        self.logger?.logToConsole(msg, .debug, .recordVC)
         timerLabel.stoppedTime = duration
 
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
 
         //doneButton.hidden = videoView.canFinalize()
-        print("view did load")
+        let msg2 = "view did load"
+        self.logger?.logToConsole(msg2, .debug, .recordVC)
+        
+        
 
     }
 
@@ -259,11 +287,13 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 
     @objc func applicationDidBecomeActive()
     {
-        print("view - app became active")
+        let msg = "view - app became active"
+        self.logger?.logToConsole(msg, .debug, .recordVC)
         if loadingFromBg {
             loadingFromBg = false
             //if we were recording previously and got interrupted, update the view state...
-            print("explicitly calling view will appear...")
+            let msg = "explicitly calling view will appear..."
+            self.logger?.logToConsole(msg, .debug, .recordVC)
             viewWillAppear(true)
 
             do
@@ -271,14 +301,18 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 try self.videoView.startSession(true)
             }
             catch let error as NSError {
-                print(error.description)
+                self.logger?.logError(RecordViewError.sessionStartFailed(error))
+                self.logger?.logToConsole(RecordViewError.sessionStartFailed(error).errorDescription,
+                                          .error,
+                                          .recordVC)
             }
         }
     }
 
     @objc func applicationWillEnterBackground()
     {
-        print("view - app will enter background")
+        let msg = "view - app will enter background"
+        self.logger?.logToConsole(msg, .debug, .recordVC)
         timerLabel.stopTimer()
         GlobalUtilityQueue.async{
             self.videoView.stopRecording({})
@@ -288,7 +322,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 
     @objc func applicationDidEnterBackground()
     {
-        print("view - app entered background")
+        let msg = "view - app entered background"
+        self.logger?.logToConsole(msg, .debug, .recordVC)
         loadingFromBg = true
     }
 
@@ -328,7 +363,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                 try videoView.startSession(true)
             }
             catch let error as NSError {
-                print(error.description)
+                self.logger?.logError(RecordViewError.sessionStartFailed(error))
+                self.logger?.logToConsole(RecordViewError.sessionStartFailed(error).errorDescription,
+                                          .error,
+                                          .recordVC)
             }
         }
     }
@@ -356,8 +394,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 //        videoView?.orientation = orientation
 
         let duration = coordinator.transitionDuration
-        print("TRANSITION TO SIZE")
-
+        let msg = "TRANSITION TO SIZE"
+        self.logger?.logToConsole(msg, .debug, .recordVC)
+        
         // BUTTON ROTATION
         // it won't animate
         if orientation == .landscapeRight {
@@ -447,7 +486,10 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
                     try self.videoView.startSession(true)
                 }
                 catch let error as NSError {
-                    print(error.description)
+                    self.logger?.logError(RecordViewError.sessionStartFailed(error))
+                    self.logger?.logToConsole(RecordViewError.sessionStartFailed(error).errorDescription,
+                                              .error,
+                                              .recordVC)
                 }
 
             }, completion: { (_) in
