@@ -111,11 +111,14 @@ class VideoPlayerController : UIViewController {
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
 
-        do {
-            try videoView.prepareTitleTrack(movieTitle)
-        }
-        catch let err as NSError {
-            print("Title Error", err.localizedDescription)
+        // This needs to have a lower QoS than the session queue in the VideoView
+        DispatchQueue(label: HomeMoviesConstants.captureSessionQueueName, qos: .default).async { [self] in
+            do {
+                try videoView.prepareTitleTrack(movieTitle)
+            }
+            catch let err as NSError {
+                print("Title Error", err.localizedDescription)
+            }
         }
 
         //concatenate video.

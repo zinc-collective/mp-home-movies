@@ -17,8 +17,12 @@ enum AwfulError: Error {
     case sessionError
 }
 
-protocol VideoViewDelegate : class {
+protocol VideoViewDelegate : AnyObject {
     func videoError(_ error: NSError);
+}
+
+enum HomeMoviesConstants {
+    static let captureSessionQueueName = "AVCaptureSessionQueue"
 }
 
 typealias Devices = (front: AVCaptureDevice?, back: AVCaptureDevice?, audio: AVCaptureDevice?)
@@ -55,6 +59,8 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
             return (devices.front != nil || devices.back != nil) && devices.audio != nil
         }
     }
+    
+    private let sessionQueue = DispatchQueue(label: HomeMoviesConstants.captureSessionQueueName, qos: .userInitiated)
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -138,39 +144,40 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
     func startSession(_ preview: Bool) throws
     {
         if let videoDevice = currentVideoDevice {
-
             do {
-
                 try configureDevice(videoDevice)
                 captureSession = AVCaptureSession()
                 videoDataOutput = AVCaptureMovieFileOutput()
-
+                
                 // disable fragment writing to fix loss of audio
                 // http://stackoverflow.com/questions/26768987/avcapturesession-audio-doesnt-work-for-long-videos
                 // https://developer.apple.com/library/prerelease/ios/documentation/AVFoundation/Reference/AVCaptureMovieFileOutput_Class/index.html#//apple_ref/occ/instp/AVCaptureMovieFileOutput/movieFragmentInterval
                 videoDataOutput?.movieFragmentInterval = CMTime.invalid;
-
+                
                 try captureSession!.addInput(AVCaptureDeviceInput(device: videoDevice))
                 try captureSession!.addInput(AVCaptureDeviceInput(device: devices.audio!))
-
+                
                 if preview {
                     previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
                     self.layer.addSublayer(self.previewLayer!)
                     self.previewLayer?.frame = self.layer.frame
                     self.previewLayer?.connection!.videoOrientation = .landscapeRight
-                    self.captureSession?.startRunning()
-
-                    if captureSession!.canAddOutput(videoDataOutput!)
-                    {
-                        captureSession!.addOutput(videoDataOutput!)
+                    
+                    sessionQueue.async { [self] in
+                        captureSession?.startRunning()
+                        guard let vidOutput = videoDataOutput,
+                              let capSess = captureSession else { return }
+                        if capSess.canAddOutput(vidOutput)
+                        {
+                            capSess.addOutput(vidOutput)
+                        }
                     }
                 }
             }
-            catch let error as NSError{
+            catch let error as NSError {
                 print("session error: ", error.description)
                 throw error
             }
-
         }
     }
 
