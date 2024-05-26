@@ -217,35 +217,8 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        doneButton.isEnabled = true
-        activityIndicator.isHidden=true
-        renderControls()
-
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
-
-        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
-        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.orientationDidChange), name:UIDevice.orientationDidChangeNotification, object: nil)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-         NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground), name: UIApplication.willResignActiveNotification, object: nil)
-
-        // correct the layout for landscape right
-        if (UIDevice.current.orientation == .landscapeRight) {
-            landscapeRightLayout(0)
-        }
-        else {
-            defaultLayout(0)
-        }
-
-        volumeHandler = JPSVolumeButtonHandler(up: {
-            self.recordPressed(self)
-        }, downBlock: {
-            self.recordPressed(self)
-        })
-
-
-
+        
+        runViewWillAppearCommands(animated)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -270,9 +243,40 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         //doneButton.hidden = videoView.canFinalize()
         let msg2 = "view did load"
         self.logger?.logToConsole(msg2, .debug, .recordVC)
-        
-        
+    }
+    
+    private func runViewWillAppearCommands(_ animated: Bool) {
+        // This set of commands was previocusly included in the viewWillAppear and called in applicationDidBecomeActive().
+        // TODO: - determine which command the original developer intended to be triggered on both cases and move the rest out of this methind and BACK to viewWillAppear()
+        doneButton.isEnabled = true
+        activityIndicator.isHidden=true
+        renderControls()
 
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.orientationDidChange),
+                                               name:UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.applicationWillEnterBackground),
+                                                name: UIApplication.willResignActiveNotification, object: nil)
+
+        // correct the layout for landscape right
+        if (UIDevice.current.orientation == .landscapeRight) {
+            landscapeRightLayout(0)
+        }
+        else {
+            defaultLayout(0)
+        }
+
+        volumeHandler = JPSVolumeButtonHandler(up: {
+            self.recordPressed(self)
+        }, downBlock: {
+            self.recordPressed(self)
+        })
     }
 
     func addVideoView(_ device:AVCaptureDevice?) {
@@ -292,9 +296,9 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         if loadingFromBg {
             loadingFromBg = false
             //if we were recording previously and got interrupted, update the view state...
-            let msg = "explicitly calling view will appear..."
+            let msg = "FORMERLY: explicitly calling view will appear..."
             self.logger?.logToConsole(msg, .debug, .recordVC)
-            viewWillAppear(true)
+            runViewWillAppearCommands(true)
 
             do
             {
