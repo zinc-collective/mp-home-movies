@@ -261,7 +261,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
 
     {
 
-        PHPhotoLibrary.requestAuthorization { status in
+        PHPhotoLibrary.requestAuthorization(for:.readWrite) { status in
             switch (status)
             {
 
@@ -324,7 +324,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         _ = self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
         //
         self.recDispGrp!.enter()
-        PHPhotoLibrary.requestAuthorization { (status : PHAuthorizationStatus) -> Void in
+        PHPhotoLibrary.requestAuthorization(for:.readWrite) { (status : PHAuthorizationStatus) -> Void in
             print("perm \(status)")
             self.recDispGrp!.leave()
         }
