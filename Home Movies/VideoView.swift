@@ -332,7 +332,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
 
         let videoAccess = AVCaptureDevice.authorizationStatus(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video)))
         let audioAccess = AVCaptureDevice.authorizationStatus(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.audio)))
-        let photoLibAcces = PHPhotoLibrary.authorizationStatus()
+        let photoLibAcces = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 
         var retVal = true
         if audioAccess != AVAuthorizationStatus.authorized {
