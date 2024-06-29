@@ -70,6 +70,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 
+extension AppDelegate {
+    static var appLogger = LogManager()
+}
+
 private extension AppDelegate {
     func setupAnalytics() {
         //Add Sentry

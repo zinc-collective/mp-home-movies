@@ -30,7 +30,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
     }
 
-    var logger: AppLogger? = LogManager()
+    var logger: AppLogger? = AppDelegate.appLogger
     var loadingFromBg: Bool = false
 
     var videoSession = VideoSessionManager.defaultManager
