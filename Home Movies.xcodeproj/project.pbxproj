@@ -511,7 +511,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_TEAM = 7G5K7Y23NM;
 				INFOPLIST_FILE = "Home Movies/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Home Movies";
@@ -539,7 +539,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 36;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_TEAM = 7G5K7Y23NM;
 				INFOPLIST_FILE = "Home Movies/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Home Movies";
