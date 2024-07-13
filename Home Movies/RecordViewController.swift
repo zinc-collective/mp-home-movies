@@ -30,7 +30,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
     }
 
-    var logger: AppLogger? = LogManager()
+    var logger: AppLogger? = AppDelegate.appLogger
     var loadingFromBg: Bool = false
 
     var videoSession = VideoSessionManager.defaultManager
@@ -360,7 +360,7 @@ class RecordViewController: UIViewController, VideoViewDelegate, UITextFieldDele
         }
 
         if !videoView.checkAllAuthorizations() {
-            showAlert("Error", msg: "Camera/Microphone/Photos Usage Not Authorized!!! \n\nPlease Update App Settings And Try Again.", comp: {(alert: UIAlertAction!) in exit(0)})
+            showAlert("Insufficient Permissions", msg: "Please allow full Photo Library access, Camera, and Microphone access from iOS Settings App.", comp: {(alert: UIAlertAction!) in exit(0)})
         }
         else {
             do {

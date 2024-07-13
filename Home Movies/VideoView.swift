@@ -261,7 +261,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
 
     {
 
-        PHPhotoLibrary.requestAuthorization { status in
+        PHPhotoLibrary.requestAuthorization(for:.readWrite) { status in
             switch (status)
             {
 
@@ -324,7 +324,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
         _ = self.recDispGrp!.wait(timeout: DispatchTime.distantFuture)
         //
         self.recDispGrp!.enter()
-        PHPhotoLibrary.requestAuthorization { (status : PHAuthorizationStatus) -> Void in
+        PHPhotoLibrary.requestAuthorization(for:.readWrite) { (status : PHAuthorizationStatus) -> Void in
             print("perm \(status)")
             self.recDispGrp!.leave()
         }
@@ -332,7 +332,7 @@ class VideoView : UIView, AVCaptureFileOutputRecordingDelegate {
 
         let videoAccess = AVCaptureDevice.authorizationStatus(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.video)))
         let audioAccess = AVCaptureDevice.authorizationStatus(for: AVMediaType(rawValue: convertFromAVMediaType(AVMediaType.audio)))
-        let photoLibAcces = PHPhotoLibrary.authorizationStatus()
+        let photoLibAcces = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 
         var retVal = true
         if audioAccess != AVAuthorizationStatus.authorized {
